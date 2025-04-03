@@ -1,10 +1,40 @@
 import TagSelector from "../Components/TagSelector";
+import {useState} from "react";
 
 export default function Signin() {
+
+    //Data for Profile
+    const [profilo, setProfiloUtente] = useState(
+        {
+            email: "email@example.com",
+            username: "username",
+            password: "password",
+            cantantiPreferiti: ["Alec Benjamin"],
+            generiPreferiti: ["Rock"],
+            playlistProprie: [
+                {
+                    id: "id-privato",
+                    titolo: "titolo",
+                    descrizione: "descrizione",
+                    tags: ["lavitafaschifa"],
+                    songs: ["id-canzone"]
+                }
+            ],
+            playlistSalvate: [
+                {
+                    "id-community": "id-community",
+                    "id-condivisione": "id-condivisione"
+                }
+            ],
+            communities: ["id-communities"]
+        }
+    );
+
+
     return (
         <div>
-            <h1 className={"h1 p-5 text-center"}>
-                Social Network for music
+            <h1 className={"h1 p-5 text-center text-uppercase"}>
+                Social Network for Music
             </h1>
             <h3>
                 Sign In

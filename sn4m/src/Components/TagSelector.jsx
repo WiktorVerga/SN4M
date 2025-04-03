@@ -1,10 +1,14 @@
 import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
+import TagConChiusura from "./TagConChiusura";
 
 export default function TagSelector({label, floatingLabel, placeholder, optionTitle}) {
     //Get Data to Fill Select
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
+
+    //Artists and Genres
+    const [savedArtists, setSavedArtists] = useState([]);
 
     const getData = async (query) => {
 
@@ -21,20 +25,38 @@ export default function TagSelector({label, floatingLabel, placeholder, optionTi
 
             const dati = await response.json();
 
-            setData(dati.artists.items);
+            return dati.artists.items
         } catch (error) {
             console.log(error.message);
         }
 
     }
 
+    const handleChoice = (e) => {
+        const addElement = e.target.getAttribute('value')
+        const searchInput = document.getElementById('search')
+        setSavedArtists(prevSelectedItems => [...prevSelectedItems, addElement]);
+        setSearch("")
+        searchInput.value = "";
+    }
+
+    const handleDelete = (elem) => {
+        setSavedArtists(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
+    }
+
     useEffect(() => {
         if (search !== "") {
-            getData(search);
+            getData(search).then((dati) => {
+                //Filtro per rimuovere dalle ricerche gli artisti già inseriti
+                const availableArtists = dati.filter(item =>
+                    !savedArtists.includes(item.name)
+                );
+                setData(availableArtists)
+            })
         } else {
             setData([]);
         }
-    }, [search]);
+    }, [search, savedArtists]);
 
     return (<div className={"row flex-row justify-content-between mt-5"}>
         <div className={"col-5"}>
@@ -48,13 +70,14 @@ export default function TagSelector({label, floatingLabel, placeholder, optionTi
                 <ul className="list-group">
                     {data?.map((item) => (
                         <li
-                            className="list-group-item flex-row"
+                            className="list-group-item flex-row cursor-pointer"
                             key={item.id}
-                            onClick={() => {
-                                console.log("added")
+                            value={item.name}
+                            onClick={(e) => {
+                                handleChoice(e);
                             }}
                         >
-                            <img src={item.images[0]?.url} width={60} className={"m-2"}/>
+                            <img src={item.images[0]?.url} width={60} height={60} className={"m-2 rounded-2"}/>
                             {item.name}
                         </li>
                     ))}
@@ -62,8 +85,11 @@ export default function TagSelector({label, floatingLabel, placeholder, optionTi
             </div>
         </div>
         <div className={"col-5"}>
-            <div>
-                Quadrato che mostra tag selezionati
+            <div className={"tag-displayer"}>
+                {savedArtists.length > 0 ? savedArtists.map((item) => (
+                    <TagConChiusura value={item} handleDelete={() => {handleDelete(item)}} />
+                )) : <p className={"text-white-50"}>Aggiungi Artisti...</p>
+                }
             </div>
         </div>
     </div>)

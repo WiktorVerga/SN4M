@@ -1,9 +1,9 @@
 
 
+
 export const getToken = async () => {
-    console.log(process.env.CLIENT_SECRET)
+
     try {
-        // Richiesta del token
         const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
@@ -11,16 +11,16 @@ export const getToken = async () => {
             },
             body: new URLSearchParams({
                 grant_type: 'client_credentials',
-                client_id: "f1b2adf9fc34a0f97af6ed784638b1d",
-                client_secret: "fa2b5bff05344238be7925d40a8e55ab",
+                client_id: process.env.REACT_APP_CLIENT_ID,
+                client_secret: process.env.REACT_APP_CLIENT_SECRET,
             })
         });
 
-        console.log(tokenResponse);
+        const token = await tokenResponse.json();
 
-        return tokenResponse.json();
-    }catch (error) {
+        return token.access_token;
+    } catch (error) {
         console.log(error.message);
     }
 
-    }
+}

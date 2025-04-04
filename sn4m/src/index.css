@@ -57,3 +57,11 @@ body {
         }
     }
 }
+
+.selected {
+    background: #bababa !important;
+}
+
+.option:hover {
+    background: #bababa;
+}

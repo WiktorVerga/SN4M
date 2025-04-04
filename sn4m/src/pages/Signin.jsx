@@ -30,6 +30,12 @@ export default function Signin() {
         }
     );
 
+    const [artistiPreferiti, setArtistiPreferiti] = useState([])
+
+    const riceviArtisti = (array) => {
+        setArtistiPreferiti(array);
+    }
+
 
     return (
         <div>
@@ -46,7 +52,7 @@ export default function Signin() {
                 <div className={"row flex-row justify-content-between"}>
                     <div className={"col-5"}>
                         <div className="form-floating mb-3 text-black">
-                            <input type="text" className="form-control" id="floatingInput"
+                            <input type="text" className="form-control" id="username"
                                    placeholder="username"/>
                             <label htmlFor="floatingInput">Username</label>
                         </div>
@@ -54,7 +60,7 @@ export default function Signin() {
                     <div className={"col-5"}>
 
                         <div className="form-floating mb-3 text-black">
-                            <input type="email" className="form-control" id="floatingInput"
+                            <input type="email" className="form-control" id="email"
                                    placeholder="name@example.com"/>
                             <label htmlFor="floatingInput">Email</label>
                         </div>
@@ -65,7 +71,7 @@ export default function Signin() {
                 <div className={"row flex-row justify-content-between mt-5"}>
                     <div className={"col-5"}>
                         <div className="form-floating mb-3 text-black">
-                            <input type="password" className="form-control" id="floatingInput"
+                            <input type="password" className="form-control" id="password"
                                    placeholder="Password"/>
                             <label htmlFor="floatingInput">Password</label>
                         </div>
@@ -73,7 +79,7 @@ export default function Signin() {
                     <div className={"col-5"}>
 
                         <div className="form-floating mb-3 text-black">
-                            <input type="password" className="form-control" id="floatingInput"
+                            <input type="password" className="form-control" id="ripeti-password"
                                    placeholder="Ripeti Password"/>
                             <label htmlFor="floatingInput">Ripeti Password</label>
                         </div>
@@ -81,14 +87,17 @@ export default function Signin() {
                 </div>
 
 
-                {/*Riga per Select Generi e Artisti*/}
+                {/*Riga per Select Artisti*/}
                 <TagSelector
                     label={"Artisti Preferiti"}
                     placeholder={"Cerca artisti preferiti"}
                     floatingLabel={"Cerca Artisti"}
                     optionTitle={"Artisti"}
+                    returnData={riceviArtisti}
                 />
 
+                <input type={"button"} onClick={() => {console.log(artistiPreferiti)}} value="Crea Account" className={"btn btn-primary mt-5 text-uppercase"} />
+                <input type={"button"} value="Annulla" className={"btn btn-primary mt-5 mx-5 text-uppercase"} />
             </form>
         </div>
     )

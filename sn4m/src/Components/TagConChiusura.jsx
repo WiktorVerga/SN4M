@@ -4,8 +4,8 @@ export default function TagConChiusura({value, handleDelete}) {
             <span>
                 {value}
             </span>
-            <div className={"closing-x-tag"}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" onClick={handleDelete}>
+            <div className={"closing-x-tag"} onClick={handleDelete}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <circle cx="10" cy="10" r="10" fill="black" fillOpacity="0.3"/>
                 </svg>
                 <svg className={"x"} xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10"

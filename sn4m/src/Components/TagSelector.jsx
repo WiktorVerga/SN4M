@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
 import TagConChiusura from "./TagConChiusura";
 
-export default function TagSelector({label, floatingLabel, placeholder, returnData}) {
+export default function TagSelector({label, floatingLabel, placeholder, returnData, type}) {
     //Get Data to Fill Select
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
@@ -11,11 +11,11 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
     //Artists and Genres
     const [savedArtists, setSavedArtists] = useState([]);
 
-    const getData = async (query) => {
+    const getData = async (query, type) => {
 
         const token = await getToken();
 
-        const url = "https://api.spotify.com/v1/search?q=" + query + "&type=artist"
+        const url = "https://api.spotify.com/v1/search?q=" + query + "&type=" + type
 
         try {
             const response = await fetch(url, {
@@ -80,7 +80,7 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
 
     useEffect(() => {
         if (search !== "") {
-            getData(search).then((dati) => {
+            getData(search, type).then((dati) => {
                 //Filtro per rimuovere dalle ricerche gli artisti già inseriti
                 const availableArtists = dati.filter(item =>
                     !savedArtists.includes(item.name)

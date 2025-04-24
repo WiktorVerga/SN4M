@@ -1,7 +1,7 @@
 import {useState} from "react";
-import Scheda from "./Components/scheda";
 import Signin from "./pages/Signin";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Login from "./pages/Login";
 
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
                 <div className={"container"}>
                     <Routes>
                         <Route path={"/"} element={<Signin/>}/>
+                        <Route path={"/login"} element={<Login/>}/>
                     </Routes>
                 </div>
             </div>

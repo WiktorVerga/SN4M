@@ -15,16 +15,15 @@ export default function Signin() {
 
     const [artistiPreferiti, setArtistiPreferiti] = useState([])
 
-    const generi = new Set()
-
     const riceviArtisti = (array) => {
         setArtistiPreferiti(array);
+        recuperaGeneri()
     }
 
     const [generiPreferiti, setGeneriPreferiti] = useState([]);
 
-    const recuperaGeneri = async () => {
-
+    const recuperaGeneri = () => {
+        const generi = new Set()
         const getData = async (query) => {
 
             const token = await getToken();
@@ -52,11 +51,14 @@ export default function Signin() {
                 data[0].genres.forEach((genre) => {
                     if (genre)
                         generi.add(genre)
+
+                    console.log(genre)
                 })
+
+                setGeneriPreferiti(Array.from(generi))
+                console.log("sono qui: " + generiPreferiti)
             })
         })
-
-        return Array.from(generi)
     }
 
     /* Dati Errori Form */
@@ -148,10 +150,8 @@ export default function Signin() {
         /* Creazione Utente con Dati Sicuri */
         if (hasError) return
 
-        recuperaGeneri().then((data) => {
-                console.log("dio: " +data)
-            }
-        )
+        recuperaGeneri()
+        console.log(generiPreferiti)
 
         const profilo = {
             email: email,

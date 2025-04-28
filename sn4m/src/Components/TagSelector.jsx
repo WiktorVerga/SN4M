@@ -124,7 +124,7 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
                                 }
                             }}
                         >
-                            <img src={item.images[0]?.url} alt={item.name + "'s Profile Image"} width={60} height={60} className={"m-2 rounded-2"}/>
+                            <img key={index} src={item.images[0]? item.images[0].url : "https://placehold.co/60x60"} alt={item.name + "'s Profile Picture"} width={60} height={60} className={"m-2 rounded-2"}/>
                             {item.name}
                         </li>
                     ))}

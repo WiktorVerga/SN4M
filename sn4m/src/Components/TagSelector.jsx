@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
 import TagConChiusura from "./TagConChiusura";
+import TagDisplayer from "./TagDisplayer";
 
 export default function TagSelector({label, floatingLabel, placeholder, returnData, type}) {
     //Get Data to Fill Select
@@ -132,14 +133,11 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
             </div>
         </div>
         <div className={"col-5"}>
-            <div className={"tag-displayer"}>
-                {savedArtists.length > 0 ? savedArtists.map((item) => (
-                    <TagConChiusura key={item.id} value={item} handleDelete={() => {
-                        handleDelete(item)
-                    }}/>
-                )) : <p className={"text-white-50"}>Aggiungi Artisti...</p>
-                }
-            </div>
+            <TagDisplayer
+                tags={savedArtists}
+                emsg={"Aggiungi Artisti..."}
+                handleDelete={handleDelete}
+            />
         </div>
     </div>)
 }

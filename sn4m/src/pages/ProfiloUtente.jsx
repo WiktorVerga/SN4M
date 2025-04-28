@@ -3,36 +3,17 @@ import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TagDisplayer from "../Components/TagDisplayer";
+import {getUser} from "../utilities/users";
 
 
 export default function ProfiloUtente() {
 
-    const [utenteLoggato, setUtenteLoggato] = useState({
-        email: "wiktor.verga@gmail.com",
-        username: "WiktorVerga5",
-        password: "GiorgiaBella1?",
-        cantantiPreferiti: [
-            "Martin Garrix",
-            "Skrillex",
-            "Marshmello",
-            "Travis Scott",
-            "21 Savage",
-            "Metro Boomin"
-        ],
-        generiPreferiti: [],
-        playlistProprie: [],
-        playlistSalvate: [],
-        communities: []
-    })
 
-    /* Dati Form */
-    const [username, setUsername] = useState("");
+    const [utenteLoggato, setUtenteLoggato] = useState({})
 
-    const [email, setEmail] = useState("");
+    const [initialArtisti, setInizialeArtisti] = useState([])
 
-    const [password, setPassword] = useState("");
-
-    const [nuoviArtistiPreferiti, setNuoviArtistiPreferiti] = useState([])
+    const [artistiPreferiti, setArtistiPreferiti] = useState([])
     const riceviNuoviArtisti = (array) => {
         setArtistiPreferiti(array);
     }
@@ -125,15 +106,21 @@ export default function ProfiloUtente() {
            }
        }*/
 
+    const handleDelete = (elem) => {
+        setGeneriPreferiti(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
+    }
+
     useEffect(() => {
+
+        /* Recupero dati utente dal localStorage */
         const loginSession = JSON.parse(sessionStorage.getItem("loginSession"))
 
-        const utenti = JSON.parse(localStorage.getItem("utenti"))
-
-        const utenteLogged = utenti.filter(item => item.email === loginSession.email)
+        const utenteLogged = getUser(loginSession.user)
 
         setUtenteLoggato(utenteLogged);
 
+        setGeneriPreferiti(utenteLogged.generiPreferiti);
+        setInizialeArtisti(utenteLogged.cantantiPreferiti);
 
     }, []);
 
@@ -143,7 +130,7 @@ export default function ProfiloUtente() {
                 Profilo Utente
             </h1>
             <h2 className={"text-capitalize"}>
-                Ciao, {usernameUtente}
+                Ciao, {utenteLoggato.username}
             </h2>
             <h4>
                 Informazioni Sul Profilo
@@ -165,7 +152,7 @@ export default function ProfiloUtente() {
                                 id="username"
                                 autoComplete="off"
                                 required
-                                value={usernameUtente}
+                                value={utenteLoggato.username}
                                 readOnly
                                 placeholder="Username" // necessario per form-floating
                             />
@@ -184,7 +171,7 @@ export default function ProfiloUtente() {
                     {/* Secondo gruppo: Nuovo username + bottone salva */}
                     {showNewUser && (
                         <div className="col-5 d-flex align-items-center justify-content-end">
-                            <div className="form-floating flex-grow-1 me-2">
+                            <div className="form-floating flex-grow-1">
                                 <input
                                     type="text"
                                     className="form-control"
@@ -200,14 +187,6 @@ export default function ProfiloUtente() {
                                 <label htmlFor="newUsername">Nuovo Username</label>
                                 <div className="invalid-feedback">{userError}</div>
                             </div>
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                style={{height: 'calc(3.5rem + 2px)'}}
-                                onClick={handleSaveUsername}
-                            >
-                                <i className="bi bi-floppy"></i>
-                            </button>
                         </div>
                     )}
                 </div>
@@ -223,7 +202,7 @@ export default function ProfiloUtente() {
                                 id="password"
                                 autoComplete="off"
                                 required
-                                value={passwordUtente}
+                                value={utenteLoggato.password}
                                 readOnly
                                 placeholder="Password" // necessario per form-floating
                             />
@@ -262,7 +241,7 @@ export default function ProfiloUtente() {
                                     </div>
                                 </div>
                                 <div className="mt-4 d-flex align-items-center justify-content-end">
-                                    <div className="form-floating flex-grow-1 me-2">
+                                    <div className="form-floating flex-grow-1">
                                         <input
                                             type="text"
                                             className="form-control"
@@ -278,14 +257,6 @@ export default function ProfiloUtente() {
                                         <label htmlFor="ripeti-new-password">Ripeti Password</label>
                                         <div className="invalid-feedback">{passwordError}</div>
                                     </div>
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        style={{height: 'calc(3.5rem + 2px)'}}
-                                        //onClick={handleSavePassword}
-                                    >
-                                        <i className="bi bi-floppy"></i>
-                                    </button>
                                 </div>
                             </div>
 
@@ -294,10 +265,11 @@ export default function ProfiloUtente() {
                 </div>
 
                 {/*Riga Generi Displayer*/}
-                <div className={"row flex-row justify-content-between"}>
-                    <div className="col-5 d-flex">
+                <div className={"row flex-row justify-content-between mt-5"}>
+                    <div className="col-5 d-flex flex-column">
+                        <label className={"m-1"}>Generi Preferiti</label>
                         <TagDisplayer
-                            tags={generi}
+                            tags={generiPreferiti}
                             emsg={"Nessun Genere Presente"}
                             handleDelete={handleDelete}
                         />
@@ -305,17 +277,16 @@ export default function ProfiloUtente() {
                 </div>
 
                 {/*Riga Artisti Selector*/}
-                <div className={"row flex-row justify-content-between"}>
-                    <div className="col-5 d-flex">
-                        <TagSelector
-                            label={"Artisti Preferiti"}
-                            placeholder={"Cerca artisti preferiti"}
-                            floatingLabel={"Cerca Artisti"}
-                            optionTitle={"Artisti"}
-                            returnData={riceviNuoviArtisti}
-                            type={"artist"}
-                        />
-                    </div>
+                <div className={"row flex-row justify-content-between mt-5"}>
+                    <TagSelector
+                        label={"Artisti Preferiti"}
+                        placeholder={"Cerca artisti preferiti"}
+                        floatingLabel={"Cerca Artisti"}
+                        optionTitle={"Artisti"}
+                        returnData={riceviNuoviArtisti}
+                        type={"artist"}
+                        initialState={initialArtisti}
+                    />
                 </div>
 
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}

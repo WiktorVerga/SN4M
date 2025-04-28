@@ -1,15 +1,14 @@
 import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
-import TagConChiusura from "./TagConChiusura";
 import TagDisplayer from "./TagDisplayer";
 
-export default function TagSelector({label, floatingLabel, placeholder, returnData, type}) {
+export default function TagSelector({label, floatingLabel, placeholder, returnData, type, initialState}) {
     //Get Data to Fill Select
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    //Artists and Genres
+    //Artists
     const [savedArtists, setSavedArtists] = useState([]);
 
     const getData = async (query, type) => {
@@ -80,6 +79,10 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
     }
 
     useEffect(() => {
+        if (initialState) {
+            setSavedArtists(initialState)
+        }
+
         if (search !== "") {
             getData(search, type).then((dati) => {
                 //Filtro per rimuovere dalle ricerche gli artisti già inseriti
@@ -92,9 +95,8 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
         } else {
             setData([]);
         }
-
         sendData()
-    }, [search, savedArtists]);
+    }, [search, initialState]);
 
     return (<div className={"row flex-row justify-content-between mt-5"}>
         <div className={"col-5"}>

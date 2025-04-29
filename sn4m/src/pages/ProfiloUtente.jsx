@@ -1,13 +1,15 @@
 import TagSelector from "../Components/TagSelector";
 import {useEffect, useState} from "react";
-import {getToken} from "../utilities/getToken";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TagDisplayer from "../Components/TagDisplayer";
 import {getUser} from "../utilities/users";
+import {useNavigate} from "react-router-dom";
 
 
 export default function ProfiloUtente() {
 
+    /* Functional Vars */
+    const navigate = useNavigate();
 
     const [utenteLoggato, setUtenteLoggato] = useState({})
 
@@ -292,7 +294,9 @@ export default function ProfiloUtente() {
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                 />
                 <input type={"button"} value="Annulla"
-                       className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}/>
+                       className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
+                       onClick={() => navigate(-1)}
+                />
 
             </form>
         </div>

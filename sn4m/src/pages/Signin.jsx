@@ -173,6 +173,8 @@ export default function Signin() {
                 setUsers([...existingUsers, profilo])
             else
                 setUsers([profilo])
+
+            navigate("/login")
         })
     }
 

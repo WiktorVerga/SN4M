@@ -8,6 +8,7 @@ export default function Login() {
 
     /* Functional Vars */
     const navigate = useNavigate()
+    const [showPassword, setShowPassword] = useState(false);
 
     /* Dati Form */
     const [username, setUsername] = useState("");
@@ -63,7 +64,7 @@ export default function Login() {
                                     </div>
                                     <div className={"col"}>
                                         <div className="form-floating mb-3 text-black">
-                                            <input type="password" className="form-control" id="password"
+                                            <input type={showPassword ? "text" : "password"} className="form-control" id="password"
                                                    required={true}
                                                    placeholder="Password"
                                                    onChange={(e) => {
@@ -72,6 +73,12 @@ export default function Login() {
                                                    }}
                                             />
                                             <label htmlFor="floatingInput">Password</label>
+                                            {password.length > 0 &&
+                                                <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                                     onClick={() => setShowPassword(!showPassword)}>
+                                                    {showPassword ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                                                </div>
+                                            }
                                             <div className="invalid-feedback">{error}</div>
                                         </div>
                                     </div>

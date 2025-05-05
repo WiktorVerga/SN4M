@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 import {getLoggedUser} from "../utilities/users";
+import {useEffect, useState} from "react";
 
 export default function Navbar() {
 
@@ -9,7 +10,7 @@ export default function Navbar() {
     }
 
     return (
-        <nav className={"navbar bg-primary p-3"}>
+        <nav className={"navbar bg-primary p-4 shadow"}>
             <div className="container">
                 <Link className={"navbar-brand text-white fw-bold fs-5"} to={"/"}>SN4M</Link>
                 <Link className={"navbar-text text-white text-decoration-none"} to={"/explore"}>Esplora</Link>

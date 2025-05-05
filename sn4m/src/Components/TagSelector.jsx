@@ -72,8 +72,10 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
         } else if (e.key === "Enter" && data.length > 0) {
             if (selectedIndex === -1) {
                 addElement(data[0].name);
+                setData([]);
             } else {
                 addElement(data[selectedIndex].name);
+                setData([]);
             }
         }
     }

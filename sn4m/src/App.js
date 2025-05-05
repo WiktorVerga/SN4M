@@ -1,6 +1,6 @@
 import {useState} from "react";
 import Signin from "./pages/Signin";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
 import Login from "./pages/Login";
 import ProfiloUtente from "./pages/ProfiloUtente";
 import Navbar from "./Components/Navbar";
@@ -8,15 +8,13 @@ import Navbar from "./Components/Navbar";
 
 function App() {
 
-    const navbarExclusion = [
-        "/",
-        "/login",
-    ]
+    const location = useLocation()
+    const excludeNavbar = ["/", "/login"].includes(location.pathname);
     
     return (
         <>
             <div className="App">
-                {!navbarExclusion.some(item => (item === window.location.pathname)) &&
+                {!excludeNavbar &&
                     <Navbar/>
                 }
                 <div className={"container"}>

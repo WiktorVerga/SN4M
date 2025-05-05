@@ -12,6 +12,8 @@ export default function ProfiloUtente() {
     /* Functional Vars */
     const navigate = useNavigate();
 
+    const [showPassword, setShowPassword] = useState(false);
+
     const [utenteLoggato, setUtenteLoggato] = useState({})
 
     const [initialArtisti, setInizialeArtisti] = useState([])

@@ -9,6 +9,8 @@ export default function Signin() {
     /* Functional Vars */
     const navigate = useNavigate();
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRipetiPassword, setShowRipetiPassword] = useState(false);
 
     /* Dati Form */
     const [username, setUsername] = useState("");
@@ -85,7 +87,7 @@ export default function Signin() {
         const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
         //Controllo lunghezza password
-        if (password.length<8){
+        if (password.length < 8) {
             //Avviene errore:
             passwordInput.classList.add("is-invalid")
             setPasswordError("Password deve essere lunga almeno 8 caratteri")
@@ -127,8 +129,7 @@ export default function Signin() {
             const profilo = {
                 email: email,
                 username: username,
-                password: password,
-                //... -> spacchetta array
+                password: password, //... -> spacchetta array
                 cantantiPreferiti: [...artistiPreferiti],
                 generiPreferiti: [...generi],
                 playlistProprie: [],
@@ -138,10 +139,8 @@ export default function Signin() {
 
             /* Salvataggio dati Utenti in LocalStorage */
 
-            if (existingUsers)
-                setUsers([...existingUsers, profilo])
-            else
-                setUsers([profilo])
+            if (existingUsers) setUsers([...existingUsers, profilo])
+            else setUsers([profilo])
 
             navigate("/login")
         })
@@ -151,8 +150,7 @@ export default function Signin() {
         navigate(-1)
     }
 
-    return (
-        <div>
+    return (<div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Social Network for Music
             </h1>
@@ -202,8 +200,8 @@ export default function Signin() {
                 {/*Riga per Password*/}
                 <div className={"row flex-row justify-content-between mt-5"}>
                     <div className={"col-5"}>
-                        <div className="form-floating mb-3 text-black">
-                            <input type="password" className="form-control" id="password"
+                        <div className="form-floating mb-3 text-black position-relative">
+                            <input type={showPassword ? "text" : "password"} className="form-control" id="password"
                                    required={true}
                                    placeholder="Password"
                                    onChange={(e) => {
@@ -212,13 +210,20 @@ export default function Signin() {
                                    }}
                             />
                             <label htmlFor="floatingInput">Password</label>
+                            {password.length > 0 &&
+                                <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                     onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                                </div>
+                            }
+
                             <div className="invalid-feedback">{passwordError}</div>
                         </div>
                     </div>
                     <div className={"col-5"}>
 
                         <div className="form-floating mb-3 text-black">
-                            <input type="password" className="form-control" id="ripeti-password"
+                            <input type={showRipetiPassword ? "text" : "password"} className="form-control" id="ripeti-password"
                                    required={true}
                                    placeholder="Ripeti Password"
                                    onChange={(e) => {
@@ -226,6 +231,12 @@ export default function Signin() {
                                        e.target.classList.remove("is-invalid")
                                    }}/>
                             <label htmlFor="floatingInput">Ripeti Password</label>
+                            {ripetiPassword.length > 0 &&
+                                <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                     onClick={() => setShowRipetiPassword(!showRipetiPassword)}>
+                                    {showRipetiPassword ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -244,8 +255,7 @@ export default function Signin() {
                 <input type={"button"} value="Crea Account" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
                 <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
-                onClick={handleAnnulla}/>
+                       onClick={handleAnnulla}/>
             </form>
-        </div>
-    )
+        </div>)
 };

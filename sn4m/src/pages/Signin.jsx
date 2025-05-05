@@ -124,6 +124,15 @@ export default function Signin() {
         const numberRegex = /[0-9]/;
         const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
+        //Controllo lunghezza password
+        if (password.length<8){
+            //Avviene errore:
+            passwordInput.classList.add("is-invalid")
+            setPasswordError("Password deve essere lunga almeno 8 caratteri")
+            hasError = true;
+        }
+
+
         //Controllo Password Diverse
         if (password !== ripetiPassword) {
             //Avviene errore:

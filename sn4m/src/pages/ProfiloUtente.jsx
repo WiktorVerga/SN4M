@@ -22,13 +22,11 @@ export default function ProfiloUtente() {
 
     const [generiPreferiti, setGeneriPreferiti] = useState([]);
 
+
     const [newUsername, setNewUsername] = useState("");
 
-    const passwordInput = document.getElementById("password");
-
-    /*Dati presi dal localStorage*/
-    let usernameUtente = "giorgia";
-    let passwordUtente = "1234";
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordConf, setNewPasswordConf] = useState("");
 
     /*Visibilità inseirmento nuovo utente */
     const [showNewUser, setShowNewUser] = useState(false);
@@ -43,7 +41,6 @@ export default function ProfiloUtente() {
 
     const handleBtnModificaPasswordClick = () => {
         setShowNewPassword(true);
-
     };
 
     /*Dati errori Form*/
@@ -62,7 +59,6 @@ export default function ProfiloUtente() {
 
         /* Controllo Username */
 
-
         //Controllo Unicità Username
         if (existingUsers?.some(item => (item.username === newUsername))) {
             //Avviene errore:
@@ -70,46 +66,56 @@ export default function ProfiloUtente() {
             setUserError("Username già in uso")
         }
 
-
     }
 
     /*HandleFunction Password*/
-    /*
+
     function handleSavePassword() {
-*/
-    /* Controllo Password */
+        /* Controlli Form */
+        const passwordInput = document.getElementById("newPassword");
 
 
-    //Regex che accetta solo lettere, numeri e caratteri speciali comuni
-    /*       const validCharactersRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        //Regex che accetta solo lettere, numeri e caratteri speciali comuni
+           const validCharactersRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
            const uppercaseRegex = /[A-Z]/;
            const numberRegex = /[0-9]/;
            const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
+            //Controllo lunghezza password
+            if (newPassword.length<8){
+                //Avviene errore:
+                passwordInput.classList.add("is-invalid")
+                setPasswordError("Password deve essere lunga almeno 8 caratteri")
+            }
+
            //Controllo Password Diverse
-           if (password !== ripetiPassword) {
+           if (newPassword !== newPasswordConf) {
                //Avviene errore:
                passwordInput.classList.add("is-invalid")
                setPasswordError("Password non Uguali")
            }
 
            //Controllo Password Valida
-           if (!validCharactersRegex.test(password)) {
+           if (!validCharactersRegex.test(newPassword)) {
                //Avviene errore:
                passwordInput.classList.add("is-invalid")
                setPasswordError("Password può contenere solo lettere, numeri e caratteri speciali")
            }
 
            //Controllo Struttura Password Valida
-           if (!uppercaseRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
+           if (!uppercaseRegex.test(newPassword) || !numberRegex.test(newPassword) || !specialCharRegex.test(newPassword)) {
                //Avviene errore:
                passwordInput.classList.add("is-invalid")
                setPasswordError("Password deve contenere almeno una lettera maiuscola, un numero e un carattere speciale")
            }
-       }*/
+       }
 
     const handleDelete = (elem) => {
         setGeneriPreferiti(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
+    }
+    const handleSubmit = () => {
+        handleSaveUsername();
+        handleSavePassword();
     }
 
     useEffect(() => {
@@ -153,9 +159,9 @@ export default function ProfiloUtente() {
                                 className="form-control"
                                 id="username"
                                 autoComplete="off"
-                                required
+                                required={true}
                                 value={utenteLoggato.username}
-                                readOnly
+                                readOnly={true}
                                 placeholder="Username" // necessario per form-floating
                             />
                             <label htmlFor="username">Username</label>
@@ -179,7 +185,7 @@ export default function ProfiloUtente() {
                                     className="form-control"
                                     id="newUsername"
                                     autoComplete="off"
-                                    required
+                                    required={true}
                                     placeholder="Nuovo username"
                                     onChange={(e) => {
                                         setNewUsername(e.target.value);
@@ -203,9 +209,9 @@ export default function ProfiloUtente() {
                                 className="form-control"
                                 id="password"
                                 autoComplete="off"
-                                required
+                                required={true}
                                 value={utenteLoggato.password}
-                                readOnly
+                                readOnly={true}
                                 placeholder="Password" // necessario per form-floating
                             />
                             <label htmlFor="password">Password</label>
@@ -227,36 +233,36 @@ export default function ProfiloUtente() {
                                 <div>
                                     <div className="form-floating flex-grow-1">
                                         <input
-                                            type="text"
+                                            type="password"
                                             className="form-control"
-                                            id="new-password"
+                                            id="newPassword"
                                             autoComplete="off"
-                                            required
+                                            required={true}
                                             placeholder="Nuova Password"
                                             onChange={(e) => {
-                                                setShowNewPassword(e.target.value);
+                                                setNewPassword(e.target.value);
                                                 e.target.classList.remove("is-invalid");
                                             }}
                                         />
-                                        <label htmlFor="new-password">Nuova Password</label>
+                                        <label htmlFor="newPassword">Nuova Password</label>
                                         <div className="invalid-feedback">{passwordError}</div>
                                     </div>
                                 </div>
                                 <div className="mt-4 d-flex align-items-center justify-content-end">
                                     <div className="form-floating flex-grow-1">
                                         <input
-                                            type="text"
+                                            type="password"
                                             className="form-control"
-                                            id="ripeti-new-password"
+                                            id="newPasswordConf"
                                             autoComplete="off"
-                                            required
+                                            required={true}
                                             placeholder="Ripeti Password"
                                             onChange={(e) => {
-                                                setShowNewPassword(e.target.value);
+                                                setNewPasswordConf(e.target.value);
                                                 e.target.classList.remove("is-invalid");
                                             }}
                                         />
-                                        <label htmlFor="ripeti-new-password">Ripeti Password</label>
+                                        <label htmlFor="newPasswordConf">Ripeti Password</label>
                                         <div className="invalid-feedback">{passwordError}</div>
                                     </div>
                                 </div>
@@ -292,6 +298,7 @@ export default function ProfiloUtente() {
                 </div>
 
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                       onClick={handleSubmit}
                 />
                 <input type={"button"} value="Annulla"
                        className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}

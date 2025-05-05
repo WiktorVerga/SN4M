@@ -24,7 +24,7 @@ export default function Login() {
 
         if (existingUsers.some(item => (item.username === username && item.password === password))) {
             navigate("/profiloUtente")
-            sessionStorage.setItem("loginSession",  JSON.stringify({user: username}))
+            sessionStorage.setItem("loginSession", JSON.stringify({user: existingUsers.find(item => item.password === password && item.username === username).email}))
         } else {
             setError("Credenziali non valide")
             userInput.classList.add("is-invalid")
@@ -38,7 +38,8 @@ export default function Login() {
             </h1>
             <div className={"row flex-row justify-content-center mt-5"}>
                 {/* Immagine Log In SX */}
-                <div className={"col d-flex justify-content-center align-items-center"}><img className={"mx-auto"} src={loginsx}/></div>
+                <div className={"col d-flex justify-content-center align-items-center"}><img className={"mx-auto"}
+                                                                                             src={loginsx}/></div>
 
                 {/* Card Log In */}
                 <div className={"col"}>
@@ -76,11 +77,13 @@ export default function Login() {
                                     </div>
 
                                     <div className={"row mt-5"}>
-                                        <Link className={"btn btn-secondary mt-2 p-2 text-uppercase"}
-                                               to={"/"}>Registrati</Link>
-                                        <input type={"button"} value="Accedi" className={"btn btn-secondary mt-2 p-2 text-uppercase"}
+                                        <input type={"button"} value="Accedi"
+                                               className={"btn btn-secondary mt-2 p-2 text-uppercase"}
                                                onClick={handleSubmit}
                                         />
+                                        <Link className={"btn btn-secondary mt-2 p-2 text-uppercase"}
+                                              to={"/"}>Registrati
+                                        </Link>
                                     </div>
 
                                 </form>
@@ -89,7 +92,8 @@ export default function Login() {
                     </div>
                 </div>
                 {/* Immagine Log In DX */}
-                <div className={"col d-flex justify-content-center align-items-center"}><img className={"mx-auto"} src={logindx}/></div>
+                <div className={"col d-flex justify-content-center align-items-center"}><img className={"mx-auto"}
+                                                                                             src={logindx}/></div>
 
             </div>
         </div>

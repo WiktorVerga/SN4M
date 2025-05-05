@@ -79,9 +79,12 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
     }
 
     useEffect(() => {
-        if (initialState) {
-            setSavedArtists(initialState)
+        if (initialState?.length > 0) {
+            setSavedArtists([...initialState])
         }
+    }, [initialState]);
+
+    useEffect(() => {
 
         if (search !== "") {
             getData(search, type).then((dati) => {
@@ -95,10 +98,14 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
         } else {
             setData([]);
         }
-        sendData()
-    }, [search, initialState]);
+    }, [search]);
 
-    return (<div className={"row flex-row justify-content-between mt-5"}>
+    useEffect(() => {
+        sendData()
+    }, [savedArtists]);
+
+    return (
+        <div className={"row flex-row justify-content-between mt-5"}>
         <div className={"col-5"}>
             <label className={"mb-1"} htmlFor="floatingInput">{label}</label>
             <div className="form-floating mb-3 text-black">
@@ -139,6 +146,7 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
                 tags={savedArtists}
                 emsg={"Aggiungi Artisti..."}
                 handleDelete={handleDelete}
+                withDelete={true}
             />
         </div>
     </div>)

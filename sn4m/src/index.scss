@@ -75,3 +75,24 @@ body {
 .option:hover {
     background: #bababa;
 }
+
+.spacer {
+    margin-top: 10rem;
+}
+
+.avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    border: 2px solid white;
+    text-decoration: none !important;
+}

@@ -2,8 +2,9 @@ import TagSelector from "../Components/TagSelector";
 import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TagDisplayer from "../Components/TagDisplayer";
-import {getUser} from "../utilities/users";
+import {getLoggedUser, getUser, getUsers, setUsers} from "../utilities/users";
 import {useNavigate} from "react-router-dom";
+import {recuperaGeneri} from "../utilities/recuperaGeneri";
 
 
 export default function ProfiloUtente() {
@@ -16,12 +17,10 @@ export default function ProfiloUtente() {
     const [initialArtisti, setInizialeArtisti] = useState([])
 
     const [artistiPreferiti, setArtistiPreferiti] = useState([])
+    const [generiPreferiti, setGeneriPreferiti] = useState([]);
     const riceviNuoviArtisti = (array) => {
         setArtistiPreferiti(array);
     }
-
-    const [generiPreferiti, setGeneriPreferiti] = useState([]);
-
 
     const [newUsername, setNewUsername] = useState("");
 
@@ -46,11 +45,12 @@ export default function ProfiloUtente() {
     /*Dati errori Form*/
     const [userError, setUserError] = useState("");
     const [passwordError, setPasswordError] = useState("")
+    const [hasError, setHasError] = useState(false);
 
     /*handleFunction Username*/
     const handleSaveUsername = () => {
 
-        const existingUsers = JSON.parse(localStorage.getItem("utenti"))
+        const existingUsers = getUsers()
 
         /* Controlli Form */
         const userInput = document.getElementById("newUsername");
@@ -59,12 +59,22 @@ export default function ProfiloUtente() {
 
         /* Controllo Username */
 
+        //Controllo Inserimento Username
+        if (newUsername === "") {
+            //Avviene errore:
+            userInput.classList.add("is-invalid")
+            setUserError("Inserire Nuovo Username")
+            setHasError(true)
+        }
+
         //Controllo Unicità Username
         if (existingUsers?.some(item => (item.username === newUsername))) {
             //Avviene errore:
             userInput.classList.add("is-invalid")
             setUserError("Username già in uso")
+            setHasError(true)
         }
+
 
     }
 
@@ -74,56 +84,88 @@ export default function ProfiloUtente() {
         /* Controlli Form */
         const passwordInput = document.getElementById("newPassword");
 
-
         //Regex che accetta solo lettere, numeri e caratteri speciali comuni
-           const validCharactersRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-           const uppercaseRegex = /[A-Z]/;
-           const numberRegex = /[0-9]/;
-           const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        const validCharactersRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        const uppercaseRegex = /[A-Z]/;
+        const numberRegex = /[0-9]/;
+        const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-            //Controllo lunghezza password
-            if (newPassword.length<8){
-                //Avviene errore:
-                passwordInput.classList.add("is-invalid")
-                setPasswordError("Password deve essere lunga almeno 8 caratteri")
-            }
+        //Controllo lunghezza password
+        if (newPassword.length < 8) {
+            //Avviene errore:
+            passwordInput.classList.add("is-invalid")
+            setPasswordError("Password deve essere lunga almeno 8 caratteri")
+            setHasError(true)
+        }
 
-           //Controllo Password Diverse
-           if (newPassword !== newPasswordConf) {
-               //Avviene errore:
-               passwordInput.classList.add("is-invalid")
-               setPasswordError("Password non Uguali")
-           }
+        //Controllo Password Diverse
+        if (newPassword !== newPasswordConf) {
+            //Avviene errore:
+            passwordInput.classList.add("is-invalid")
+            setPasswordError("Password non Uguali")
+            setHasError(true)
+        }
 
-           //Controllo Password Valida
-           if (!validCharactersRegex.test(newPassword)) {
-               //Avviene errore:
-               passwordInput.classList.add("is-invalid")
-               setPasswordError("Password può contenere solo lettere, numeri e caratteri speciali")
-           }
+        //Controllo Password Valida
+        if (!validCharactersRegex.test(newPassword)) {
+            //Avviene errore:
+            passwordInput.classList.add("is-invalid")
+            setPasswordError("Password può contenere solo lettere, numeri e caratteri speciali")
+            setHasError(true)
+        }
 
-           //Controllo Struttura Password Valida
-           if (!uppercaseRegex.test(newPassword) || !numberRegex.test(newPassword) || !specialCharRegex.test(newPassword)) {
-               //Avviene errore:
-               passwordInput.classList.add("is-invalid")
-               setPasswordError("Password deve contenere almeno una lettera maiuscola, un numero e un carattere speciale")
-           }
-       }
+        //Controllo Struttura Password Valida
+        if (!uppercaseRegex.test(newPassword) || !numberRegex.test(newPassword) || !specialCharRegex.test(newPassword)) {
+            //Avviene errore:
+            passwordInput.classList.add("is-invalid")
+            setPasswordError("Password deve contenere almeno una lettera maiuscola, un numero e un carattere speciale")
+            setHasError(true)
+        }
+    }
 
     const handleDelete = (elem) => {
         setGeneriPreferiti(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
     }
+
     const handleSubmit = () => {
-        handleSaveUsername();
-        handleSavePassword();
+        const existingUsers = getUsers()
+        if (showNewUser) handleSaveUsername();
+        if (showNewPassword) handleSavePassword();
+
+        const profilo = {
+            email: utenteLoggato.email,
+            username: showNewUser ? newUsername : utenteLoggato.username,
+            password: showNewPassword ? newPassword : utenteLoggato.password,
+            cantantiPreferiti: artistiPreferiti,
+            generiPreferiti: generiPreferiti,
+            playlistProprie: utenteLoggato.playlistProprie,
+            playlistSalvate: utenteLoggato.playlistProprie,
+            communities: utenteLoggato.communities
+        }
+
+        /* Salvataggio dati Utenti in LocalStorage */
+
+        if (!hasError) {
+            const users = existingUsers?.filter(item => item.email !== utenteLoggato.email)
+            setUsers([...users, profilo])
+        }
+
+        setUtenteLoggato(getUser(utenteLoggato.email))
+    }
+
+    const handleDeleteAccount = () => {
+        const validate = prompt("Digita: ELIMINA")
+
+        if (validate === "ELIMINA") {
+            setUsers(getUsers()?.filter(item => item.email !== utenteLoggato.email))
+            navigate("/")
+        }
     }
 
     useEffect(() => {
 
         /* Recupero dati utente dal localStorage */
-        const loginSession = JSON.parse(sessionStorage.getItem("loginSession"))
-
-        const utenteLogged = getUser(loginSession.user)
+        const utenteLogged = getLoggedUser()
 
         setUtenteLoggato(utenteLogged);
 
@@ -131,6 +173,10 @@ export default function ProfiloUtente() {
         setInizialeArtisti(utenteLogged.cantantiPreferiti);
 
     }, []);
+
+    useEffect(() => {
+        recuperaGeneri(artistiPreferiti).then(generi => setGeneriPreferiti(generi));
+    }, [artistiPreferiti]);
 
     return (
         <div>
@@ -140,7 +186,7 @@ export default function ProfiloUtente() {
             <h2 className={"text-capitalize"}>
                 Ciao, {utenteLoggato.username}
             </h2>
-            <h4>
+            <h4 className={"mt-5"}>
                 Informazioni Sul Profilo
             </h4>
 
@@ -272,18 +318,6 @@ export default function ProfiloUtente() {
                     )}
                 </div>
 
-                {/*Riga Generi Displayer*/}
-                <div className={"row flex-row justify-content-between mt-5"}>
-                    <div className="col-5 d-flex flex-column">
-                        <label className={"m-1"}>Generi Preferiti</label>
-                        <TagDisplayer
-                            tags={generiPreferiti}
-                            emsg={"Nessun Genere Presente"}
-                            handleDelete={handleDelete}
-                        />
-                    </div>
-                </div>
-
                 {/*Riga Artisti Selector*/}
                 <div className={"row flex-row justify-content-between mt-5"}>
                     <TagSelector
@@ -297,15 +331,37 @@ export default function ProfiloUtente() {
                     />
                 </div>
 
-                <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                {/*Riga Generi Displayer*/}
+                <div className={"row flex-row justify-content-between mt-5"}>
+                    <div className="col-5 d-flex flex-column">
+                        <label className={"m-1"}>Generi Preferiti</label>
+                        <TagDisplayer
+                            tags={generiPreferiti}
+                            emsg={"Nessun Genere Presente"}
+                            handleDelete={handleDelete}
+                        />
+                    </div>
+                </div>
+
+                <input type={"button"} value="Salva Modifiche"
+                       className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}
                 />
                 <input type={"button"} value="Annulla"
-                       className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
+                       className={"btn btn-secondary mt-5  mx-5 p-2 text-uppercase"}
                        onClick={() => navigate(-1)}
                 />
-
             </form>
+
+            <h4 className={"spacer text-danger fw-bold"}>
+                Elimina Account
+            </h4>
+            <button className={"btn btn-danger mt-3 mb-5 text-uppercase"}
+                    onClick={handleDeleteAccount}
+            >
+                Elimina Account
+            </button>
+
         </div>
     )
 }

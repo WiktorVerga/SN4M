@@ -6,6 +6,10 @@ export const setUsers = (users) => {
     localStorage.setItem("utenti", JSON.stringify(users))
 }
 
-export const getUser = (username) => {
-    return getUsers().find(item => item.username === username)
+export const getUser = (email) => {
+    return getUsers().find(item => item.email === email)
+}
+
+export const getLoggedUser = () => {
+    return getUser(JSON.parse(sessionStorage.getItem("loginSession")).user)
 }

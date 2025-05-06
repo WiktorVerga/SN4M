@@ -1,16 +1,38 @@
-import {useState} from "react";
-import Signin from "./pages/Signin";
-import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
-import Login from "./pages/Login";
-import ProfiloUtente from "./pages/ProfiloUtente";
+import Signin from "./pages/user/Signin";
+import {BrowserRouter, Route, Routes, useLocation, useNavigate} from "react-router-dom";
+import Login from "./pages/user/Login";
+import ProfiloUtente from "./pages/user/ProfiloUtente";
 import Navbar from "./Components/Navbar";
+import CreaCommunity from "./pages/communities/CreaCommunity";
+import ModificaCommunity from "./pages/communities/ModificaCommunity";
+import {useEffect, useState} from "react";
+import {ToastContainer} from "react-toastify";
 
 
 function App() {
 
     const location = useLocation()
-    const excludeNavbar = ["/", "/login"].includes(location.pathname);
-    
+    const navigate = useNavigate()
+    const excludeNavbar = ["/", "/login", "/modificaCommunity", "/creaCommunity"].includes(location.pathname);
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
+
+    useEffect(() => {
+        const checkLogin = () => {
+            const token = sessionStorage.getItem("loginSession") === null
+
+            if (token && !excludeNavbar) {
+                navigate("/login")
+            }
+
+            setCheckingAuth(false);
+        };
+
+        checkLogin();
+    }, [location.pathname]);
+
+    if (checkingAuth) return null
+
     return (
         <>
             <div className="App">
@@ -22,8 +44,11 @@ function App() {
                         <Route path={"/"} element={<Signin/>}/>
                         <Route path={"/login"} element={<Login/>}/>
                         <Route path={"/profiloUtente"} element={<ProfiloUtente/>}/>
+                        <Route path={"/creaCommunity"} element={<CreaCommunity/>}/>
+                        <Route path={"/modificaCommunity"} element={<ModificaCommunity/>}/>
                     </Routes>
                 </div>
+                <ToastContainer />
             </div>
         </>
     );

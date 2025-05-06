@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
-import TagDisplayer from "./TagDisplayer";
 
 export default function TagSelector({label, floatingLabel, placeholder, returnData, type, initialState}) {
     //Get Data to Fill Select
@@ -37,23 +36,18 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
         const searchInput = document.getElementById('search')
 
         setSavedArtists(prevSelectedItems => {
-            const newSelectedItems = [...prevSelectedItems, elem]
-            return newSelectedItems
+            return [...prevSelectedItems, elem]
         });
 
         setSearch("")
         searchInput.value = "";
-
+        setData([]);
     }
 
     const handleChoice = (e) => {
         const element = e.target.getAttribute('value')
 
         addElement(element);
-    }
-
-    const handleDelete = (elem) => {
-        setSavedArtists(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
     }
 
     const sendData = () => {
@@ -72,10 +66,8 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
         } else if (e.key === "Enter" && data.length > 0) {
             if (selectedIndex === -1) {
                 addElement(data[0].name);
-                setData([]);
             } else {
                 addElement(data[selectedIndex].name);
-                setData([]);
             }
         }
     }
@@ -87,7 +79,6 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
     }, [initialState]);
 
     useEffect(() => {
-
         if (search !== "") {
             getData(search, type).then((dati) => {
                 //Filtro per rimuovere dalle ricerche gli artisti già inseriti
@@ -104,11 +95,11 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
 
     useEffect(() => {
         sendData()
+        setData([]);
     }, [savedArtists]);
 
     return (
-        <div className={"row flex-row justify-content-between mt-5"}>
-        <div className={"col-5"}>
+        <div>
             <label className={"mb-1"} htmlFor="floatingInput">{label}</label>
             <div className="form-floating mb-3 text-black">
                 <input type="text" className="form-control" id="search"
@@ -132,24 +123,18 @@ export default function TagSelector({label, floatingLabel, placeholder, returnDa
                             }}
                             ref={(el) => {
                                 if (index === selectedIndex) {
-                                    el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                                    el?.scrollIntoView({block: "nearest", behavior: "smooth"});
                                 }
                             }}
                         >
-                            <img key={index} src={item.images[0]? item.images[0].url : "https://placehold.co/60x60"} alt={item.name + "'s Profile Picture"} width={60} height={60} className={"m-2 rounded-2"}/>
+                            <img key={index} src={item.images[0] ? item.images[0].url : "https://placehold.co/60x60"}
+                                 alt={item.name + "'s Profile Picture"} width={60} height={60}
+                                 className={"m-2 rounded-2"}/>
                             {item.name}
                         </li>
                     ))}
                 </ul>
             </div>
         </div>
-        <div className={"col-5"}>
-            <TagDisplayer
-                tags={savedArtists}
-                emsg={"Aggiungi Artisti..."}
-                handleDelete={handleDelete}
-                withDelete={true}
-            />
-        </div>
-    </div>)
+    )
 }

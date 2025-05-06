@@ -1,8 +1,8 @@
 import {useState} from "react";
-import loginsx from "../media/loginsx.png"
-import logindx from "../media/logindx.png"
+import loginsx from "../../media/loginsx.png"
+import logindx from "../../media/logindx.png"
 import {Link, useNavigate} from "react-router-dom";
-import {getUsers} from "../utilities/users";
+import {getUsers} from "../../utilities/users";
 
 export default function Login() {
 

@@ -8,6 +8,10 @@ $secondary: #4F6A6D;
     src: url("../public/fonts/Raleway-VariableFont_wght.ttf");
 }
 
+:root {
+    --toastify-color-success: #183840;
+}
+
 body {
     margin: 0;
     -webkit-font-smoothing: antialiased;

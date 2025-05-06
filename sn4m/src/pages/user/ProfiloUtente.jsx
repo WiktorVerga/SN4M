@@ -1,10 +1,11 @@
-import TagSelector from "../Components/TagSelector";
+import ArtistSelector from "../../Components/ArtistSelector";
 import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import TagDisplayer from "../Components/TagDisplayer";
-import {getLoggedUser, getUser, getUsers, setUsers} from "../utilities/users";
+import TagDisplayer from "../../Components/TagDisplayer";
+import {getLoggedUser, getUser, getUsers, setUsers} from "../../utilities/users";
 import {useNavigate} from "react-router-dom";
-import {recuperaGeneri} from "../utilities/recuperaGeneri";
+import {recuperaGeneri} from "../../utilities/recuperaGeneri";
+import {toast} from "react-toastify";
 
 
 export default function ProfiloUtente() {
@@ -153,6 +154,16 @@ export default function ProfiloUtente() {
         }
 
         setUtenteLoggato(getUser(utenteLoggato.email))
+        toast.success("Modifiche Salvate", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            theme: "dark",
+            progress: undefined,
+        });
     }
 
     const handleDeleteAccount = () => {
@@ -169,10 +180,13 @@ export default function ProfiloUtente() {
         /* Recupero dati utente dal localStorage */
         const utenteLogged = getLoggedUser()
 
+        if (utenteLogged == null) return
+
         setUtenteLoggato(utenteLogged);
 
         setGeneriPreferiti(utenteLogged.generiPreferiti);
         setInizialeArtisti(utenteLogged.cantantiPreferiti);
+
 
     }, []);
 
@@ -197,7 +211,7 @@ export default function ProfiloUtente() {
                 className={"mt-5"}
             >
 
-                {/*Riga User e Nuovo User*/}
+                {/*Riga user e Nuovo user*/}
                 <div className={"row flex-row justify-content-between align-items-center"}>
                     {/* Primo gruppo: Username + bottone modifica */}
                     <div className="col-5 d-flex align-items-center">
@@ -224,7 +238,7 @@ export default function ProfiloUtente() {
                         </button>
                     </div>
 
-                    {/* Secondo gruppo: Nuovo username + bottone salva */}
+                    {/* Secondo gruppo: Nuovo username*/}
                     {showNewUser && (
                         <div className="col-5 d-flex align-items-center justify-content-end">
                             <div className="form-floating flex-grow-1">
@@ -322,7 +336,7 @@ export default function ProfiloUtente() {
 
                 {/*Riga Artisti Selector*/}
                 <div className={"row flex-row justify-content-between mt-5"}>
-                    <TagSelector
+                    <ArtistSelector
                         label={"Artisti Preferiti"}
                         placeholder={"Cerca artisti preferiti"}
                         floatingLabel={"Cerca Artisti"}

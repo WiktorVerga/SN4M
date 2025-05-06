@@ -1,11 +1,16 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {getLoggedUser} from "../utilities/users";
 import {useEffect, useState} from "react";
 
 export default function Navbar() {
 
+    const navigate = useNavigate();
+
     const getLetter = () => {
         const loggedUser = getLoggedUser()
+        if (loggedUser === null) return
+
+
         return loggedUser?.username.charAt(0).toUpperCase()
     }
 

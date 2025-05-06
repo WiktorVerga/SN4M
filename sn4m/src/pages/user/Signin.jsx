@@ -1,9 +1,9 @@
-import TagSelector from "../Components/TagSelector";
+import ArtistSelector from "../../Components/ArtistSelector";
 import {useState} from "react";
-import {getToken} from "../utilities/getToken";
+import {getToken} from "../../utilities/getToken";
 import {useNavigate} from "react-router-dom";
-import {getUsers, setUsers, users} from "../utilities/users";
-import {recuperaGeneri} from "../utilities/recuperaGeneri";
+import {getUsers, setUsers, users} from "../../utilities/users";
+import {recuperaGeneri} from "../../utilities/recuperaGeneri";
 
 export default function Signin() {
     /* Functional Vars */
@@ -164,7 +164,7 @@ export default function Signin() {
                 autoComplete={"off"}
             >
 
-                {/*Riga User e Email*/}
+                {/*Riga user e Email*/}
                 <div className={"row flex-row justify-content-between"}>
                     <div className={"col-5"}>
                         <div className="form-floating mb-3 text-black ">
@@ -243,13 +243,8 @@ export default function Signin() {
 
 
                 {/*Riga per Select Artisti*/}
-                <TagSelector
-                    label={"Artisti Preferiti"}
-                    placeholder={"Cerca artisti preferiti"}
-                    floatingLabel={"Cerca Artisti"}
-                    optionTitle={"Artisti"}
+                <ArtistSelector
                     returnData={riceviArtisti}
-                    type={"artist"}
                 />
 
                 <input type={"button"} value="Crea Account" className={"btn btn-secondary mt-5 p-2 text-uppercase"}

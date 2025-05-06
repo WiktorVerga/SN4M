@@ -1,3 +1,5 @@
+import {useNavigate} from "react-router-dom";
+
 export const getUsers = () => {
     return JSON.parse(localStorage.getItem("utenti"))
 }
@@ -11,5 +13,12 @@ export const getUser = (email) => {
 }
 
 export const getLoggedUser = () => {
-    return getUser(JSON.parse(sessionStorage.getItem("loginSession")).user)
+    if (sessionStorage.getItem("loginSession") === null)
+
+        return null
+
+    const loggedUser = getUser(JSON.parse(sessionStorage.getItem("loginSession")).user)
+    if (loggedUser === undefined) return null
+
+    return loggedUser
 }

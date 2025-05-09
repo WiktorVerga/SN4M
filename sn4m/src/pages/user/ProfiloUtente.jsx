@@ -347,18 +347,6 @@ export default function ProfiloUtente() {
                     />
                 </div>
 
-                {/*Riga Generi Displayer*/}
-                <div className={"row flex-row justify-content-between mt-5"}>
-                    <div className="col-5 d-flex flex-column">
-                        <label className={"m-1"}>Generi Preferiti</label>
-                        <TagDisplayer
-                            tags={generiPreferiti}
-                            emsg={"Nessun Genere Presente"}
-                            handleDelete={handleDelete}
-                        />
-                    </div>
-                </div>
-
                 <input type={"button"} value="Salva Modifiche"
                        className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}
@@ -369,6 +357,8 @@ export default function ProfiloUtente() {
                 />
             </form>
 
+
+            {/*Elimina Account*/}
             <h4 className={"spacer text-danger fw-bold"}>
                 Elimina Account
             </h4>

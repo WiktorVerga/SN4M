@@ -19,9 +19,10 @@ export default function GenericSelector({returnData, initialState}) {
     }
 
     const handleAddTag = (elem) => {
-        setTags(prevSelectedItems => [...prevSelectedItems, elem]);
-        tagPersonalizzato.value = "";
+        if (!tags.includes(elem))
+            setTags(prevSelectedItems => [...prevSelectedItems, elem]);
 
+        tagPersonalizzato.value = "";
     }
 
     const handleDelete = (elem) => {
@@ -32,6 +33,10 @@ export default function GenericSelector({returnData, initialState}) {
         if (tags)
             setTags([...new Set([...tags, ...savedArtists])])
     }, [savedArtists]);
+
+    useEffect(() => {
+        sendTags(tags)
+    }, [tags])
 
     return (
         <div className={"row flex-row justify-content-between mt-5"}>

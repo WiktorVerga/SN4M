@@ -2,9 +2,10 @@ import ArtistSelector from "../../Components/ArtistSelector";
 import {useState} from "react";
 import {getToken} from "../../utilities/getToken";
 import {useNavigate} from "react-router-dom";
-import {getUsers, setUsers, users} from "../../utilities/users";
+import {getLoggedUser, getUsers, setUsers, users} from "../../utilities/users";
 import {recuperaGeneri} from "../../utilities/recuperaGeneri";
 import GenericSelector from "../../Components/GenericSelector";
+import {getCommunities, setCommunities} from "../../utilities/communities";
 
 export default function CreaCommunity() {
     /* Functional Vars */
@@ -20,127 +21,90 @@ export default function CreaCommunity() {
     const [titoloError, setTitoloError] = useState("");
     const [descrizioneError, setDescrizioneError] = useState("");
 
+    const [tags, setTags] = useState([])
+    const getTags = (array) => {
+        setTags(array)
+    }
 
-    /* Handle Functions
+
     const handleSubmit = () => {
+        const existingCommunities = getCommunities()
 
-        const existingUsers = getUsers()
+        /* Controlli Form */
+        const titoloInput = document.getElementById("titolo");
+        const descrizioneInput = document.getElementById("descrizione");
 
-        /* Controlli Form
-        const emailInput = document.getElementById("email");
-        const userInput = document.getElementById("username");
-        const passwordInput = document.getElementById("password");
+        titoloInput.classList.remove("is-invalid")
+        descrizioneInput.classList.remove("is-invalid")
 
-        emailInput.classList.remove("is-invalid")
-        userInput.classList.remove("is-invalid")
-        passwordInput.classList.remove("is-invalid")
-
-        /* Controllo Email
         let hasError = false
 
-        //Controllo Formato Email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        /* Controllo Titolo */
 
-        if (!emailRegex.test(email)) {
-            emailInput.classList.add("is-invalid")
-            setEmailError("Email non Valida")
-            hasError = true;
+        //Controllo Lunghezza Titolo
+        if (titolo.length > 30 || titolo.length < 5) {
+            //Avviene Errore:
+            titoloInput.classList.add("is-invalid")
+            setTitoloError("Il Titolo deve essere lungo Tra 5 e 30 caratteri")
+            hasError = true
         }
 
         //Controllo Unicità Email
-        if (existingUsers?.some(item => (item.email === email))) {
+        if (existingCommunities?.some(item => (item.titolo === titolo))) {
             //Avviene errore:
-            emailInput.classList.add("is-invalid")
-            setEmailError("Email già collegata ad un Account Esistente")
-            hasError = true;
+            titoloInput.classList.add("is-invalid")
+            setTitoloError("Il Titolo è già in uso")
+            hasError = true
         }
 
+        /* Controllo Descrizione */
 
-        /* Controllo Username
-
-        //Controllo Unicità Username
-        if (existingUsers?.some(item => (item.username === username))) {
-            //Avviene errore:
-            userInput.classList.add("is-invalid")
-            setUserError("Username già in uso")
-            hasError = true;
+        //Conotrollo Lunghezza Descrizione
+        if (descrizione.length > 150 || descrizione.length < 10) {
+            //Avviene Errore:
+            descrizioneInput.classList.add("is-invalid")
+            setDescrizioneError("La Descrizione deve essere lunga Tra 10 e 150 caratteri")
+            hasError = true
         }
 
-        /* Controllo Password
-
-        //Regex che accetta solo lettere, numeri e caratteri speciali comuni
-        const validCharactersRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        const uppercaseRegex = /[A-Z]/;
-        const numberRegex = /[0-9]/;
-        const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-
-        //Controllo lunghezza password
-        if (password.length < 8) {
-            //Avviene errore:
-            passwordInput.classList.add("is-invalid")
-            setPasswordError("Password deve essere lunga almeno 8 caratteri")
-            hasError = true;
-        }
-
-
-        //Controllo Password Diverse
-        if (password !== ripetiPassword) {
-            //Avviene errore:
-            passwordInput.classList.add("is-invalid")
-            setPasswordError("Password non Uguali")
-            hasError = true;
-        }
-
-        //Controllo Password Valida
-        if (!validCharactersRegex.test(password)) {
-            //Avviene errore:
-            passwordInput.classList.add("is-invalid")
-            setPasswordError("Password può contenere solo lettere, numeri e caratteri speciali")
-            hasError = true;
-        }
-
-        //Controllo Struttura Password Valida
-        if (!uppercaseRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
-            //Avviene errore:
-            passwordInput.classList.add("is-invalid")
-            setPasswordError("Password deve contenere almeno una lettera maiuscola, un numero e un carattere speciale")
-            hasError = true;
-        }
-
-
-        /* Creazione Utente con Dati Sicuri
+        /* Creazione Community con Dati Sicuri */
         if (hasError) return
 
-        //Si attenodno tutti i dati sull'utente
-        recuperaGeneri(artistiPreferiti).then(generi => {
+        function generateId() {
+            return Date.now() + '-' + Math.floor(Math.random() * 10000);
+        }
 
-            const profilo = {
-                email: email,
-                username: username,
-                password: password, //... -> spacchetta array
-                cantantiPreferiti: [...artistiPreferiti],
-                generiPreferiti: [...generi],
-                playlistProprie: [],
-                playlistSalvate: [],
-                communities: []
-            }
+        const loggedUser = getLoggedUser()
 
-            /* Salvataggio dati Utenti in LocalStorage
+        const community = {
+            idCommunity: generateId(),
+            titolo: titolo,
+            descrizione: descrizione,
+            tags: [...tags],
+            autore: loggedUser.email,
+            playlistCondivise: []
+        }
 
-            if (existingUsers) setUsers([...existingUsers, profilo])
-            else setUsers([profilo])
+        /* Salvataggio dati Utenti in LocalStorage */
 
-            navigate("/login")
-        })
+        //Aggiungo alla lista di Communities
+        if (existingCommunities) setCommunities([...existingCommunities, community])
+        else setCommunities([community])
+
+        //Aggiorno l'utente salvando la community che ha appena creato
+        if (!hasError) {
+            const existingUsers = getUsers()
+            const users = existingUsers?.filter(item => item.email !== loggedUser.email)
+            loggedUser.communities.push(community.idCommunity)
+            setUsers([...users, loggedUser])
+        }
     }
-    */
 
     const handleAnnulla = () => {
         navigate(-1)
     }
 
-    return (
-        <div>
+    return (<div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Crea la Tua Community
             </h1>
@@ -180,7 +144,7 @@ export default function CreaCommunity() {
                     <div className={"col-5"}>
                         <div className="form-floating">
                             <textarea className="form-control" placeholder="Scrivi una Descrizione"
-                                      id="floatingTextarea2"
+                                      id="descrizione"
                                       style={{height: 100}}
                                       required={true}
                                       maxLength={250}
@@ -190,7 +154,7 @@ export default function CreaCommunity() {
                                       }}
                             ></textarea>
                             <label htmlFor="floatingTextarea2">Descrizione</label>
-                            <div className="invalid-feedback">{titoloError}</div>
+                            <div className="invalid-feedback">{descrizioneError}</div>
                         </div>
 
                     </div>
@@ -204,16 +168,16 @@ export default function CreaCommunity() {
                     Tags
                 </h3>
 
-                <GenericSelector/>
+                <GenericSelector
+                    returnData={getTags}
+                />
 
                 {/*TODO: handleSubmit*/}
                 <input type={"button"} value="Crea Community" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
-                       onClick={() => {
-                       }}/>
+                       onClick={handleSubmit}/>
 
                 <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                        onClick={handleAnnulla}/>
             </form>
-        </div>
-    )
+        </div>)
 };

@@ -123,27 +123,22 @@ export default function Signin() {
         /* Creazione Utente con Dati Sicuri */
         if (hasError) return
 
-        //Si attenodno tutti i dati sull'utente
-        recuperaGeneri(artistiPreferiti).then(generi => {
+        const profilo = {
+            email: email,
+            username: username,
+            password: password, //... -> spacchetta array
+            cantantiPreferiti: [...artistiPreferiti],
+            playlistProprie: [],
+            playlistSalvate: [],
+            communities: []
+        }
 
-            const profilo = {
-                email: email,
-                username: username,
-                password: password, //... -> spacchetta array
-                cantantiPreferiti: [...artistiPreferiti],
-                generiPreferiti: [...generi],
-                playlistProprie: [],
-                playlistSalvate: [],
-                communities: []
-            }
+        /* Salvataggio dati Utenti in LocalStorage */
 
-            /* Salvataggio dati Utenti in LocalStorage */
+        if (existingUsers) setUsers([...existingUsers, profilo])
+        else setUsers([profilo])
 
-            if (existingUsers) setUsers([...existingUsers, profilo])
-            else setUsers([profilo])
-
-            navigate("/login")
-        })
+        navigate("/login")
     }
 
     const handleAnnulla = () => {

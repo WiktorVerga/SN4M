@@ -8,13 +8,16 @@ export default function ArtistSelector({initialState, returnData}) {
     const [savedArtists, setSavedArtists] = useState([]);
 
     const sendArtisti = (array) => {
-        setSavedArtists(array);
-        returnData(array);
+        setSavedArtists(array)
     }
 
     const handleDelete = (elem) => {
         setSavedArtists(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
     }
+
+    useEffect(() => {
+        returnData(savedArtists)
+    }, [savedArtists]);
 
     return (
         <div className={"row flex-row justify-content-between mt-5"}>

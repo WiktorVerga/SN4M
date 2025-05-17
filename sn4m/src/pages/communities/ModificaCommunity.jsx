@@ -1,11 +1,7 @@
-import ArtistSelector from "../../Components/ArtistSelector";
 import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import TagDisplayer from "../../Components/TagDisplayer";
-import {getLoggedUser, getUser, getUsers, setUsers} from "../../utilities/users";
 import {useNavigate} from "react-router-dom";
-import {recuperaGeneri} from "../../utilities/recuperaGeneri";
-import GenericSelector from "../../Components/GenericSelector";
+import TagSelector from "../../Components/TagSelector";
 
 
 export default function ModificaCommunity() {
@@ -21,6 +17,10 @@ export default function ModificaCommunity() {
 
     const [descrizione, setDescrizione] = useState("");
 
+    const [tags, setTags] = useState([])
+    const getTags = (array) => {
+        setTags(array)
+    }
 
     /* Dati Errori Form */
     const [titoloError, setTitoloError] = useState("");
@@ -140,12 +140,15 @@ export default function ModificaCommunity() {
                 </div>
 
 
-                {/*Riga per Select Artisti*/}
+                {/*Riga per Select Tags*/}
                 <h3 className={"mt-5"}>
                     Tags
                 </h3>
 
-                <GenericSelector/>
+                <TagSelector
+                    personalizzati={true}
+                    returnData={getTags}
+                />
 
                 {/*TODO: handleSubmit*/}
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}

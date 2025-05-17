@@ -1,11 +1,9 @@
-import ArtistSelector from "../../Components/ArtistSelector";
 import {useState} from "react";
-import {getToken} from "../../utilities/getToken";
 import {useNavigate} from "react-router-dom";
-import {getLoggedUser, getUsers, setUsers, users} from "../../utilities/users";
-import {recuperaGeneri} from "../../utilities/recuperaGeneri";
-import GenericSelector from "../../Components/GenericSelector";
+import {getLoggedUser, getUsers, setUsers} from "../../utilities/users";
 import {getCommunities, setCommunities} from "../../utilities/communities";
+import TagSelector from "../../Components/TagSelector";
+import {toast} from "react-toastify";
 
 export default function CreaCommunity() {
     /* Functional Vars */
@@ -85,7 +83,7 @@ export default function CreaCommunity() {
             playlistCondivise: []
         }
 
-        /* Salvataggio dati Utenti in LocalStorage */
+        /* Salvataggio dati Communities in LocalStorage */
 
         //Aggiungo alla lista di Communities
         if (existingCommunities) setCommunities([...existingCommunities, community])
@@ -97,6 +95,16 @@ export default function CreaCommunity() {
             const users = existingUsers?.filter(item => item.email !== loggedUser.email)
             loggedUser.communities.push(community.idCommunity)
             setUsers([...users, loggedUser])
+            toast.success("Community Creata", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                theme: "dark",
+                progress: undefined,
+            })
         }
     }
 
@@ -163,21 +171,22 @@ export default function CreaCommunity() {
                 </div>
 
 
-                {/*Riga per Select Artisti*/}
+                {/*Riga per Select Tag*/}
                 <h3 className={"mt-5"}>
                     Tags
                 </h3>
 
-                <GenericSelector
+                <TagSelector
+                    personalizzati={true}
                     returnData={getTags}
                 />
 
-                {/*TODO: handleSubmit*/}
                 <input type={"button"} value="Crea Community" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
 
                 <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                        onClick={handleAnnulla}/>
             </form>
-        </div>)
+        </div>
+    )
 };

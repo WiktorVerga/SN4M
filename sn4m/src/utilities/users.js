@@ -22,3 +22,7 @@ export const getLoggedUser = () => {
 
     return loggedUser
 }
+
+export const logout = () => {
+    sessionStorage.removeItem("loginSession")
+}

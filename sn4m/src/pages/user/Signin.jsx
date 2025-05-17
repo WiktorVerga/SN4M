@@ -1,9 +1,7 @@
-import ArtistSelector from "../../Components/ArtistSelector";
 import {useState} from "react";
-import {getToken} from "../../utilities/getToken";
 import {useNavigate} from "react-router-dom";
-import {getUsers, setUsers, users} from "../../utilities/users";
-import {recuperaGeneri} from "../../utilities/recuperaGeneri";
+import {getUsers, setUsers} from "../../utilities/users";
+import TagSelector from "../../Components/TagSelector";
 
 export default function Signin() {
     /* Functional Vars */
@@ -146,106 +144,114 @@ export default function Signin() {
     }
 
     return (<div>
-            <h1 className={"h1 p-5 text-center text-uppercase"}>
-                Social Network for Music
-            </h1>
-            <h3>
-                Sign In
-            </h3>
+        <h1 className={"h1 p-5 text-center text-uppercase"}>
+            Social Network for Music
+        </h1>
+        <h3>
+            Sign In
+        </h3>
 
-            <form
-                name={"signin"}
-                className={"mt-5"}
-                autoComplete={"off"}
-            >
+        <form
+            name={"signin"}
+            className={"mt-5"}
+            autoComplete={"off"}
+        >
 
-                {/*Riga user e Email*/}
-                <div className={"row flex-row justify-content-between"}>
-                    <div className={"col-5"}>
-                        <div className="form-floating mb-3 text-black ">
-                            <input type="text" className="form-control" id="username"
-                                   required={true}
-                                   placeholder="username"
-                                   onChange={(e) => {
-                                       setUsername(e.target.value)
-                                       e.target.classList.remove("is-invalid")
-                                   }}
-                            />
-                            <label htmlFor="floatingInput">Username</label>
-                            <div className="invalid-feedback">{userError}</div>
-                        </div>
-
+            {/*Riga Username e Email*/}
+            <div className={"row flex-row justify-content-between"}>
+                <div className={"col-5"}>
+                    <div className="form-floating mb-3 text-black ">
+                        <input type="text" className="form-control" id="username"
+                               required={true}
+                               placeholder="username"
+                               onChange={(e) => {
+                                   setUsername(e.target.value)
+                                   e.target.classList.remove("is-invalid")
+                               }}
+                        />
+                        <label htmlFor="floatingInput">Username</label>
+                        <div className="invalid-feedback">{userError}</div>
                     </div>
-                    <div className={"col-5"}>
 
-                        <div className="form-floating mb-3 text-black">
-                            <input type="email" className="form-control" id="email"
-                                   required={true}
-                                   placeholder="name@example.com"
-                                   onChange={(e) => {
-                                       setEmail(e.target.value)
-                                       e.target.classList.remove("is-invalid")
-                                   }}/>
-                            <label htmlFor="floatingInput">Email</label>
-                            <div className="invalid-feedback">{emailError}</div>
-                        </div>
+                </div>
+                <div className={"col-5"}>
+
+                    <div className="form-floating mb-3 text-black">
+                        <input type="email" className="form-control" id="email"
+                               required={true}
+                               placeholder="name@example.com"
+                               onChange={(e) => {
+                                   setEmail(e.target.value)
+                                   e.target.classList.remove("is-invalid")
+                               }}/>
+                        <label htmlFor="floatingInput">Email</label>
+                        <div className="invalid-feedback">{emailError}</div>
                     </div>
                 </div>
+            </div>
 
-                {/*Riga per Password*/}
-                <div className={"row flex-row justify-content-between mt-5"}>
-                    <div className={"col-5"}>
-                        <div className="form-floating mb-3 text-black position-relative">
-                            <input type={showPassword ? "text" : "password"} className="form-control" id="password"
-                                   required={true}
-                                   placeholder="Password"
-                                   onChange={(e) => {
-                                       setPassword(e.target.value)
-                                       e.target.classList.remove("is-invalid")
-                                   }}
-                            />
-                            <label htmlFor="floatingInput">Password</label>
-                            {password.length > 0 &&
-                                <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
-                                     onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
-                                </div>
-                            }
+            {/*Riga per Password*/}
+            <div className={"row flex-row justify-content-between mt-5"}>
+                <div className={"col-5"}>
+                    <div className="form-floating mb-3 text-black position-relative">
+                        <input type={showPassword ? "text" : "password"} className="form-control" id="password"
+                               required={true}
+                               placeholder="Password"
+                               onChange={(e) => {
+                                   setPassword(e.target.value)
+                                   e.target.classList.remove("is-invalid")
+                               }}
+                        />
+                        <label htmlFor="floatingInput">Password</label>
+                        {password.length > 0 &&
+                            <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                 onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <i className="bi bi-eye-slash text-gray"
+                                                   style={{fontSize: '1.6rem', color: '#626262'}}></i> :
+                                    <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                            </div>
+                        }
 
-                            <div className="invalid-feedback">{passwordError}</div>
-                        </div>
-                    </div>
-                    <div className={"col-5"}>
-
-                        <div className="form-floating mb-3 text-black">
-                            <input type={showRipetiPassword ? "text" : "password"} className="form-control" id="ripeti-password"
-                                   required={true}
-                                   placeholder="Ripeti Password"
-                                   onChange={(e) => {
-                                       setRipetiPassword(e.target.value)
-                                       e.target.classList.remove("is-invalid")
-                                   }}/>
-                            <label htmlFor="floatingInput">Ripeti Password</label>
-                            {ripetiPassword.length > 0 &&
-                                <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
-                                     onClick={() => setShowRipetiPassword(!showRipetiPassword)}>
-                                    {showRipetiPassword ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
-                                </div>
-                            }
-                        </div>
+                        <div className="invalid-feedback">{passwordError}</div>
                     </div>
                 </div>
+                <div className={"col-5"}>
+
+                    <div className="form-floating mb-3 text-black">
+                        <input type={showRipetiPassword ? "text" : "password"} className="form-control"
+                               id="ripeti-password"
+                               required={true}
+                               placeholder="Ripeti Password"
+                               onChange={(e) => {
+                                   setRipetiPassword(e.target.value)
+                                   e.target.classList.remove("is-invalid")
+                               }}/>
+                        <label htmlFor="floatingInput">Ripeti Password</label>
+                        {ripetiPassword.length > 0 &&
+                            <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                 onClick={() => setShowRipetiPassword(!showRipetiPassword)}>
+                                {showRipetiPassword ? <i className="bi bi-eye-slash text-gray"
+                                                         style={{fontSize: '1.6rem', color: '#626262'}}></i> :
+                                    <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
 
 
-                {/*Riga per Select Artisti*/}
-                <ArtistSelector
-                    returnData={riceviArtisti}
-                />
+            {/*Riga per Select Artisti*/}
 
-                <input type={"button"} value="Crea Account" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
-                       onClick={handleSubmit}/>
-                <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
-                       onClick={handleAnnulla}/>
-            </form>
-        </div>)
+            <TagSelector
+                personalizzati={false}
+                returnData={riceviArtisti}
+            />
+
+
+            <input type={"button"} value="Crea Account" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                   onClick={handleSubmit}/>
+            <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
+                   onClick={handleAnnulla}/>
+        </form>
+    </div>)
 };

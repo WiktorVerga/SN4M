@@ -64,7 +64,8 @@ export default function Login() {
                                     </div>
                                     <div className={"col"}>
                                         <div className="form-floating mb-3 text-black">
-                                            <input type={showPassword ? "text" : "password"} className="form-control" id="password"
+                                            <input type={showPassword ? "text" : "password"}
+                                                   className="form-control" id="password"
                                                    required={true}
                                                    placeholder="Password"
                                                    onChange={(e) => {

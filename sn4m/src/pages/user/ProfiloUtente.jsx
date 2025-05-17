@@ -1,11 +1,10 @@
-import ArtistSelector from "../../Components/ArtistSelector";
 import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import TagDisplayer from "../../Components/TagDisplayer";
-import {getLoggedUser, getUser, getUsers, setUsers} from "../../utilities/users";
+import {getLoggedUser, getUser, getUsers, logout, setUsers} from "../../utilities/users";
 import {useNavigate} from "react-router-dom";
 import {recuperaGeneri} from "../../utilities/recuperaGeneri";
 import {toast} from "react-toastify";
+import TagSelector from "../../Components/TagSelector";
 
 
 export default function ProfiloUtente() {
@@ -14,6 +13,7 @@ export default function ProfiloUtente() {
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConf, setShowPasswordConf] = useState(false);
 
     const [utenteLoggato, setUtenteLoggato] = useState({})
 
@@ -30,13 +30,16 @@ export default function ProfiloUtente() {
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConf, setNewPasswordConf] = useState("");
 
+    const resetState = () => {
+        setNewUsername("");
+        setNewPassword("");
+        setNewPasswordConf("");
+        setShowNewPassword(false);
+        setShowNewUser(false);
+    }
+
     /*Visibilità inseirmento nuovo utente */
     const [showNewUser, setShowNewUser] = useState(false);
-
-    const handleBtnModificaUserClick = () => {
-        setShowNewUser(true);
-
-    };
 
     /*Visibilità inserimento nuova password*/
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -49,6 +52,12 @@ export default function ProfiloUtente() {
     const [userError, setUserError] = useState("");
     const [passwordError, setPasswordError] = useState("")
     const [hasError, setHasError] = useState(false);
+
+    /* handleFunction Logout */
+    const handleLogout = () => {
+        logout()
+        navigate("/login")
+    }
 
     /*handleFunction Username*/
     const handleSaveUsername = () => {
@@ -63,11 +72,12 @@ export default function ProfiloUtente() {
         /* Controllo Username */
 
         //Controllo Inserimento Username
-        if (newUsername === "") {
+        if (newUsername.length === 0) {
             //Avviene errore:
             userInput.classList.add("is-invalid")
             setUserError("Inserire Nuovo Username")
             setHasError(true)
+            console.log(newUsername)
         }
 
         //Controllo Unicità Username
@@ -77,8 +87,6 @@ export default function ProfiloUtente() {
             setUserError("Username già in uso")
             setHasError(true)
         }
-
-
     }
 
     /*HandleFunction Password*/
@@ -126,44 +134,53 @@ export default function ProfiloUtente() {
         }
     }
 
-    const handleDelete = (elem) => {
-        setGeneriPreferiti(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
-    }
-
     const handleSubmit = () => {
         const existingUsers = getUsers()
-        if (showNewUser) handleSaveUsername();
-        if (showNewPassword) handleSavePassword();
-
-        const profilo = {
-            email: utenteLoggato.email,
-            username: showNewUser ? newUsername : utenteLoggato.username,
-            password: showNewPassword ? newPassword : utenteLoggato.password,
-            cantantiPreferiti: artistiPreferiti,
-            generiPreferiti: generiPreferiti,
-            playlistProprie: utenteLoggato.playlistProprie,
-            playlistSalvate: utenteLoggato.playlistProprie,
-            communities: utenteLoggato.communities
-        }
+        if (showNewUser && newUsername.length !== 0) handleSaveUsername()
+        if (showNewPassword) handleSavePassword()
 
         /* Salvataggio dati Utenti in LocalStorage */
 
         if (!hasError) {
+            const profilo = {
+                email: utenteLoggato.email,
+                username: (showNewUser && newUsername.length !== 0) ? newUsername : utenteLoggato.username,
+                password: (showNewPassword && newPassword !== "" && newPasswordConf !== "") ? newPassword : utenteLoggato.password,
+                cantantiPreferiti: artistiPreferiti,
+                generiPreferiti: generiPreferiti,
+                playlistProprie: utenteLoggato.playlistProprie,
+                playlistSalvate: utenteLoggato.playlistProprie,
+                communities: utenteLoggato.communities
+            }
+
             const users = existingUsers?.filter(item => item.email !== utenteLoggato.email)
             setUsers([...users, profilo])
-        }
+            setUtenteLoggato(getUser(utenteLoggato.email))
+            toast.success("Modifiche Salvate", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                theme: "dark",
+                progress: undefined,
+            });
 
-        setUtenteLoggato(getUser(utenteLoggato.email))
-        toast.success("Modifiche Salvate", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            theme: "dark",
-            progress: undefined,
-        });
+            resetState()
+        } else {
+            toast.error("Errore nel Salvataggio", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                theme: "dark",
+            })
+
+            setHasError(false)
+        }
     }
 
     const handleDeleteAccount = () => {
@@ -199,9 +216,18 @@ export default function ProfiloUtente() {
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Profilo Utente
             </h1>
-            <h2 className={"text-capitalize"}>
-                Ciao, {utenteLoggato.username}
-            </h2>
+            <div className={"row d-flex flex-row justify-content-between"}>
+                <h2 className={"mx-auto col"}>
+                    Ciao, {utenteLoggato.username}
+                </h2>
+                <button
+                    className={"col-1 btn btn-secondary mx-auto w-fit-content text-uppercase"}
+                    onClick={handleLogout}
+                >
+                    Log Out
+                </button>
+            </div>
+
             <h4 className={"mt-5"}>
                 Informazioni Sul Profilo
             </h4>
@@ -232,9 +258,9 @@ export default function ProfiloUtente() {
                             type="button"
                             className="btn btn-secondary"
                             style={{height: 'calc(3.5rem + 2px)'}}
-                            onClick={handleBtnModificaUserClick}
+                            onClick={() => setShowNewUser(!showNewUser)}
                         >
-                            <i className="bi bi-pencil"></i>
+                            {showNewUser? <i className="bi bi-x-lg"></i> : <i className="bi bi-pencil"></i>}
                         </button>
                     </div>
 
@@ -282,9 +308,9 @@ export default function ProfiloUtente() {
                             type="button"
                             className="btn btn-secondary"
                             style={{height: 'calc(3.5rem + 2px)'}}
-                            onClick={handleBtnModificaPasswordClick}
+                            onClick={() => setShowNewPassword(!showNewPassword)}
                         >
-                            <i className="bi bi-pencil"></i>
+                            {showNewPassword? <i className="bi bi-x-lg"></i> : <i className="bi bi-pencil"></i>}
                         </button>
                     </div>
 
@@ -295,7 +321,7 @@ export default function ProfiloUtente() {
                                 <div>
                                     <div className="form-floating flex-grow-1">
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             className="form-control"
                                             id="newPassword"
                                             autoComplete="off"
@@ -307,13 +333,19 @@ export default function ProfiloUtente() {
                                             }}
                                         />
                                         <label htmlFor="newPassword">Nuova Password</label>
+                                        {newPassword.length > 0 &&
+                                            <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                                 onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                                            </div>
+                                        }
                                         <div className="invalid-feedback">{passwordError}</div>
                                     </div>
                                 </div>
                                 <div className="mt-4 d-flex align-items-center justify-content-end">
                                     <div className="form-floating flex-grow-1">
                                         <input
-                                            type="password"
+                                            type={showPasswordConf ? "text" : "password"}
                                             className="form-control"
                                             id="newPasswordConf"
                                             autoComplete="off"
@@ -325,6 +357,12 @@ export default function ProfiloUtente() {
                                             }}
                                         />
                                         <label htmlFor="newPasswordConf">Ripeti Password</label>
+                                        {newPasswordConf.length > 0 &&
+                                            <div className={"position-absolute top-50 end-0 translate-middle-y me-4 cursor-pointer"}
+                                                 onClick={() => setShowPasswordConf(!showPasswordConf)}>
+                                                {showPasswordConf ? <i className="bi bi-eye-slash text-gray" style={{fontSize: '1.6rem', color: '#626262'}}></i> : <i className="bi bi-eye" style={{fontSize: '1.6rem', color: '#626262'}}></i>}
+                                            </div>
+                                        }
                                         <div className="invalid-feedback">{passwordError}</div>
                                     </div>
                                 </div>
@@ -336,13 +374,9 @@ export default function ProfiloUtente() {
 
                 {/*Riga Artisti Selector*/}
                 <div className={"row flex-row justify-content-between mt-5"}>
-                    <ArtistSelector
-                        label={"Artisti Preferiti"}
-                        placeholder={"Cerca artisti preferiti"}
-                        floatingLabel={"Cerca Artisti"}
-                        optionTitle={"Artisti"}
+                    <TagSelector
+                        personalizzati={false}
                         returnData={riceviNuoviArtisti}
-                        type={"artist"}
                         initialState={initialArtisti}
                     />
                 </div>

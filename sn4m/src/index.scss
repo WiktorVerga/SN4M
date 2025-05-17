@@ -8,6 +8,11 @@ $secondary: #4F6A6D;
     src: url("../public/fonts/Raleway-VariableFont_wght.ttf");
 }
 
+@font-face {
+    font-family: "jura";
+    src: url("../public/fonts/Jura-VariableFont_wght.ttf");
+}
+
 :root {
     --toastify-color-success: #183840;
 }
@@ -84,6 +89,11 @@ body {
     margin-top: 10rem;
 }
 
+.navbar-ff {
+    font-family: jura, sans-serif;
+    font-size: 20px;
+}
+
 .avatar {
     width: 55px;
     height: 55px;
@@ -99,4 +109,39 @@ body {
     text-transform: uppercase;
     border: 2px solid white;
     text-decoration: none !important;
+}
+
+.search-bar {
+    width: 66%;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background: #183840;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.25);
+    margin: 10px;
+    & input {
+        width: 100%;
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-family: raleway, sans-serif;
+        outline: none;
+        background: inherit;
+    }
+    & input::placeholder {
+        color: #748b8e;
+    }
+    & button {
+        border: none;
+        background: inherit;
+        outline: none;
+        cursor: pointer;
+    }
+}
+
+.floating-btn-add {
+    font-size: 20rem;
 }

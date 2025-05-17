@@ -7,6 +7,7 @@ import CreaCommunity from "./pages/communities/CreaCommunity";
 import ModificaCommunity from "./pages/communities/ModificaCommunity";
 import {useEffect, useState} from "react";
 import {ToastContainer} from "react-toastify";
+import Communities from "./pages/communities/Communities";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
                         <Route path={"/profiloUtente"} element={<ProfiloUtente/>}/>
                         <Route path={"/creaCommunity"} element={<CreaCommunity/>}/>
                         <Route path={"/modificaCommunity"} element={<ModificaCommunity/>}/>
+                        <Route path={"/esplora"} element={<Communities/>}/>
                     </Routes>
                 </div>
                 <ToastContainer />

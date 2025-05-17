@@ -15,10 +15,10 @@ export default function Navbar() {
     }
 
     return (
-        <nav className={"navbar bg-primary p-4 shadow"}>
+        <nav className={"navbar navbar-ff bg-primary p-4 shadow"}>
             <div className="container">
-                <Link className={"navbar-brand text-white fw-bold fs-5"} to={"/"}>SN4M</Link>
-                <Link className={"navbar-text text-white text-decoration-none"} to={"/explore"}>Esplora</Link>
+                <Link className={"navbar-brand text-white fw-bold"} to={"/"}><h2>SN4M</h2></Link>
+                <Link className={"navbar-text text-white text-decoration-none"} to={"/esplora"}>Esplora</Link>
                 <Link className={"navbar-text text-white text-decoration-none"} to={"/communities"}>Communities</Link>
                 <Link className={"navbar-text text-white text-decoration-none"} to={"/playlists"}>Playlists</Link>
                 <Link className={"navbar-button text-decoration-none"} to={"/profiloUtente"} onClick={() => {

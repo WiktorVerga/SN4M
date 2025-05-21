@@ -1,9 +1,10 @@
 import SearchBar from "../../Components/SearchBar";
 import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
 import {getCommunities, setCommunities} from "../../utilities/communities";
+import {getLoggedUser} from "../../utilities/users";
 
 export default function Communities() {
     const navigate = useNavigate();
@@ -12,7 +13,36 @@ export default function Communities() {
 
     const [communities, setCommunities] = useState(getCommunities()? getCommunities() : []);
 
+    const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);
 
+    const loggedUser = getLoggedUser()
+
+    useEffect(() => {
+
+        /* Applico Filtro se è selezionato "Suggerite" */
+        if (!isTutte) {
+
+            /* Algoritmo di verifica di Correlazione con Profilo Utente */
+            const verifyValidity = (community) => {
+
+                if (loggedUser) {
+                    const numTagsUser = loggedUser.cantantiPreferiti.length
+                    const numMinCorr = Math.round(numTagsUser/100*55);
+
+                    let numCorr = 0
+                    for (let i = 0; i < community.tags.length; i++) {
+                        if (loggedUser.cantantiPreferiti.includes(community.tags[i])) numCorr++
+                    }
+
+                    return numCorr >= numMinCorr
+                }
+
+            }
+            setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.email)));
+        } else {
+            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.email)));
+        }
+    }, [communities, isTutte])
 
     return (
         <div>
@@ -34,7 +64,7 @@ export default function Communities() {
             </div>
 
 
-            {communities.length === 0?
+            {visualizzaCommunities.length === 0?
                 <>
                     {/*Nessuna community trovata*/}
                     <div className={"text-center w-100 mt-5 d-flex flex-column justify-content-center align-items-center"} style={{height: "50vh"}}>
@@ -47,7 +77,7 @@ export default function Communities() {
                 </> : <>
                     {/* Mostra le Communities */}
                     <div className={"d-flex flex-column justify-content-center mt-5"}>
-                    {communities.map((communiity, index) => (
+                    {visualizzaCommunities.map((communiity, index) => (
                         <CommunityCard
                             key={index}
                             commmunity={communiity}

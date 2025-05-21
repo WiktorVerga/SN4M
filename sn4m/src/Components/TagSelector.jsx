@@ -2,7 +2,7 @@ import TagDisplayer from "./TagDisplayer";
 import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
 
-export default function TagSelector({personalizzati, returnData, initialState}) {
+export default function TagSelector({personalizzati, returnData, initialState, limMin, limMax}) {
     //Get Data to Fill Select
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
@@ -13,6 +13,9 @@ export default function TagSelector({personalizzati, returnData, initialState}) 
 
     const tagPersonalizzato = document.getElementById("tag-personalizzato");
 
+    //Var di Controllo
+    const [limitExceeded, setLimitExceeded] = useState(false);
+    const [searchError, setSearchError] = useState("");
 
     /* Fetch API Spotify per ottenere artisti da ricerca */
     const getData = async (query) => {
@@ -41,7 +44,15 @@ export default function TagSelector({personalizzati, returnData, initialState}) 
     const addArtist = (elem) => {
         const searchInput = document.getElementById('search')
 
-        setTags([...new Set([...tags, elem])])
+        //Controllo sul Limite dei Tags
+        setLimitExceeded(tags.length >= limMax)
+        if (tags.length >= limMax) {
+            searchInput.classList.add("is-invalid")
+            setSearchError("Limite raggiunto")
+        } else {
+            searchInput.classList.remove("is-invalid")
+            setTags([...new Set([...tags, elem])])
+        }
 
         setSearch("")
         searchInput.value = "";
@@ -128,6 +139,10 @@ export default function TagSelector({personalizzati, returnData, initialState}) 
     useEffect(() => {
         sendTags(tags)
         setData([]);
+        setLimitExceeded(tags.length >= limMax)
+        if (!(tags.length >= limMax)) {
+            document.getElementById('search').classList.remove("is-invalid")
+        }
     }, [tags])
 
     return (
@@ -142,11 +157,13 @@ export default function TagSelector({personalizzati, returnData, initialState}) 
                                placeholder={"Cerca artisti preferiti"} onChange={(e) => {
                             setSearch(e.target.value)
                         }}
+                               disabled={limitExceeded}
                                onKeyDown={(e) => {
                                    handleNavigateList(e)
                                }}
                         />
                         <label htmlFor="floatingInput">Cerca Artisti</label>
+                        <div className="invalid-feedback">{searchError}</div>
                         <ul className="list-group"
                         >
                             {data?.map((item, index) => (
@@ -182,6 +199,7 @@ export default function TagSelector({personalizzati, returnData, initialState}) 
                             id="tag-personalizzato"
                             autoComplete="off"
                             required={true}
+                            disabled={limitExceeded}
                             placeholder="Es: Estate; Es: Mattino; Es: Chill"
                             onKeyDown={(e) => {
                                 handleKeyboard(e)
@@ -206,6 +224,8 @@ export default function TagSelector({personalizzati, returnData, initialState}) 
                     emsg={personalizzati? "Aggiungi Tags..." : "Aggiungi Artisti..."}
                     handleDelete={handleDelete}
                     withDelete={true}
+                    limMin={limMin}
+                    limMax={limMax}
                 />
             </div>
 

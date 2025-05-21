@@ -42,8 +42,8 @@ function App() {
                 }
                 <div className={"container"}>
                     <Routes>
-                        <Route path={"/"} element={<Signin/>}/>
-                        <Route path={"/login"} element={<Login/>}/>
+                        <Route path={"/signin"} element={<Signin/>}/>
+                        <Route path={"/"} element={<Login/>}/>
                         <Route path={"/profiloUtente"} element={<ProfiloUtente/>}/>
                         <Route path={"/creaCommunity"} element={<CreaCommunity/>}/>
                         <Route path={"/modificaCommunity"} element={<ModificaCommunity/>}/>

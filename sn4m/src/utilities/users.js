@@ -26,3 +26,10 @@ export const getLoggedUser = () => {
 export const logout = () => {
     sessionStorage.removeItem("loginSession")
 }
+
+export const updateUser = (user) => {
+    const existingUsers = getUsers()
+    const users = existingUsers?.filter(item => item.email !== user.email)
+    if (existingUsers) setUsers([...users, user])
+    else setUsers([user])
+}

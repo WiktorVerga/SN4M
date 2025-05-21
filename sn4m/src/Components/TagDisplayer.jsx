@@ -1,9 +1,9 @@
 import TagConChiusura from "./TagConChiusura";
 import Tag from "./Tag";
 
-export default function TagDisplayer({tags, emsg, withDelete, handleDelete}) {
+export default function TagDisplayer({tags, emsg, withDelete, handleDelete, limMin, limMax}) {
     return (
-        <div className={"tag-displayer"}>
+        <div className={"tag-displayer position-relative"}>
             {tags?.length > 0 ? tags.map((item, index) => (
                 withDelete?
                     <TagConChiusura key={index} value={item} handleDelete={() => {handleDelete(item)}}/>
@@ -11,6 +11,11 @@ export default function TagDisplayer({tags, emsg, withDelete, handleDelete}) {
 
             )) : <p className={"text-white-50"}>{emsg}</p>
             }
+
+            {limMax && <div className={"position-absolute bottom-0 end-0 me-2 mb-1"}>
+                <span
+                    className={(tags.length < limMin || tags.length > limMax) ? " text-danger " : "text-secondary"}>{tags?.length}/{limMax}</span>
+            </div>}
         </div>
     )
 }

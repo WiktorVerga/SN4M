@@ -245,6 +245,8 @@ export default function Signin() {
             <TagSelector
                 personalizzati={false}
                 returnData={riceviArtisti}
+                limMin={3}
+                limMax={15}
             />
 
 

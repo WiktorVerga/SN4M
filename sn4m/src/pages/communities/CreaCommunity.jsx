@@ -17,7 +17,12 @@ export default function CreaCommunity() {
 
     /* Dati Errori Form */
     const [titoloError, setTitoloError] = useState("");
+    const limMaxTitolo = 30
+    const limMinTitolo = 5
+
     const [descrizioneError, setDescrizioneError] = useState("");
+    const limMaxDescrizione = 150
+    const limMinDescrizione = 10
 
     const [tags, setTags] = useState([])
     const getTags = (array) => {
@@ -47,7 +52,7 @@ export default function CreaCommunity() {
             hasError = true
         }
 
-        //Controllo Unicità Email
+        //Controllo Unicità Titolo
         if (existingCommunities?.some(item => (item.titolo === titolo))) {
             //Avviene errore:
             titoloInput.classList.add("is-invalid")
@@ -140,6 +145,11 @@ export default function CreaCommunity() {
                                    }}
                             />
                             <label htmlFor="floatingInput">Titolo</label>
+
+                            <div className={"position-absolute bottom-0 end-0 me-2 mb-1"}>
+                                <span className={(titolo.length < limMinTitolo || titolo.length > limMaxTitolo) ? " text-danger " : "text-secondary"}>{titolo.length}/{limMaxTitolo}</span>
+                            </div>
+
                             <div className="invalid-feedback">{titoloError}</div>
                         </div>
 
@@ -163,6 +173,9 @@ export default function CreaCommunity() {
                                       }}
                             ></textarea>
                             <label htmlFor="floatingTextarea2">Descrizione</label>
+                            <div className={"position-absolute bottom-0 end-0 me-2 mb-1"}>
+                                <span className={(descrizione.length < limMinDescrizione || descrizione.length > limMaxDescrizione) ? " text-danger " : "text-secondary"}>{descrizione.length}/{limMaxDescrizione}</span>
+                            </div>
                             <div className="invalid-feedback">{descrizioneError}</div>
                         </div>
 
@@ -180,6 +193,8 @@ export default function CreaCommunity() {
                 <TagSelector
                     personalizzati={true}
                     returnData={getTags}
+                    limMin={3}
+                    limMax={25}
                 />
 
                 <input type={"button"} value="Crea Community" className={"btn btn-secondary mt-5 p-2 text-uppercase"}

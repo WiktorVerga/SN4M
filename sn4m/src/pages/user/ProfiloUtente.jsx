@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {getLoggedUser, getUser, getUsers, logout, setUsers} from "../../utilities/users";
+import {getLoggedUser, getUser, getUsers, logout, setUsers, updateUser} from "../../utilities/users";
 import {useNavigate} from "react-router-dom";
 import {recuperaGeneri} from "../../utilities/recuperaGeneri";
 import {toast} from "react-toastify";
@@ -135,7 +135,6 @@ export default function ProfiloUtente() {
     }
 
     const handleSubmit = () => {
-        const existingUsers = getUsers()
         if (showNewUser && newUsername.length !== 0) handleSaveUsername()
         if (showNewPassword) handleSavePassword()
 
@@ -153,8 +152,7 @@ export default function ProfiloUtente() {
                 communities: utenteLoggato.communities
             }
 
-            const users = existingUsers?.filter(item => item.email !== utenteLoggato.email)
-            setUsers([...users, profilo])
+            updateUser(profilo)
             setUtenteLoggato(getUser(utenteLoggato.email))
             toast.success("Modifiche Salvate", {
                 position: "top-right",
@@ -201,15 +199,10 @@ export default function ProfiloUtente() {
 
         setUtenteLoggato(utenteLogged);
 
-        setGeneriPreferiti(utenteLogged.generiPreferiti);
         setInizialeArtisti(utenteLogged.cantantiPreferiti);
 
 
     }, []);
-
-    useEffect(() => {
-        recuperaGeneri(artistiPreferiti).then(generi => setGeneriPreferiti(generi));
-    }, [artistiPreferiti]);
 
     return (
         <div>
@@ -378,6 +371,8 @@ export default function ProfiloUtente() {
                         personalizzati={false}
                         returnData={riceviNuoviArtisti}
                         initialState={initialArtisti}
+                        limMax={15}
+                        limMin={3}
                     />
                 </div>
 

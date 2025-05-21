@@ -5,7 +5,7 @@ export default function SearchBar({sendSearch}) {
     const [search, setSearch] = useState("")
 
     useEffect(() => {
-
+        /*sendSearch(search)*/
     }, [search])
 
     return (

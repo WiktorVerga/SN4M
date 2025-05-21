@@ -18,9 +18,9 @@ export default function Navbar() {
         <nav className={"navbar navbar-ff bg-primary p-4 shadow"}>
             <div className="container">
                 <Link className={"navbar-brand text-white fw-bold"} to={"/"}><h2>SN4M</h2></Link>
-                <Link className={"navbar-text text-white text-decoration-none"} to={"/esplora"}>Esplora</Link>
-                <Link className={"navbar-text text-white text-decoration-none"} to={"/communities"}>Communities</Link>
-                <Link className={"navbar-text text-white text-decoration-none"} to={"/playlists"}>Playlists</Link>
+                <Link className={"navbar-text text-white text-decoration-none text-center"} to={"/esplora"}>Esplora<br/>Communities</Link>
+                <Link className={"navbar-text text-white text-decoration-none text-center"} to={"/communities"}>Le Tue<br/>Communities</Link>
+                <Link className={"navbar-text text-white text-decoration-none text-center"} to={"/playlists"}>Libreria<br/>Playlists</Link>
                 <Link className={"navbar-button text-decoration-none"} to={"/profiloUtente"} onClick={() => {
                 }}>
                     <div className={"avatar"}>{getLetter()}</div>

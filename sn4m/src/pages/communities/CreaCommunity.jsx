@@ -105,6 +105,7 @@ export default function CreaCommunity() {
                 theme: "dark",
                 progress: undefined,
             })
+            navigate(-1)
         }
     }
 

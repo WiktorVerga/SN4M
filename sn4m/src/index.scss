@@ -145,3 +145,17 @@ body {
 .floating-btn-add {
     font-size: 20rem;
 }
+
+.navbar-text {
+    transition: text-shadow 0.25s ease-in-out;
+}
+
+.navbar-text:hover {
+    text-shadow: #0dcaf0 0 0 2px;
+}
+
+.floating-btn-div {
+    position: fixed;
+    bottom: 10%;
+    right: 5%;
+}

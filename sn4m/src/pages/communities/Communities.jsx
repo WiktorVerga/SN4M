@@ -19,6 +19,7 @@ export default function Communities() {
 
     useEffect(() => {
 
+
         /* Applico Filtro se è selezionato "Suggerite" */
         if (!isTutte) {
 
@@ -38,9 +39,9 @@ export default function Communities() {
                 }
 
             }
-            setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.email)));
+            setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.email && !loggedUser.communities.includes(community.idCommunity))));
         } else {
-            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.email)));
+            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.email && !loggedUser.communities.includes(community.idCommunity))));
         }
     }, [communities, isTutte])
 
@@ -72,7 +73,8 @@ export default function Communities() {
                             Non ho trovato Nulla!<br/>
                             Inizia a Creare
                         </h3>
-                        <FloatingAddBtn navigateTo={"/creaCommunity"}/>
+                        <FloatingAddBtn navigateTo={"/creaCommunity"}
+                        dim={5}/>
                     </div>
                 </> : <>
                     {/* Mostra le Communities */}
@@ -80,12 +82,16 @@ export default function Communities() {
                     {visualizzaCommunities.map((communiity, index) => (
                         <CommunityCard
                             key={index}
-                            commmunity={communiity}
+                            community={communiity}
                         />
                     ))
 
                     }
                 </div>
+                    <div className={"floating-btn-div"}>
+                        <FloatingAddBtn navigateTo={"/creaCommunity"}
+                        dim={4}/>
+                    </div>
                 </>}
         </div>
     )

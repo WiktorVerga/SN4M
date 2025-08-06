@@ -6,7 +6,7 @@ import CommunityCard from "../../Components/CommunityCard";
 import {getCommunities, setCommunities} from "../../utilities/communities";
 import {getLoggedUser} from "../../utilities/users";
 
-export default function Communities() {
+export default function EsploraCommunities() {
     const navigate = useNavigate();
 
     const [isTutte, setIsTutte] = useState(false);
@@ -18,7 +18,6 @@ export default function Communities() {
     const loggedUser = getLoggedUser()
 
     useEffect(() => {
-
 
         /* Applico Filtro se è selezionato "Suggerite" */
         if (!isTutte) {
@@ -57,7 +56,7 @@ export default function Communities() {
             {/* Intestazione Dinamica con Pulsante Filtro */}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
-                    {isTutte? "Scopri Tutte le Communities": "Scopri Communities Per Te!"}
+                    {isTutte? "Scopri Tutte le EsploraCommunities": "Scopri EsploraCommunities Per Te!"}
                 </h3>
                 <button className={"col-2 btn btn-primary text-uppercase"} onClick={() => setIsTutte(!isTutte)}>{isTutte? "scopri suggerite" : "scopri tutte"}</button>
             </div>
@@ -79,12 +78,13 @@ export default function Communities() {
                         dim={5}/>
                     </div>
                 </> : <>
-                    {/* Mostra le Communities */}
+                    {/* Mostra le EsploraCommunities */}
                     <div className={"d-flex flex-column justify-content-center mt-5"}>
                     {visualizzaCommunities.map((communiity, index) => (
                         <CommunityCard
                             key={index}
                             community={communiity}
+                            esplora={true}
                         />
                     ))
                     }

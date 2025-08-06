@@ -7,9 +7,11 @@ import CreaCommunity from "./pages/communities/CreaCommunity";
 import ModificaCommunity from "./pages/communities/ModificaCommunity";
 import {useEffect, useState} from "react";
 import {ToastContainer} from "react-toastify";
-import Communities from "./pages/communities/Communities";
+import EsploraCommunities from "./pages/communities/EsploraCommunities";
 import CreaPlaylist from "./pages/playlist/CreaPlaylist";
 import ModificaPlaylist from "./pages/playlist/ModificaPlaylist";
+import TueCommunities from "./pages/communities/TueCommunities";
+import Playlists from "./pages/playlist/Playlists";
 
 
 function App() {
@@ -52,7 +54,9 @@ function App() {
                         <Route path={"/profiloUtente"} element={<ProfiloUtente/>}/>
                         <Route path={"/creaCommunity"} element={<CreaCommunity/>}/>
                         <Route path={"/modificaCommunity"} element={<ModificaCommunity/>}/>
-                        <Route path={"/esplora"} element={<Communities/>}/>
+                        <Route path={"/esplora"} element={<EsploraCommunities/>}/>
+                        <Route path={"/tueCommunities"} element={<TueCommunities/>}/>
+                        <Route path={"/playlists"} element={<Playlists/>}/>
                         <Route path={"/creaPlaylist"} element={<CreaPlaylist/>}/>
                         <Route path={"/modificaPlaylist"} element={<ModificaPlaylist/>}/>
                     </Routes>

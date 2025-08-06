@@ -88,9 +88,9 @@ export default function CreaCommunity() {
             playlistCondivise: []
         }
 
-        /* Salvataggio dati Communities in LocalStorage */
+        /* Salvataggio dati EsploraCommunities in LocalStorage */
 
-        //Aggiungo alla lista di Communities
+        //Aggiungo alla lista di EsploraCommunities
         if (existingCommunities) setCommunities([...existingCommunities, community])
         else setCommunities([community])
 

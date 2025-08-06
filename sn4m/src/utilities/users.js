@@ -1,4 +1,5 @@
 import {useNavigate} from "react-router-dom";
+import {getCommunities} from "./communities";
 
 export const getUsers = () => {         //restituisce tutti gli utenti salvati nel localStorage
     return JSON.parse(localStorage.getItem("utenti"))
@@ -35,4 +36,32 @@ export const updateUser = (user) => {           //ottiene l'elenco degli utenti 
     if (existingUsers) setUsers([...users, user])      //se c’erano utenti già salvati: salva la lista aggiornata
     else setUsers([user])       //Se no: crea una nuova lista con l’utente passato.
 
+}
+
+export const getUserCommunities = () => {
+    const user = getLoggedUser()
+
+    if (user === undefined) return null;
+
+    const communities = getCommunities()
+
+    const myCommunities = communities.filter(item => user.communities.includes(item.idCommunity))
+
+    return myCommunities
+}
+
+export const getPlaylistsProprie = () => {
+    const user = getLoggedUser()
+
+    if (user === undefined) return null
+
+    return user.playlistProprie
+}
+
+export const getPlaylistsSalvate = () => {
+    const user = getLoggedUser()
+
+    if (user === undefined) return null
+
+    return user.playlistSalvate
 }

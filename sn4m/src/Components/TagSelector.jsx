@@ -41,7 +41,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
 
     }
 
-    /* Aggiusta Artista */
+    /* Aggiunta Artista */
     const addArtist = (elem) => {
         const searchInput = document.getElementById('search')
 

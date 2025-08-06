@@ -84,22 +84,18 @@ export default function CreaPlaylist() {
             titolo: titolo,
             descrizione: descrizione,
             tags: [...tags],
-            autore: loggedUser.email,
-            canzoniPresenti: []
+            canzoni: []
         }
 
         /* Salvataggio dati playlist in LocalStorage */
-
-        //Aggiungo alla lista di playlists
-        if (existingPlaylists) setPlaylists([...existingPlaylists, playlist])
-        else setPlaylists([playlist])
 
         //Aggiorno l'utente salvando la playlist che ha appena creato
         if (!hasError) {
             const existingUsers = getUsers()
             const users = existingUsers?.filter(item => item.email !== loggedUser.email)
-            loggedUser.playlistProprie.push(playlist.idPlaylist)
+            loggedUser.playlistProprie.push(playlist)
             setUsers([...users, loggedUser])
+
             toast.success("Playlist Creata", {
                 position: "top-right",
                 autoClose: 5000,
@@ -110,6 +106,7 @@ export default function CreaPlaylist() {
                 theme: "dark",
                 progress: undefined,
             })
+
             navigate(-1)
         }
     }

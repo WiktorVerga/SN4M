@@ -11,7 +11,7 @@ export default function ModificaCommunity() {
     /* Functional Vars */
     const navigate = useNavigate();
     const [searchParams] = useSearchParams()
-    const communityId = searchParams.get("id")
+    const communityId = searchParams.get("idCommunity");
     const [community, setCommunity] = useState({})
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
@@ -43,6 +43,12 @@ export default function ModificaCommunity() {
         setDescrizione("");
         setShowNewTitolo(false);
         setShowNewDescrizione(false);
+
+        const community = getCommunities()?.find(item => item.idCommunity === communityId)
+
+        if (community == null) return
+
+        setCommunity(community)
     }
 
     const handleSaveTitolo = () => {
@@ -61,7 +67,7 @@ export default function ModificaCommunity() {
             setHasError(true)
         }
 
-        //Controllo Unicità Titolo
+        //C ontrollo UnicitàTitolo
         if (existingCommunities?.some(item => (item.titolo === titolo))) {
             //Avviene errore:
             titoloInput.classList.add("is-invalid")
@@ -145,7 +151,6 @@ export default function ModificaCommunity() {
     useEffect(() => {
         /* Recupero Dati Community */
         const community = getCommunities()?.find(item => item.idCommunity === communityId)
-        console.log(getCommunity(communityId))
 
         if (community == null) return
 
@@ -275,7 +280,7 @@ export default function ModificaCommunity() {
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
 
-                <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
+                <input type={"button"} value="Esci" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                        onClick={handleAnnulla}/>
             </form>
 

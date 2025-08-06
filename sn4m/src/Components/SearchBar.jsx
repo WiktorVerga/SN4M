@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export default function SearchBar({sendSearch}) {
+export default function SearchBar({sendSearch}) {       //barra di ricerca con un campo di input
 
     const [search, setSearch] = useState("")
 

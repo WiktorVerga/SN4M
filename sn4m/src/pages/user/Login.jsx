@@ -8,7 +8,7 @@ export default function Login() {
 
     /* Functional Vars */
     const navigate = useNavigate()
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);        //stato booleano per mostrare/nascondere la password.
 
     /* Dati Form */
     const [username, setUsername] = useState("");
@@ -17,13 +17,15 @@ export default function Login() {
     /* Errori Form */
     const [error, setError] = useState("");
 
-    const handleSubmit = () => {
-        const existingUsers = getUsers()
+    const handleSubmit = () => {        //Si attiva al click su “Accedi”.
+        const existingUsers = getUsers()    //Recupera gli utenti registrati da localStorage.
 
         const userInput = document.getElementById("username");
         const passwordInput = document.getElementById("password");
 
+        //Controlla se esiste un utente con le credenziali fornite.
         if (existingUsers.some(item => (item.username === username && item.password === password))) {
+            //Se sì: reindirizza pagina profilo utente e salva email utente nel sessionStorage
             navigate("/profiloUtente")
             sessionStorage.setItem("loginSession", JSON.stringify({user: existingUsers.find(item => item.password === password && item.username === username).email}))
         } else {
@@ -32,6 +34,8 @@ export default function Login() {
             passwordInput.classList.add("is-invalid")
         }
     }
+
+    //Layout pagina Login
     return (
         <div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
@@ -90,7 +94,7 @@ export default function Login() {
                                                onClick={handleSubmit}
                                         />
                                         <Link className={"btn btn-secondary mt-2 p-2 text-uppercase"}
-                                              to={"/"}>Registrati
+                                              to={"/signin"}>Registrati
                                         </Link>
                                     </div>
 

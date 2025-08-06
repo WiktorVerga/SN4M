@@ -32,7 +32,7 @@ export default function Signin() {
 
 
     /* Handle Functions */
-    const handleSubmit = () => {
+    const handleSubmit = () => {            //salvataggio dati dell'utente nel localStorage
 
         const existingUsers = getUsers()
 
@@ -44,6 +44,7 @@ export default function Signin() {
         emailInput.classList.remove("is-invalid")
         userInput.classList.remove("is-invalid")
         passwordInput.classList.remove("is-invalid")
+
 
         /* Controllo Email */
         let hasError = false
@@ -76,6 +77,7 @@ export default function Signin() {
             hasError = true;
         }
 
+
         /* Controllo Password */
 
         //Regex che accetta solo lettere, numeri e caratteri speciali comuni
@@ -91,7 +93,6 @@ export default function Signin() {
             setPasswordError("Password deve essere lunga almeno 8 caratteri")
             hasError = true;
         }
-
 
         //Controllo Password Diverse
         if (password !== ripetiPassword) {
@@ -109,7 +110,7 @@ export default function Signin() {
             hasError = true;
         }
 
-        //Controllo Struttura Password Valida
+        //Controllo Struttura Password Valida: richiede almeno una lettere maiuscola, un numero e un carattere speciale
         if (!uppercaseRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
             //Avviene errore:
             passwordInput.classList.add("is-invalid")
@@ -139,7 +140,7 @@ export default function Signin() {
         navigate("/login")
     }
 
-    const handleAnnulla = () => {
+    const handleAnnulla = () => {       //Naviga indietro nella cronologia quindi torna alla pagina precedente.
         navigate(-1)
     }
 

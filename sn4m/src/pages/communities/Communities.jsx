@@ -23,7 +23,9 @@ export default function Communities() {
         /* Applico Filtro se è selezionato "Suggerite" */
         if (!isTutte) {
 
-            /* Algoritmo di verifica di Correlazione con Profilo Utente */
+            /* Algoritmo di verifica di Correlazione con Profilo Utente: verifica la correlazione tra i tag della community e i tag cantanti preferiti dell’utente.
+                Soglia: almeno il 55% dei tag dell’utente devono combaciare.
+                Esclude: community create dall’utente stesso e community a cui l’utente partecipa già */
             const verifyValidity = (community) => {
 
                 if (loggedUser) {
@@ -41,6 +43,7 @@ export default function Communities() {
             }
             setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.email && !loggedUser.communities.includes(community.idCommunity))));
         } else {
+            /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
             setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.email && !loggedUser.communities.includes(community.idCommunity))));
         }
     }, [communities, isTutte])
@@ -64,7 +67,6 @@ export default function Communities() {
                 <SearchBar/>
             </div>
 
-
             {visualizzaCommunities.length === 0?
                 <>
                     {/*Nessuna community trovata*/}
@@ -85,7 +87,6 @@ export default function Communities() {
                             community={communiity}
                         />
                     ))
-
                     }
                 </div>
                     <div className={"floating-btn-div"}>

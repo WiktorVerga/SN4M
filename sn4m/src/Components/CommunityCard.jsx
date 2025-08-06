@@ -4,8 +4,7 @@ import {useState} from "react";
 import {setCommunities} from "../utilities/communities";
 import {toast} from "react-toastify";
 
-export default function CommunityCard({community}) {
-
+export default function CommunityCard({community}) {        // scheda di una community a cui un utente può unirsi.
     const loggedUser = getLoggedUser()
 
     const [isUnito, setIsUnito] = useState(false);

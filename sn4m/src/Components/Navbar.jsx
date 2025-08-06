@@ -10,7 +10,6 @@ export default function Navbar() {
         const loggedUser = getLoggedUser()
         if (loggedUser === null) return
 
-
         return loggedUser?.username.charAt(0).toUpperCase()
     }
 

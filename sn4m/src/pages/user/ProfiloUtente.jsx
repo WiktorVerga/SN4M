@@ -54,7 +54,7 @@ export default function ProfiloUtente() {
     const [hasError, setHasError] = useState(false);
 
     /* handleFunction Logout */
-    const handleLogout = () => {
+    const handleLogout = () => {            //utente fa logout e ritorna alla schermata di login
         logout()
         navigate("/login")
     }
@@ -185,8 +185,8 @@ export default function ProfiloUtente() {
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
-            setUsers(getUsers()?.filter(item => item.email !== utenteLoggato.email))
-            navigate("/")
+            setUsers(getUsers()?.filter(item => item.email !== utenteLoggato.email))        //rimuove l’utente loggato dal localStorage.
+            navigate("/")       //reindirizza alla home page dopo l’eliminazione.
         }
     }
 

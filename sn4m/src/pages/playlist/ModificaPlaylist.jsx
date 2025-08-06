@@ -2,17 +2,17 @@ import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import TagSelector from "../../Components/TagSelector";
-import {getCommunities, getCommunity, setCommunities, updateCommunity} from "../../utilities/communities";
+import {getPlaylists, getPlaylist, setPlaylists, updatePlaylist} from "../../utilities/playlists";
 import {toast} from "react-toastify";
 
 
-export default function ModificaCommunity() {
+export default function ModificaPlaylist() {
 
     /* Functional Vars */
     const navigate = useNavigate();
     const [searchParams] = useSearchParams()
-    const communityId = searchParams.get("id")
-    const [community, setCommunity] = useState({})
+    const playlistId = searchParams.get("id")
+    const [playlist, setPlaylist] = useState({})
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -46,7 +46,7 @@ export default function ModificaCommunity() {
     }
 
     const handleSaveTitolo = () => {
-        const existingCommunities = getCommunities()
+        const existingPlaylists = getPlaylists()
 
         const titoloInput = document.getElementById("titolo");
         titoloInput.classList.remove("is-invalid")
@@ -62,7 +62,7 @@ export default function ModificaCommunity() {
         }
 
         //Controllo Unicità Titolo
-        if (existingCommunities?.some(item => (item.titolo === titolo))) {
+        if (existingPlaylists?.some(item => (item.titolo === titolo))) {
             //Avviene errore:
             titoloInput.classList.add("is-invalid")
             setTitoloError("Il Titolo è già in uso")
@@ -92,13 +92,13 @@ export default function ModificaCommunity() {
 
         if (!hasError) {
 
-            updateCommunity({
-                idCommunity: community.idCommunity,
-                titolo: showNewTitolo ? titolo : community.titolo,
-                descrizione: showNewDescrizione ? descrizione : community.descrizione,
+            updatePlaylist({
+                idPlaylist: playlist.idPlaylist,
+                titolo: showNewTitolo ? titolo : playlist.titolo,
+                descrizione: showNewDescrizione ? descrizione : playlist.descrizione,
                 tags: [...tags],
-                autore: community.autore,
-                playlistCondivise: community.playlistCondivise
+                autore: playlist.autore,
+                playlistCondivise: playlist.playlistCondivise
             })
 
             toast.success("Modifiche Salvate", {
@@ -128,11 +128,11 @@ export default function ModificaCommunity() {
         }
     }
 
-    const handleDeleteCommunity = () => {
+    const handleDeletePlaylist = () => {
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
-            setCommunities(getCommunities()?.filter(item => item.idCommunity !== communityId))
+            setPlaylists(getPlaylists()?.filter(item => item.idPlaylist !== playlistId))
             navigate("/esplora")
         }
     }
@@ -143,22 +143,22 @@ export default function ModificaCommunity() {
 
     /* UseEffect */
     useEffect(() => {
-        /* Recupero Dati Community */
-        const community = getCommunities()?.find(item => item.idCommunity === communityId)
-        console.log(getCommunity(communityId))
+        /* Recupero Dati Playlist */
+        const playlist = getPlaylists()?.find(item => item.idPlaylist === playlistId)
+        console.log(getPlaylist(playlistId))
 
-        if (community == null) return
+        if (playlist == null) return
 
-        setCommunity(community)
+        setPlaylist(playlist)
     }, [])
 
     return (
         <div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
-                Modifica la Tua Community
+                Modifica la Tua Playlist
             </h1>
             <h3>
-                Informazioni sulla Community
+                Informazioni sulla Playlist
             </h3>
 
             <form
@@ -176,7 +176,7 @@ export default function ModificaCommunity() {
                             <input type="text" className="form-control" id="titolo"
                                    placeholder="Titolo"
                                    readOnly={true}
-                                   value={community.titolo}
+                                   value={playlist.titolo}
                             />
                             <label htmlFor="floatingInput">Titolo</label>
                         </div>
@@ -220,7 +220,7 @@ export default function ModificaCommunity() {
                                       id="descrizione"
                                       style={{height: 100}}
                                       readOnly={true}
-                                      value={community.descrizione}
+                                      value={playlist.descrizione}
                                       maxLength={250}
                             ></textarea>
                             <label htmlFor="floatingTextarea2">Descrizione</label>
@@ -268,7 +268,7 @@ export default function ModificaCommunity() {
                     returnData={getTags}
                     limMax={25}
                     limMin={3}
-                    initialState={community.tags}
+                    initialState={playlist.tags}
                 />
 
                 {/*TODO: handleSubmit*/}
@@ -280,12 +280,12 @@ export default function ModificaCommunity() {
             </form>
 
             <h4 className={"spacer text-danger fw-bold"}>
-                Elimina Community
+                Elimina Playlist
             </h4>
             <button className={"btn btn-danger mt-3 mb-5 text-uppercase"}
-                    onClick={handleDeleteCommunity}
+                    onClick={handleDeletePlaylist}
             >
-                Elimina Community
+                Elimina Playlist
             </button>
         </div>
     )

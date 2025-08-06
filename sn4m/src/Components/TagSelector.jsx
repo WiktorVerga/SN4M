@@ -2,6 +2,7 @@ import TagDisplayer from "./TagDisplayer";
 import {useEffect, useState} from "react";
 import {getToken} from "../utilities/getToken";
 
+//consente agli utenti di selezionare artisti o inserire tag personalizzati, con vincoli di quantità (min/max)
 export default function TagSelector({personalizzati, returnData, initialState, limMin, limMax}) {
     //Get Data to Fill Select
     const [data, setData] = useState([]);

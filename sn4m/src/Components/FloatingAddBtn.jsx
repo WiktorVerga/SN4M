@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 
-export default function FloatingAddBtn({navigateTo, dim}) {
+export default function FloatingAddBtn({navigateTo, dim}) {         //pulsante fluttuante con un'icona a forma di +
     return (
         <Link className={"btn btn-primary p-" + dim +" rounded-4"}
             to={navigateTo}

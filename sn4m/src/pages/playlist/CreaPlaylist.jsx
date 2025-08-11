@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {getLoggedUser, getUsers, setUsers} from "../../utilities/users";
-import {getPlaylists, setPlaylists} from "../../utilities/playlists";
+import {getLoggedUser, getPlaylistsProprie, getUsers, setUsers} from "../../utilities/users";
 import TagSelector from "../../Components/TagSelector";
 import {toast} from "react-toastify";
 
@@ -30,8 +29,8 @@ export default function CreaPlaylist() {
     }
 
 
-    const handleSubmit = () => {
-        const existingPlaylists = getPlaylists()
+    const handleSubmit = () => {                //creazione playlist
+        const existingPlaylists = getPlaylistsProprie();        //recupera le playlist create dell'utente dal localStorage
 
         /* Controlli Form */
         const titoloInput = document.getElementById("titolo");
@@ -40,7 +39,7 @@ export default function CreaPlaylist() {
         titoloInput.classList.remove("is-invalid")
         descrizioneInput.classList.remove("is-invalid")
 
-        let hasError = false
+        let hasError = false                //flag che indica se ci sono errori nel form
 
         /* Controllo Titolo */
 
@@ -71,14 +70,16 @@ export default function CreaPlaylist() {
         }
 
         /* Creazione Playlist con Dati Sicuri */
-        if (hasError) return
+        if (hasError) return            //se ci sono errori interrompe la funzione
 
+        /* Generazione ID Univoco: basato su timestamp e numero casuale */
         function generateId() {
             return Date.now() + '-' + Math.floor(Math.random() * 10000);
         }
 
-        const loggedUser = getLoggedUser()
+        const loggedUser = getLoggedUser()          //recupera info utente loggato
 
+        /* --- COSTRUZIONE OGGETTO PLAYLIST --- */
         const playlist = {
             idPlaylist: generateId(),
             titolo: titolo,
@@ -92,10 +93,11 @@ export default function CreaPlaylist() {
         //Aggiorno l'utente salvando la playlist che ha appena creato
         if (!hasError) {
             const existingUsers = getUsers()
-            const users = existingUsers?.filter(item => item.email !== loggedUser.email)
-            loggedUser.playlistProprie.push(playlist)
-            setUsers([...users, loggedUser])
+            const users = existingUsers?.filter(item => item.email !== loggedUser.email)            //toglie dalla lista degli utenti l'utente loggato
+            loggedUser.playlistProprie.push(playlist)               //aggiunge la playlist nella lista delle playlistProprie dell'utente
+            setUsers([...users, loggedUser])        //salva nel localStorage gli utenti
 
+            /* Notifica e Ritorno alla pagina visualizza playlist */
             toast.success("Playlist Creata", {
                 position: "top-right",
                 autoClose: 5000,
@@ -107,7 +109,7 @@ export default function CreaPlaylist() {
                 progress: undefined,
             })
 
-            navigate(-1)
+            navigate("/playlists)")
         }
     }
 
@@ -194,6 +196,7 @@ export default function CreaPlaylist() {
                     limMax={25}
                 />
 
+                {/* Pulsanti per Confermare e per Annullare */}
                 <input type={"button"} value="Crea Playlist" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
 

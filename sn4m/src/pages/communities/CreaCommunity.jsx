@@ -6,8 +6,8 @@ import TagSelector from "../../Components/TagSelector";
 import {toast} from "react-toastify";
 
 export default function CreaCommunity() {
-    /* Functional Vars */
-    const navigate = useNavigate();
+    /* Variabili funzionali */
+    const navigate = useNavigate();     //navigazione tra pagine
 
     /* Dati Form */
     const [titolo, setTitolo] = useState("");
@@ -25,13 +25,13 @@ export default function CreaCommunity() {
     const limMinDescrizione = 10
 
     const [tags, setTags] = useState([])
-    const getTags = (array) => {
+    const getTags = (array) => {             //Funzione callback passata a TagSelector per aggiornare i tag
         setTags(array)
     }
 
 
-    const handleSubmit = () => {
-        const existingCommunities = getCommunities()
+    const handleSubmit = () => {            //creazione community
+        const existingCommunities = getCommunities()        //recupera le community esistenti dal localStorage
 
         /* Controlli Form */
         const titoloInput = document.getElementById("titolo");
@@ -40,7 +40,7 @@ export default function CreaCommunity() {
         titoloInput.classList.remove("is-invalid")
         descrizioneInput.classList.remove("is-invalid")
 
-        let hasError = false
+        let hasError = false            //flag per bloccare la creazione se ci sono errori
 
         /* Controllo Titolo */
 
@@ -71,14 +71,16 @@ export default function CreaCommunity() {
         }
 
         /* Creazione Community con Dati Sicuri */
-        if (hasError) return
+        if (hasError) return                //se ci sono errori interrompe il flusso
 
+        /* Generazione ID Univoco: basato su timestamp e numero casuale */
         function generateId() {
             return Date.now() + '-' + Math.floor(Math.random() * 10000);
         }
 
-        const loggedUser = getLoggedUser()
+        const loggedUser = getLoggedUser()          //recupera info utente loggato
 
+        /* --- COSTRUZIONE OGGETTO COMMUNITY --- */
         const community = {
             idCommunity: generateId(),
             titolo: titolo,
@@ -97,9 +99,11 @@ export default function CreaCommunity() {
         //Aggiorno l'utente salvando la community che ha appena creato
         if (!hasError) {
             const existingUsers = getUsers()
-            const users = existingUsers?.filter(item => item.email !== loggedUser.email)
-            loggedUser.communities.push(community.idCommunity)
-            setUsers([...users, loggedUser])
+            const users = existingUsers?.filter(item => item.email !== loggedUser.email)        //toglie dalla lista degli utenti l'utente loggato
+            loggedUser.communities.push(community.idCommunity)      //aggiunge la community nella lista delle community dell'utente
+            setUsers([...users, loggedUser])        //salva nel localStorage gli utenti
+
+            /* Notifica e Ritorno alla Pagina Precedente */
             toast.success("Community Creata", {
                 position: "top-right",
                 autoClose: 5000,
@@ -184,7 +188,6 @@ export default function CreaCommunity() {
                     </div>
                 </div>
 
-
                 {/*Riga per Select Tag*/}
                 <h3 className={"mt-5"}>
                     Tags
@@ -197,6 +200,7 @@ export default function CreaCommunity() {
                     limMax={25}
                 />
 
+                {/*Pulsanti Conferma e Annulla*/}
                 <input type={"button"} value="Crea Community" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
 

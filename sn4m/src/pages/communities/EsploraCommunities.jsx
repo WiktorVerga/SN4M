@@ -9,13 +9,13 @@ import {getLoggedUser} from "../../utilities/users";
 export default function EsploraCommunities() {
     const navigate = useNavigate();
 
-    const [isTutte, setIsTutte] = useState(false);
+    const [isTutte, setIsTutte] = useState(false);      //flag per visualizzare tutte le communities oppure solo quelle suggerite
 
-    const [communities, setCommunities] = useState(getCommunities()? getCommunities() : []);
+    const [communities, setCommunities] = useState(getCommunities()? getCommunities() : []);        //tutte le communities salvate nel localStorage o array vuoto
 
-    const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);
+    const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);         //stato che conterrà la lista di community filtrate da mostrare a schermo
 
-    const loggedUser = getLoggedUser()
+    const loggedUser = getLoggedUser()          //recupera utente loggato
 
     useEffect(() => {
 

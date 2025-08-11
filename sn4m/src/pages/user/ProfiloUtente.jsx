@@ -2,26 +2,25 @@ import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {getLoggedUser, getUser, getUsers, logout, setUsers, updateUser} from "../../utilities/users";
 import {useNavigate} from "react-router-dom";
-import {recuperaGeneri} from "../../utilities/recuperaGeneri";
 import {toast} from "react-toastify";
 import TagSelector from "../../Components/TagSelector";
 
-
 export default function ProfiloUtente() {
 
-    /* Functional Vars */
+    /* Variabili Funzionali */
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConf, setShowPasswordConf] = useState(false);
 
-    const [utenteLoggato, setUtenteLoggato] = useState({})
+    const [utenteLoggato, setUtenteLoggato] = useState({})              //memorizza i dati completi dell’utente loggato.
 
-    const [initialArtisti, setInizialeArtisti] = useState([])
+    const [initialArtisti, setInizialeArtisti] = useState([])           //serve a salvare la lista iniziale di artisti.
 
-    const [artistiPreferiti, setArtistiPreferiti] = useState([])
-    const [generiPreferiti, setGeneriPreferiti] = useState([]);
-    const riceviNuoviArtisti = (array) => {
+    const [artistiPreferiti, setArtistiPreferiti] = useState([])        //serve a salvare gli artisti selezionati dall'utente loggato
+    // [generiPreferiti, setGeneriPreferiti] = useState([]);
+
+    const riceviNuoviArtisti = (array) => {         //funzione di callback che riceve un array di nuovi artisti preferiti e aggiorna lo stato.
         setArtistiPreferiti(array);
     }
 
@@ -30,7 +29,7 @@ export default function ProfiloUtente() {
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConf, setNewPasswordConf] = useState("");
 
-    const resetState = () => {
+    const resetState = () => {          //ripristina i campi di input e nasconde le sezioni di modifica.
         setNewUsername("");
         setNewPassword("");
         setNewPasswordConf("");
@@ -38,15 +37,11 @@ export default function ProfiloUtente() {
         setShowNewUser(false);
     }
 
-    /*Visibilità inseirmento nuovo utente */
+    /*Visibilità inserimento nuovo utente */
     const [showNewUser, setShowNewUser] = useState(false);
 
     /*Visibilità inserimento nuova password*/
     const [showNewPassword, setShowNewPassword] = useState(false);
-
-    const handleBtnModificaPasswordClick = () => {
-        setShowNewPassword(true);
-    };
 
     /*Dati errori Form*/
     const [userError, setUserError] = useState("");
@@ -141,12 +136,14 @@ export default function ProfiloUtente() {
         /* Salvataggio dati Utenti in LocalStorage */
 
         if (!hasError) {
+
+            /*Creazione oggetto Profilo*/
             const profilo = {
                 email: utenteLoggato.email,
                 username: (showNewUser && newUsername.length !== 0) ? newUsername : utenteLoggato.username,
                 password: (showNewPassword && newPassword !== "" && newPasswordConf !== "") ? newPassword : utenteLoggato.password,
                 cantantiPreferiti: artistiPreferiti,
-                generiPreferiti: generiPreferiti,
+                //generiPreferiti: generiPreferiti,
                 playlistProprie: utenteLoggato.playlistProprie,
                 playlistSalvate: utenteLoggato.playlistProprie,
                 communities: utenteLoggato.communities
@@ -181,7 +178,7 @@ export default function ProfiloUtente() {
         }
     }
 
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = () => {         //eliminazione account dopo che l'utente scriva ELIMINA
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
@@ -190,6 +187,7 @@ export default function ProfiloUtente() {
         }
     }
 
+    /*UseEffect --> si attiva all’avvio dove recupera i dati dell’utente loggato dal localStorage e li memorizza nello stato e salva anche la lista iniziale di cantanti preferiti. */
     useEffect(() => {
 
         /* Recupero dati utente dal localStorage */
@@ -200,7 +198,6 @@ export default function ProfiloUtente() {
         setUtenteLoggato(utenteLogged);
 
         setInizialeArtisti(utenteLogged.cantantiPreferiti);
-
 
     }, []);
 
@@ -380,7 +377,7 @@ export default function ProfiloUtente() {
                        className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}
                 />
-                <input type={"button"} value="Annulla"
+                <input type={"button"} value="Esci"
                        className={"btn btn-secondary mt-5  mx-5 p-2 text-uppercase"}
                        onClick={() => navigate(-1)}
                 />

@@ -2,17 +2,17 @@ import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import TagSelector from "../../Components/TagSelector";
-import {getPlaylists, getPlaylist, setPlaylists, updatePlaylist} from "../../utilities/playlists";
 import {toast} from "react-toastify";
+import {getPlaylistsProprie, setPlaylistsProprie, updatePlaylistPropria, } from "../../utilities/users";
 
 
 export default function ModificaPlaylist() {
 
-    /* Functional Vars */
+    /* Variabili Funzionali */
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams()
-    const playlistId = searchParams.get("id")
-    const [playlist, setPlaylist] = useState({})
+    const [searchParams] = useSearchParams()                //per leggere i parametri URL, in particolare idPlaylist per identificare la playlist da modificare.
+    const playlistId = searchParams.get("idPlaylist")
+    const [playlist, setPlaylist] = useState({})               //stato che conterrà i dati della playlist corrente
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -38,15 +38,22 @@ export default function ModificaPlaylist() {
 
     const [hasError, setHasError] = useState(false)
 
-    const resetState = () => {
+    const resetState = () => {          //resetta gli input, nasconde i campi di modifica, ricarica i dati della community da localStorage.
+
         setTitolo("");
         setDescrizione("");
         setShowNewTitolo(false);
         setShowNewDescrizione(false);
+
+        const playlist = getPlaylistsProprie()?.find(item => item.idPlaylist === playlistId)
+
+        if (playlist == null) return
+
+        setPlaylist(playlist)
     }
 
     const handleSaveTitolo = () => {
-        const existingPlaylists = getPlaylists()
+        const existingPlaylists = getPlaylistsProprie()
 
         const titoloInput = document.getElementById("titolo");
         titoloInput.classList.remove("is-invalid")
@@ -92,13 +99,12 @@ export default function ModificaPlaylist() {
 
         if (!hasError) {
 
-            updatePlaylist({
+            updatePlaylistPropria({
                 idPlaylist: playlist.idPlaylist,
-                titolo: showNewTitolo ? titolo : playlist.titolo,
-                descrizione: showNewDescrizione ? descrizione : playlist.descrizione,
+                titolo: titolo,
+                descrizione: descrizione,
                 tags: [...tags],
-                autore: playlist.autore,
-                playlistCondivise: playlist.playlistCondivise
+                canzoni: []
             })
 
             toast.success("Modifiche Salvate", {
@@ -128,12 +134,12 @@ export default function ModificaPlaylist() {
         }
     }
 
-    const handleDeletePlaylist = () => {
+    const handleDeletePlaylist = () => {            //richiede conferma testuale per l’eliminazione della playlist.
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
-            setPlaylists(getPlaylists()?.filter(item => item.idPlaylist !== playlistId))
-            navigate("/esplora")
+            setPlaylistsProprie(getPlaylistsProprie()?.filter(item => item.idPlaylist !== playlistId))
+            navigate("/playlists")
         }
     }
 
@@ -141,11 +147,10 @@ export default function ModificaPlaylist() {
         navigate(-1)
     }
 
-    /* UseEffect */
+    /* UseEffect --> si attiva al montaggio del component*/
     useEffect(() => {
         /* Recupero Dati Playlist */
-        const playlist = getPlaylists()?.find(item => item.idPlaylist === playlistId)
-        console.log(getPlaylist(playlistId))
+        const playlist = getPlaylistsProprie()?.find(item => item.idPlaylist === playlistId)
 
         if (playlist == null) return
 
@@ -271,11 +276,11 @@ export default function ModificaPlaylist() {
                     initialState={playlist.tags}
                 />
 
-                {/*TODO: handleSubmit*/}
+                {/*Pulsanti per Confermare e Annullare e per Eliminare Playlist*/}
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
 
-                <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
+                <input type={"button"} value="Esci" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                        onClick={handleAnnulla}/>
             </form>
 

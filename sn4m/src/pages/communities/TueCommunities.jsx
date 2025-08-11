@@ -9,18 +9,22 @@ import {getLoggedUser, getUserCommunities} from "../../utilities/users";
 export default function TueCommunities() {
     const navigate = useNavigate();
 
-    const [isTue, setIsTue] = useState(false);
+    const [isTue, setIsTue] = useState(false);          //Stato che indica se mostrare le communities create dall'utente (true) o quelle a cui è iscritto (false)
 
-    const [communities, setCommunities] = useState(getUserCommunities()? getUserCommunities() : []);
+    const [communities, setCommunities] = useState(getUserCommunities()? getUserCommunities() : []);       //stato che contiene tutte le communities relative all'utente, recuperate dal localStorage e se non ci sono communities è un array vuoto
 
-    const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);
+    const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);         //stato che contiene le communities filtrate da mostrare all'utente, in base al filtro isTue
 
     const loggedUser = getLoggedUser()
 
+    //funzione che aggiorna lo stato delle communities recuperandole di nuovo
     const update = () => {
         setCommunities(getUserCommunities())
     }
 
+    /*Effetto che si attiva quando cambiano 'communities' o 'isTue': viene applicato il filtro:
+     - se isTue = false => mostra communities a cui l'utente è iscritto ma NON create da lui
+     - se isTue = true => mostra solo le communities create dall'utente*/
     useEffect(() => {
 
         /* Applico Filtro se è selezionato "Sei Iscritto" */

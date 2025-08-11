@@ -5,14 +5,13 @@ import TagSelector from "../../Components/TagSelector";
 import {getCommunities, getCommunity, setCommunities, updateCommunity} from "../../utilities/communities";
 import {toast} from "react-toastify";
 
-
 export default function ModificaCommunity() {
 
-    /* Functional Vars */
+    /* Variabili Funzionali */
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams()
+    const [searchParams] = useSearchParams()            //per leggere i parametri URL, in particolare idCommunity per identificare la community da modificare.
     const communityId = searchParams.get("idCommunity");
-    const [community, setCommunity] = useState({})
+    const [community, setCommunity] = useState({})              //stato che conterrà i dati della community corrente
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -38,7 +37,7 @@ export default function ModificaCommunity() {
 
     const [hasError, setHasError] = useState(false)
 
-    const resetState = () => {
+    const resetState = () => {      //resetta gli input, nasconde i campi di modifica, ricarica i dati della community da localStorage.
         setTitolo("");
         setDescrizione("");
         setShowNewTitolo(false);
@@ -134,7 +133,7 @@ export default function ModificaCommunity() {
         }
     }
 
-    const handleDeleteCommunity = () => {
+    const handleDeleteCommunity = () => {       //richiede conferma testuale per l’eliminazione della community.
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
@@ -147,7 +146,7 @@ export default function ModificaCommunity() {
         navigate(-1)
     }
 
-    /* UseEffect */
+    /* UseEffect --> si attiva al montaggio del componente*/
     useEffect(() => {
         /* Recupero Dati Community */
         const community = getCommunities()?.find(item => item.idCommunity === communityId)
@@ -262,7 +261,6 @@ export default function ModificaCommunity() {
                     </div>}
                 </div>
 
-
                 {/*Riga per Select Tags*/}
                 <h3 className={"mt-5"}>
                     Tags
@@ -276,7 +274,7 @@ export default function ModificaCommunity() {
                     initialState={community.tags}
                 />
 
-                {/*TODO: handleSubmit*/}
+                {/*Pulsanti per Confermare e Annullare e per Eliminare Community*/}
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        onClick={handleSubmit}/>
 

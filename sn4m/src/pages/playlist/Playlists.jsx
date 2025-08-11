@@ -3,30 +3,29 @@ import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
-import {getCommunities, setCommunities} from "../../utilities/communities";
-import {getLoggedUser, getPlaylistsProprie, getPlaylistsSalvate, getUserCommunities} from "../../utilities/users";
+import {getLoggedUser, getPlaylistsProprie, getPlaylistsSalvate} from "../../utilities/users";
 
 export default function Playlists() {
+
+    /*Variabili funzionali*/
     const navigate = useNavigate();
 
-    const [isTue, setIsTue] = useState(false);
+    const [isTue, setIsTue] = useState(false);          //Stato booleano che indica se l’utente sta visualizzando le proprie playlist (true) oppure quelle salvate (false).
 
-    const [visualizzaPlaylists, setVisualizzaPlaylists] = useState([]);
+    const [visualizzaPlaylists, setVisualizzaPlaylists] = useState([]);            //Stato che conterrà l’elenco delle playlist da mostrare nella pagina dopo eventuali filtri.
 
 
     const loggedUser = getLoggedUser()
 
-    const update = () => {
-        setCommunities(getUserCommunities())
-    }
 
     useEffect(() => {
 
-        /* Applico Filtro se è selezionato "Sei Iscritto" */
+        /* Applico Filtro se è selezionato "Tue" */
         if (isTue) {
+            //Mostra tutte le playlist create dall'utente loggato
             setVisualizzaPlaylists(getPlaylistsProprie()? getPlaylistsProprie() : []);
         } else {
-            /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
+            //Mostra tutte le playlist salvate dall'utente loggato
             setVisualizzaPlaylists(getPlaylistsSalvate()? getPlaylistsSalvate() : []);
         }
     }, [isTue])
@@ -37,7 +36,7 @@ export default function Playlists() {
                 PLAYLISTS
             </h1>
 
-            {/* Intestazione Dinamica con Pulsante Filtro */}
+            {/* Intestazione Dinamica con Pulsante Filtro per Passare da "le tue" a "salvate" e viceversa. */}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
                     {isTue? "Le Tue Playlists": "Playlists Salvate"}
@@ -52,7 +51,7 @@ export default function Playlists() {
 
             {visualizzaPlaylists.length === 0?
                 <>
-                    {/*Nessuna community trovata*/}
+                    {/*Nessuna playlist trovata*/}
                     <div className={"text-center w-100 mt-5 d-flex flex-column justify-content-center align-items-center"} style={{height: "50vh"}}>
                         <h3 className={"mb-5"}>
                             {isTue?

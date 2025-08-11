@@ -5,21 +5,22 @@ import {setCommunities} from "../utilities/communities";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 
-export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi.
+export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
     const loggedUser = getLoggedUser()
 
     const navigate = useNavigate();
 
-    const [isUnito, setIsUnito] = useState(false);
-    const [isTua, setIsTua] = useState(false);
+    const [isUnito, setIsUnito] = useState(false);              //Stato per sapere se l'utente è già unito alla community oppure deve ancora unirsi
+    const [isTua, setIsTua] = useState(false);                  //Stato per sapere se la community è stata creata dall'utente loggato oppure se l'utente si è iscritto alla community
 
 
-    const handleUnisciti = () => {
+    const handleUnisciti = () => {              //funzione per unirsi alla community
         if (loggedUser && !isUnito) {
-            const existingUsers = getUsers()
-            const users = existingUsers?.filter(item => item.email !== loggedUser.email)
-            loggedUser.communities.push(community.idCommunity)
-            setUsers([...users, loggedUser])
+            const existingUsers = getUsers()            //ottiene tutti gli utenti registrati
+            const users = existingUsers?.filter(item => item.email !== loggedUser.email)        //toglie l'utente loggato dalla lista degli utenti
+            loggedUser.communities.push(community.idCommunity)      //Aggiunge l'ID della community alla lista delle community dell'utente loggato
+            setUsers([...users, loggedUser])                    //aggiorna la lista degli utenti salvandola nello localStorage
+            //mostra notifica di successo
             toast.success("Unito alla Community", {
                 position: "top-right",
                 autoClose: 5000,
@@ -32,19 +33,21 @@ export default function CommunityCard({community, esplora, update}) {        // 
             })
             setIsUnito(true)
         }
-
     }
 
-    const handleAbbandona = () => {
+    const handleAbbandona = () => {             //funzione per abbandonare la community
+        //rimuove la community dalla lista di quelle a cui l'utente è iscritto
         const communitiesAggiornate = loggedUser.communities.filter(item => item !== community.idCommunity)
 
+        //crea una copia con le community aggiornate dell'utente
         const utenteAggiornato = {
             ...loggedUser,
             communities: communitiesAggiornate
         }
 
-        updateUser(utenteAggiornato)
+        updateUser(utenteAggiornato)            //aggiorna dati dell'utente nello storage
 
+        // Chiama la funzione passata come prop per aggiornare la UI estern
         update()
 
         toast.success("Uscito dalla Community", {
@@ -59,10 +62,11 @@ export default function CommunityCard({community, esplora, update}) {        // 
         })
     }
 
-    const handleModifica = () => {
+    const handleModifica = () => {              //funzione per modificare la community soltanto se l'utente loggato è il creatore
         navigate("/modificaCommunity?idCommunity=" + community.idCommunity)
     }
 
+    //verifica se la community è stata creata dall'utente loggato
     useEffect(() => {
         setIsTua(community.autore === loggedUser.email);
     }, [community]);
@@ -75,6 +79,10 @@ export default function CommunityCard({community, esplora, update}) {        // 
                     <h2 className={"col"}>
                         {community.titolo}
                     </h2>
+                    {/* Pulsante che cambia in base alla modalità:
+                        - Se 'esplora' è true: mostra "Unisciti" e appena l'utente si unisce iscritto
+                        - Altrimenti: mostra "Modifica" se propria, oppure "Esci" */}
+
                     {esplora? <button className={"col-2 btn btn-primary text-uppercase"}
                              onClick={handleUnisciti}
                              disabled={isUnito}

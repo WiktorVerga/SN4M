@@ -72,7 +72,6 @@ export default function ProfiloUtente() {
             userInput.classList.add("is-invalid")
             setUserError("Inserire Nuovo Username")
             setHasError(true)
-            console.log(newUsername)
         }
 
         //Controllo Unicità Username

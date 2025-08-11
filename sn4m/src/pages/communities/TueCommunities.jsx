@@ -29,10 +29,10 @@ export default function TueCommunities() {
 
         /* Applico Filtro se è selezionato "Sei Iscritto" */
         if (!isTue) {
-            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.email)));
+            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.idUtente)));
         } else {
             /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
-            setVisualizzaCommunities(communities.filter(community => (community.autore === loggedUser.email)));
+            setVisualizzaCommunities(communities.filter(community => (community.autore === loggedUser.idUtente)));
         }
     }, [communities, isTue])
 

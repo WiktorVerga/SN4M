@@ -27,7 +27,7 @@ export default function Login() {
         if (existingUsers.some(item => (item.username === username && item.password === password))) {
             //Se sì: reindirizza pagina profilo utente e salva email utente nel sessionStorage
             navigate("/esplora")
-            sessionStorage.setItem("loginSession", JSON.stringify({user: existingUsers.find(item => item.password === password && item.username === username).email}))
+            sessionStorage.setItem("loginSession", JSON.stringify({user: existingUsers.find(item => item.password === password && item.username === username).idUtente}))
         } else {
             setError("Credenziali non valide")
             userInput.classList.add("is-invalid")

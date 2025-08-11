@@ -9,8 +9,8 @@ export const setUsers = (users) => {            //salva oggetto users, converten
     localStorage.setItem("utenti", JSON.stringify(users))
 }
 
-export const getUser = (email) => {         //cerca un utente nella lista degli utenti nel localStorage, confrontando l’email.
-    return getUsers().find(item => item.email === email)
+export const getUser = (idUtente) => {         //cerca un utente nella lista degli utenti nel localStorage, confrontando l’email.
+    return getUsers().find(item => item.idUtente === idUtente)
 }
 
 export const getLoggedUser = () => {            //recupera l'utente attualmente loggato.
@@ -31,7 +31,7 @@ export const logout = () => {           //rimuove la sessione attiva dal session
 
 export const updateUser = (user) => {           //ottiene l'elenco degli utenti salvati nel localStorage
     const existingUsers = getUsers()
-    const users = existingUsers?.filter(item => item.email !== user.email)  //rimuove l’utente con la stessa email, così da poterlo aggiornare.
+    const users = existingUsers?.filter(item => item.idUtente !== user.idUtente)  //rimuove l’utente con la stessa email, così da poterlo aggiornare.
 
     if (existingUsers) setUsers([...users, user])      //se c’erano utenti già salvati: salva la lista aggiornata
     else setUsers([user])       //Se no: crea una nuova lista con l’utente passato.
@@ -45,7 +45,7 @@ export const getUserCommunities = () => {       //restituisce le community a cui
 
     const communities = getCommunities()        //recupera tutte le community
 
-    const myCommunities = communities.filter(item => user.communities.includes(item.idCommunity))   //filtra quelle in cui l'utente loggato è presente
+    const myCommunities = communities?.filter(item => user.communities.includes(item.idCommunity))   //filtra quelle in cui l'utente loggato è presente
 
     return myCommunities
 }
@@ -57,11 +57,25 @@ export const getPlaylistsProprie = () => {      //restituisce le playlist create
 
     return user.playlistProprie
 }
+export const getPlaylist = (idPlaylist) => {      //restituisce le playlist create dall'utente loggato
+    const idUtente = idPlaylist.split(".")[0]
+    const utente = getUser(idUtente)
+
+    return utente.playlistProprie.find(item => item.idPlaylist === idPlaylist) || utente.playlistSalvate.find(item => item.idPlaylist === idPlaylist)
+}
+
+export const getAutorePlaylist = (idPlaylist) => {      //restituisce le playlist create dall'utente loggato
+    const idUtente = idPlaylist.split(".")[0]
+    const utente = getUser(idUtente)
+    return utente
+}
 
 export const getPlaylistsSalvate = () => {      //restituisce le playlist salvate dall'utente loggato
     const user = getLoggedUser()
 
     if (user === undefined) return null
+
+
 
     return user.playlistSalvate
 }

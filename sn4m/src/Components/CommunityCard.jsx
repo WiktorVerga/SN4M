@@ -3,7 +3,7 @@ import {getLoggedUser, getUsers, setUsers, updateUser} from "../utilities/users"
 import {useEffect, useState} from "react";
 import {setCommunities} from "../utilities/communities";
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
     const loggedUser = getLoggedUser()
@@ -68,12 +68,14 @@ export default function CommunityCard({community, esplora, update}) {        // 
 
     //verifica se la community è stata creata dall'utente loggato
     useEffect(() => {
-        setIsTua(community.autore === loggedUser.email);
+        setIsTua(community.autore === loggedUser.idUtente);
     }, [community]);
 
 
     return (
-        <div className={"card mt-5 bg-primary text-white w-75 m-auto shadow"}>
+        <Link className={"card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none"}
+            to={`/communities/${community.idCommunity}`}
+        >
             <div className={"card-body p-5"}>
                 <div className={"row flex-row align-items-center"}>
                     <h2 className={"col"}>
@@ -83,14 +85,26 @@ export default function CommunityCard({community, esplora, update}) {        // 
                         - Se 'esplora' è true: mostra "Unisciti" e appena l'utente si unisce iscritto
                         - Altrimenti: mostra "Modifica" se propria, oppure "Esci" */}
 
-                    {esplora? <button className={"col-2 btn btn-primary text-uppercase"}
-                             onClick={handleUnisciti}
+                    {esplora? <button className={"col-2 btn btn-primary text-uppercase  z-2"}
+                             onClick={(e) => {
+                                 e.preventDefault(); // blocca la navigazione del Link
+                                 e.stopPropagation(); // blocca il click sul Link
+                                 handleUnisciti()
+                             }}
                              disabled={isUnito}
                     >
                         {isUnito ? "iscritto" : "unisciti"}
                     </button> :
                         <button className={"col-2 btn btn-primary text-uppercase"}
-                                onClick={isTua? handleModifica : handleAbbandona}
+                                onClick={isTua? (e) => {
+                                    e.preventDefault(); // blocca la navigazione del Link
+                                    e.stopPropagation(); // blocca il click sul Link
+                                    handleModifica()
+                                } : (e) => {
+                                    e.preventDefault(); // blocca la navigazione del Link
+                                    e.stopPropagation(); // blocca il click sul Link
+                                    handleAbbandona()
+                                }}
                         >
                             {isTua ? <i className="bi bi-pencil"></i> : "esci"}
                         </button>
@@ -104,8 +118,9 @@ export default function CommunityCard({community, esplora, update}) {        // 
                 <TagDisplayer
                     tags={community.tags}
                     withDelete={false}
+                    clear={false}
                 />
             </div>
-        </div>
+        </Link>
     )
 }

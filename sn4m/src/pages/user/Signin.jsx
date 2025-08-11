@@ -122,7 +122,12 @@ export default function Signin() {
         /* Creazione Utente con Dati Sicuri */
         if (hasError) return
 
+        function generateId() {
+            return Date.now() + '-' + Math.floor(Math.random() * 10000);
+        }
+
         const profilo = {
+            idUtente: generateId(),
             email: email,
             username: username,
             password: password, //... -> spacchetta array

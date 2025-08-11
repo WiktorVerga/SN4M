@@ -101,8 +101,8 @@ export default function ModificaPlaylist() {
 
             updatePlaylistPropria({
                 idPlaylist: playlist.idPlaylist,
-                titolo: titolo,
-                descrizione: descrizione,
+                titolo: showNewTitolo ? titolo : playlist.titolo,
+                descrizione: showNewDescrizione ? descrizione : playlist.descrizione,
                 tags: [...tags],
                 canzoni: []
             })

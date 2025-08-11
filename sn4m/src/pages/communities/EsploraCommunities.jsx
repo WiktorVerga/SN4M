@@ -40,10 +40,10 @@ export default function EsploraCommunities() {
                 }
 
             }
-            setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.email && !loggedUser.communities.includes(community.idCommunity))));
+            setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         } else {
             /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
-            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.email && !loggedUser.communities.includes(community.idCommunity))));
+            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         }
     }, [communities, isTutte])
 

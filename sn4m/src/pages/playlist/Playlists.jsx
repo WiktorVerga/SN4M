@@ -3,7 +3,8 @@ import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
-import {getLoggedUser, getPlaylistsProprie, getPlaylistsSalvate} from "../../utilities/users";
+import {getLoggedUser, getPlaylistsProprie, getPlaylistsSalvate, updatePlaylistPropria} from "../../utilities/users";
+import {PlaylistCard} from "../../Components/PlaylistCard";
 
 export default function Playlists() {
 
@@ -74,17 +75,15 @@ export default function Playlists() {
                     </div>
                 </> : <>
                     {/* Mostra le EsploraCommunities */}
-                    <div className={"d-flex flex-column justify-content-center mt-5"}>
-                    {visualizzaPlaylists.map((communiity, index) => (
-                        <CommunityCard
-                            key={index}
-                            community={communiity}
-                            esplora={false}
-                            update={update}
-                        />
-                    ))
-                    }
-                </div>
+                    <div className={"d-flex flex-row justify-content-center mt-5"}>
+                        {visualizzaPlaylists.map((playlist, index) => (
+                            <PlaylistCard
+                                key={index}
+                                playlist={playlist}
+                            />
+                        ))
+                        }
+                    </div>
                     <div className={"floating-btn-div"}>
                         <FloatingAddBtn navigateTo={"/creaPlaylist"}
                         dim={4}/>

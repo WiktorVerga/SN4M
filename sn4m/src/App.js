@@ -12,6 +12,8 @@ import CreaPlaylist from "./pages/playlist/CreaPlaylist";
 import ModificaPlaylist from "./pages/playlist/ModificaPlaylist";
 import TueCommunities from "./pages/communities/TueCommunities";
 import Playlists from "./pages/playlist/Playlists";
+import {Playlist} from "./pages/playlist/Playlist";
+import {Community} from "./pages/communities/Community";
 
 
 function App() {
@@ -55,8 +57,10 @@ function App() {
                         <Route path={"/creaCommunity"} element={<CreaCommunity/>}/>
                         <Route path={"/modificaCommunity"} element={<ModificaCommunity/>}/>
                         <Route path={"/esplora"} element={<EsploraCommunities/>}/>
+                        <Route path={"/communities/:id"} element={<Community/>}/>
                         <Route path={"/tueCommunities"} element={<TueCommunities/>}/>
                         <Route path={"/playlists"} element={<Playlists/>}/>
+                        <Route path={"/playlists/:id"} element={<Playlist/>}/>
                         <Route path={"/creaPlaylist"} element={<CreaPlaylist/>}/>
                         <Route path={"/modificaPlaylist"} element={<ModificaPlaylist/>}/>
                     </Routes>

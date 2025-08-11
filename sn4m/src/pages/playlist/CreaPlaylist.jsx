@@ -81,7 +81,7 @@ export default function CreaPlaylist() {
 
         /* --- COSTRUZIONE OGGETTO PLAYLIST --- */
         const playlist = {
-            idPlaylist: generateId(),
+            idPlaylist: loggedUser.idUtente + '.' + generateId(),
             titolo: titolo,
             descrizione: descrizione,
             tags: [...tags],
@@ -109,7 +109,7 @@ export default function CreaPlaylist() {
                 progress: undefined,
             })
 
-            navigate("/playlists)")
+            navigate("/playlists")
         }
     }
 

@@ -86,7 +86,7 @@ export default function CreaCommunity() {
             titolo: titolo,
             descrizione: descrizione,
             tags: [...tags],
-            autore: loggedUser.email,
+            autore: loggedUser.idUtente,
             playlistCondivise: []
         }
 

@@ -1,3 +1,5 @@
+import {getUser} from "./users";
+
 export const getCommunities = () => {       //recupera la voce "communities" da localStorage e trasforma il JSON in stringa
     return JSON.parse(localStorage.getItem("communities"))
 }
@@ -16,4 +18,19 @@ export const updateCommunity = (community) => {   //ottiene la lista esistente d
 
     if (existingCommunities) setCommunities([...communities, community])      //se c'erano community salvate: aggiunge quella nuova/aggiornata all’array filtrato e lo salva nel localStorage.
     else setCommunities([community])                                           //Se no: crea un nuovo array con solo la community da aggiornare/inserire.
+}
+
+export const getPlaylists = (community) => {
+    const playlists = community.playlistCondivise
+
+    const playlistsTrovate = []
+
+    playlists.forEach(playlist => {
+        const autore = playlist.autore
+
+        const playlistTrovata = autore.playlistProprie.find(item => item.idPlaylist === playlist.idPlaylist)
+        playlistsTrovate.push(playlistTrovata)
+    })
+
+    return playlistsTrovate
 }

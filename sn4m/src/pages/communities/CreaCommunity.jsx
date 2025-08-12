@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 export default function CreaCommunity() {
     /* Variabili funzionali */
     const navigate = useNavigate();     //navigazione tra pagine
-    const [canSubmit, setCabSubmit] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);      //flag booleano per abilitare/disabilitare il pulsante di creazione.
 
     /* Dati Form */
     const [titolo, setTitolo] = useState("");
@@ -126,9 +126,9 @@ export default function CreaCommunity() {
     //Controllo Massimi e Minimi di Tags
     useEffect(() => {
         if (tags.length < 3 || tags.length > 15) {
-            setCabSubmit(false)
+            setCanSubmit(false)
         } else {
-            setCabSubmit(true)
+            setCanSubmit(true)
         }
     }, [tags]);
 
@@ -141,12 +141,12 @@ export default function CreaCommunity() {
             </h3>
 
             <form
-                name={"signin"}
+                name={"creaCommunity"}
                 className={"mt-5"}
                 autoComplete={"off"}
             >
 
-                {/*Riga user e Titolo*/}
+                {/*Riga Titolo*/}
                 <div className={"row flex-row justify-content-between"}>
                     <div className={"col-5"}>
                         <div className="form-floating mb-3 text-black ">

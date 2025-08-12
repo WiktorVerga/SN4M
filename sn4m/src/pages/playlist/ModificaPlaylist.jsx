@@ -13,7 +13,7 @@ export default function ModificaPlaylist() {
     const [searchParams] = useSearchParams()                //per leggere i parametri URL, in particolare idPlaylist per identificare la playlist da modificare.
     const playlistId = searchParams.get("idPlaylist")
     const [playlist, setPlaylist] = useState({})               //stato che conterrà i dati della playlist corrente
-    const [canSubmit, setCabSubmit] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -39,7 +39,7 @@ export default function ModificaPlaylist() {
 
     const [hasError, setHasError] = useState(false)
 
-    const resetState = () => {          //resetta gli input, nasconde i campi di modifica, ricarica i dati della community da localStorage.
+    const resetState = () => {          //resetta gli input, nasconde i campi di modifica, ricarica i dati della playlist da localStorage.
 
         setTitolo("");
         setDescrizione("");
@@ -161,9 +161,9 @@ export default function ModificaPlaylist() {
     //Controllo Massimi e Minimi di Tags
     useEffect(() => {
         if (tags.length < 3 || tags.length > 15) {
-            setCabSubmit(false)
+            setCanSubmit(false)
         } else {
-            setCabSubmit(true)
+            setCanSubmit(true)
         }
     }, [tags]);
 
@@ -177,12 +177,12 @@ export default function ModificaPlaylist() {
             </h3>
 
             <form
-                name={"signin"}
+                name={"modificaPlaylist"}
                 className={"mt-5"}
                 autoComplete={"off"}
             >
 
-                {/*Riga user e Titolo*/}
+                {/*Riga Titolo*/}
                 <div className={"row flex-row justify-content-between"}>
 
                     {/*Primo Gruppo: Titolo + Bottone Modifica */}

@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {getLoggedUser} from "../../utilities/users";
 
 export const Playlist = () => {
-    const {id} = useParams()
+    const {id} = useParams()            //recupera l'id della playlist dall'URL
 
     const isProprietaria = (getLoggedUser().idUtente === getAutorePlaylist(id).idUtente)
 

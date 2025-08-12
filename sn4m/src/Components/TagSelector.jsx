@@ -4,24 +4,24 @@ import {getToken} from "../utilities/getToken";
 
 //consente agli utenti di selezionare artisti o inserire tag personalizzati, con vincoli di quantità (min/max)
 export default function TagSelector({personalizzati, returnData, initialState, limMin, limMax}) {
-    //Get Data to Fill Select
-    const [data, setData] = useState([]);
-    const [search, setSearch] = useState("");
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+    //Varibili funzionali
+    const [data, setData] = useState([]);               //lista di artisti trovati da API
+    const [search, setSearch] = useState("");           //testo inserito nella barra di ricerca
+    const [selectedIndex, setSelectedIndex] = useState(-1);         //indice artista evidenziato in lista
 
-    //Generic Tags
-    const [tags, setTags] = useState([]);
+    //Tags Generici
+    const [tags, setTags] = useState([]);            //lista di artisti/tag selezionati
 
-    const tagPersonalizzato = document.getElementById("tag-personalizzato");
+    const tagPersonalizzato = document.getElementById("tag-personalizzato");        //input tag personalizzato
 
     //Var di Controllo
-    const [limitExceeded, setLimitExceeded] = useState(false);
+    const [limitExceeded, setLimitExceeded] = useState(false);          //Flag limite massimo
     const [searchError, setSearchError] = useState("");
 
     /* Fetch API Spotify per ottenere artisti da ricerca */
     const getData = async (query) => {
 
-        const token = await getToken();
+        const token = await getToken();         //ottiene token Spotify
 
         const url = "https://api.spotify.com/v1/search?q=" + query + "&type=artist"
 
@@ -34,18 +34,18 @@ export default function TagSelector({personalizzati, returnData, initialState, l
 
             const dati = await response.json();
 
-            return dati.artists.items
+            return dati.artists.items             //ritorna lista artisti
         } catch (error) {
             console.log(error.message);
         }
 
     }
 
-    /* Aggiunta Artista */
+    /* Aggiunta Artista alla lista dei Tag */
     const addArtist = (elem) => {
         const searchInput = document.getElementById('search')
 
-        //Controllo sul Limite dei Tags
+        //Controllo sul Limite Massimo dei Tags
         setLimitExceeded(tags.length >= limMax)
         if (tags.length >= limMax) {
             searchInput.classList.add("is-invalid")
@@ -92,6 +92,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
         }
     }
 
+    /* Selezione artista cliccando sulla lista */
     const handleChoice = (e) => {
         const element = e.target.getAttribute('value')
 
@@ -105,6 +106,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
         }
     }
 
+    /* Rimuove un tag dalla lista */
     const handleDelete = (elem) => {
         setTags(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
     }
@@ -165,6 +167,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                         />
                         <label htmlFor="floatingInput">Cerca Artisti</label>
                         <div className="invalid-feedback">{searchError}</div>
+                        {/* Lista risultati ricerca */}
                         <ul className="list-group"
                         >
                             {data?.map((item, index) => (
@@ -181,6 +184,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                                         }
                                     }}
                                 >
+                                    {/* Immagine artista o placeholder */}
                                     <img key={index} src={item.images[0] ? item.images[0].url : "https://placehold.co/60x60"}
                                          alt={item.name + "'s Profile Picture"} width={60} height={60}
                                          className={"m-2 rounded-2"}/>
@@ -219,6 +223,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                 </div>}
             </div>
 
+            {/* Colonna che mostra i tag selezionati */}
             <div className={"col-5"}>
                 <TagDisplayer
                     tags={tags}
@@ -229,7 +234,6 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                     limMax={limMax}
                 />
             </div>
-
 
         </div>
     )

@@ -2,7 +2,7 @@ import SearchBar from "../../Components/SearchBar";
 import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getPlaylistsProprie, getPlaylistsSalvate, updatePlaylistPropria} from "../../utilities/playlists";
+import {getPlaylistsProprie, getPlaylistsSalvate} from "../../utilities/playlists";
 import {PlaylistCard} from "../../Components/PlaylistCard";
 import {getLoggedUser} from "../../utilities/users";
 
@@ -14,9 +14,6 @@ export default function Playlists() {
     const [isTue, setIsTue] = useState(false);          //Stato booleano che indica se l’utente sta visualizzando le proprie playlist (true) oppure quelle salvate (false).
 
     const [visualizzaPlaylists, setVisualizzaPlaylists] = useState([]);            //Stato che conterrà l’elenco delle playlist da mostrare nella pagina dopo eventuali filtri.
-
-
-    const loggedUser = getLoggedUser()
 
 
     useEffect(() => {

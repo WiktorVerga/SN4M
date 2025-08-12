@@ -122,6 +122,7 @@ export default function Signin() {
         /* Creazione Utente con Dati Sicuri */
         if (hasError) return
 
+        /* Generazione ID Univoco: basato su timestamp e numero casuale */
         function generateId() {
             return Date.now() + '-' + Math.floor(Math.random() * 10000);
         }
@@ -130,8 +131,8 @@ export default function Signin() {
             idUtente: generateId(),
             email: email,
             username: username,
-            password: password, //... -> spacchetta array
-            cantantiPreferiti: [...artistiPreferiti],
+            password: password,
+            cantantiPreferiti: [...artistiPreferiti],           //... -> spacchetta array
             playlistProprie: [],
             playlistSalvate: [],
             communities: []
@@ -264,7 +265,7 @@ export default function Signin() {
                 limMax={15}
             />
 
-
+            {/*Pulsanti Conferma e Annulla*/}
             <input type={"button"} value="Crea Account" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                    disabled={!canSubmit}
                    onClick={handleSubmit}/>

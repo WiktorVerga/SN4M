@@ -8,7 +8,7 @@ import {getLoggedUser, getUsers, setUsers} from "../../utilities/users";
 export default function CreaPlaylist() {
     /* Functional Vars */
     const navigate = useNavigate();
-    const [canSubmit, setCabSubmit] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);          //flag booleano per abilitare/disabilitare il pulsante di creazione.
 
     /* Dati Form */
     const [titolo, setTitolo] = useState("");
@@ -83,7 +83,7 @@ export default function CreaPlaylist() {
 
         /* --- COSTRUZIONE OGGETTO PLAYLIST --- */
         const playlist = {
-            idPlaylist: loggedUser.idUtente + '.' + generateId(),
+            idPlaylist: loggedUser.idUtente + '.' + generateId(),               //unione idUtente e idPlaylist divisi da .
             titolo: titolo,
             descrizione: descrizione,
             tags: [...tags],
@@ -122,9 +122,9 @@ export default function CreaPlaylist() {
     //Controllo Massimi e Minimi di Tags
     useEffect(() => {
         if (tags.length < 3 || tags.length > 15) {
-            setCabSubmit(false)
+            setCanSubmit(false)
         } else {
-            setCabSubmit(true)
+            setCanSubmit(true)
         }
     }, [tags]);
 
@@ -138,12 +138,12 @@ export default function CreaPlaylist() {
             </h3>
 
             <form
-                name={"signin"}
+                name={"creaPlaylist"}
                 className={"mt-5"}
                 autoComplete={"off"}
             >
 
-                {/*Riga user e Titolo*/}
+                {/*Riga Titolo*/}
                 <div className={"row flex-row justify-content-between"}>
                     <div className={"col-5"}>
                         <div className="form-floating mb-3 text-black ">
@@ -194,7 +194,6 @@ export default function CreaPlaylist() {
                     <div className={"col-5"}>
                     </div>
                 </div>
-
 
                 {/*Riga per Select Tag*/}
                 <h3 className={"mt-5"}>

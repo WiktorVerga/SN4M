@@ -9,20 +9,23 @@ export const Community = () => {
     /* Variabili Funzionali */
     const navigate = useNavigate();
 
-    const {id} = useParams();
+    const {id} = useParams();       //recupera l'ID della community dalla URL
 
-    const [community, setCommunity] = useState({});
+    const [community, setCommunity] = useState({});      //stato per salvare i dati della community corrente
 
-    const [communityPlaylists, setCommunityPlaylists] = useState([]);
+    const [communityPlaylists, setCommunityPlaylists] = useState([]);       //stato per le playlist della community
 
     const loggedUser = getLoggedUser()
 
     /* useEffect hooks */
 
     useEffect(() => {
+        //recupera i dati della community usando l'ID preso dai parametri della URL
         setCommunity(getCommunity(id));
+        //recupera le playlist associate a questa community
         setCommunityPlaylists(getPlaylists(getCommunity(id)));
-    }, [id])
+    }, [id])            //si aggiorna ogni volta che cambia l'ID nella URL
+
 
     return (
         <div>
@@ -30,7 +33,7 @@ export const Community = () => {
                 {community.titolo}
             </h1>
 
-            {/* Intestazione Dinamica con Pulsante Modifica */}
+            {/* Intestazione Dinamica con Pulsante Modifica solo per il proprietario della community*/}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
                     {community.descrizione}

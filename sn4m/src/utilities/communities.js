@@ -20,15 +20,17 @@ export const updateCommunity = (community) => {   //ottiene la lista esistente d
     else setCommunities([community])                                           //Se no: crea un nuovo array con solo la community da aggiornare/inserire.
 }
 
-export const getPlaylists = (community) => {
-    const playlists = community.playlistCondivise
+export const getPlaylists = (community) => {            //restituisce tutte le playlist condivise all'interno di una determinata community
+    const playlists = community.playlistCondivise                    //prende l'array delle playlist condivise dalla community
 
     const playlistsTrovate = []
 
+    //cicla tutte le playlist condivise nella community
     playlists.forEach(playlist => {
         const autore = playlist.autore
-
+        //cerca, tra le playlist proprie dell'autore, quella con lo stesso idPlaylist
         const playlistTrovata = autore.playlistProprie.find(item => item.idPlaylist === playlist.idPlaylist)
+        //aggiunge la playlist trovata all'array di output
         playlistsTrovate.push(playlistTrovata)
     })
 

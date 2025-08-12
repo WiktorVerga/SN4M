@@ -15,7 +15,7 @@ export const getPlaylists = (idPlaylist) => {      //restituisce le playlist cre
 }
 
 export const getAutorePlaylist = (idPlaylist) => {      //restituisce l'oggetto dell'autore della playlist, dato in ingresso l'id della playlist
-    const idUtente = idPlaylist.split(".")[0]
+    const idUtente = idPlaylist.split(".")[0]           //l'id Utente è la parte prima del . dell'idPlaylist
     const utente = getUser(idUtente)
     return utente
 }
@@ -43,7 +43,7 @@ export const updatePlaylistPropria = (playlist) => {            //aggiornare una
 
     const updatedUser = { ...loggedUser, playlistProprie: updatedPlaylists };       //sovrascrivo la proprietà playlistProprie con la versione aggiornata mantenendo immutati gli altri campi dell'utente.
 
-    const users = existingUsers?.filter(item => item.email !== loggedUser.email)
+    const users = existingUsers?.filter(item => item.idUtente !== loggedUser.idUtente)
     setUsers([...users, updatedUser]);
 }
 
@@ -54,7 +54,7 @@ export const setPlaylistsProprie = (playlists) => {         //modifica array pla
 
     const updatedUser = { ...loggedUser, playlistProprie: playlists };       //sovrascrivo la proprietà playlistProprie con l'input della funzione mantenendo immutati gli altri campi dell'utente.
 
-    const users = existingUsers?.filter(item => item.email !== loggedUser.email)        //rimuovo utente loggato dalla lista degli utenti
+    const users = existingUsers?.filter(item => item.idUtente !== loggedUser.idUtente)        //rimuovo utente loggato dalla lista degli utenti
     setUsers([...users, updatedUser]);          //salvataggio nel localStorage
 }
 

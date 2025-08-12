@@ -176,12 +176,12 @@ export default function ModificaCommunity() {
             </h3>
 
             <form
-                name={"signin"}
+                name={"modificaCommunity"}
                 className={"mt-5"}
                 autoComplete={"off"}
             >
 
-                {/*Riga user e Titolo*/}
+                {/*Riga Titolo*/}
                 <div className={"row flex-row justify-content-between"}>
 
                     {/*Primo Gruppo: Titolo + Bottone Modifica */}

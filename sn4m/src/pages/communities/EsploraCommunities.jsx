@@ -56,7 +56,7 @@ export default function EsploraCommunities() {
             {/* Intestazione Dinamica con Pulsante Filtro */}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
-                    {isTutte? "Scopri Tutte le EsploraCommunities": "Scopri EsploraCommunities Per Te!"}
+                    {isTutte? "Scopri Tutte le Communities": "Scopri le Communities Per Te!"}
                 </h3>
                 <button className={"col-2 btn btn-primary text-uppercase"} onClick={() => setIsTutte(!isTutte)}>{isTutte? "scopri suggerite" : "scopri tutte"}</button>
             </div>

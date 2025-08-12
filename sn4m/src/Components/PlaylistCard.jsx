@@ -12,7 +12,7 @@ export const PlaylistCard = ({playlist, esplora}) => {
         >
             <div className="card-body d-flex flex-column">
                 <div className={"mb-auto"}>
-                    <h3 className="card-title">{playlist.titolo}</h3>
+                    <h3 className="card-title text-capitalize">{playlist.titolo}</h3>
                     <p className="card-text">
                         {playlist.descrizione}
                     </p>
@@ -24,7 +24,7 @@ export const PlaylistCard = ({playlist, esplora}) => {
                         clear={true}
                     />
                     <hr />
-                    <h3>{getAutorePlaylist(playlist.idPlaylist).username}</h3>
+                    <h3 className={"text-capitalize"}>{getAutorePlaylist(playlist.idPlaylist).username}</h3>
                 </div>
             </div>
         </Link>

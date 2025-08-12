@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {getUsers, setUsers} from "../../utilities/users";
 import TagSelector from "../../Components/TagSelector";
@@ -9,6 +9,7 @@ export default function Signin() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showRipetiPassword, setShowRipetiPassword] = useState(false);
+    const [canSubmit, setCabSubmit] = useState(false);
 
     /* Dati Form */
     const [username, setUsername] = useState("");
@@ -118,7 +119,6 @@ export default function Signin() {
             hasError = true;
         }
 
-
         /* Creazione Utente con Dati Sicuri */
         if (hasError) return
 
@@ -148,6 +148,15 @@ export default function Signin() {
     const handleAnnulla = () => {       //Naviga indietro nella cronologia quindi torna alla pagina precedente.
         navigate(-1)
     }
+
+    //Controllo Massimi e Minimi di Artisti Preferiti
+    useEffect(() => {
+        if (artistiPreferiti.length < 3 || artistiPreferiti.length > 15) {
+            setCabSubmit(false)
+        } else {
+            setCabSubmit(true)
+        }
+    }, [artistiPreferiti]);
 
     return (<div>
         <h1 className={"h1 p-5 text-center text-uppercase"}>
@@ -257,6 +266,7 @@ export default function Signin() {
 
 
             <input type={"button"} value="Crea Account" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                   disabled={!canSubmit}
                    onClick={handleSubmit}/>
             <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                    onClick={handleAnnulla}/>

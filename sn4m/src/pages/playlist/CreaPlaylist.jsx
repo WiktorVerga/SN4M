@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {getLoggedUser, getPlaylistsProprie, getUsers, setUsers} from "../../utilities/users";
 import TagSelector from "../../Components/TagSelector";
@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 export default function CreaPlaylist() {
     /* Functional Vars */
     const navigate = useNavigate();
+    const [canSubmit, setCabSubmit] = useState(false);
 
     /* Dati Form */
     const [titolo, setTitolo] = useState("");
@@ -117,6 +118,16 @@ export default function CreaPlaylist() {
         navigate(-1)
     }
 
+    //Controllo Massimi e Minimi di Tags
+    useEffect(() => {
+        if (tags.length < 3 || tags.length > 15) {
+            setCabSubmit(false)
+        } else {
+            setCabSubmit(true)
+        }
+    }, [tags]);
+
+
     return (<div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Crea la Tua Playlist
@@ -198,6 +209,7 @@ export default function CreaPlaylist() {
 
                 {/* Pulsanti per Confermare e per Annullare */}
                 <input type={"button"} value="Crea Playlist" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                       disabled={!canSubmit}
                        onClick={handleSubmit}/>
 
                 <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}

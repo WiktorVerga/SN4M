@@ -12,6 +12,7 @@ export default function ModificaCommunity() {
     const [searchParams] = useSearchParams()            //per leggere i parametri URL, in particolare idCommunity per identificare la community da modificare.
     const communityId = searchParams.get("idCommunity");
     const [community, setCommunity] = useState({})              //stato che conterrà i dati della community corrente
+    const [canSubmit, setCabSubmit] = useState(false);
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -156,6 +157,15 @@ export default function ModificaCommunity() {
         setCommunity(community)
     }, [])
 
+    //Controllo Massimi e Minimi di Tags
+    useEffect(() => {
+        if (tags.length < 3 || tags.length > 15) {
+            setCabSubmit(false)
+        } else {
+            setCabSubmit(true)
+        }
+    }, [tags]);
+
     return (
         <div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
@@ -276,6 +286,7 @@ export default function ModificaCommunity() {
 
                 {/*Pulsanti per Confermare e Annullare e per Eliminare Community*/}
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                       disabled={!canSubmit}
                        onClick={handleSubmit}/>
 
                 <input type={"button"} value="Esci" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}

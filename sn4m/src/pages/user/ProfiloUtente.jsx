@@ -12,13 +12,13 @@ export default function ProfiloUtente() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConf, setShowPasswordConf] = useState(false);
+    const [canSubmit, setCabSubmit] = useState(false);
 
     const [utenteLoggato, setUtenteLoggato] = useState({})              //memorizza i dati completi dell’utente loggato.
 
     const [initialArtisti, setInizialeArtisti] = useState([])           //serve a salvare la lista iniziale di artisti.
 
     const [artistiPreferiti, setArtistiPreferiti] = useState([])        //serve a salvare gli artisti selezionati dall'utente loggato
-    // [generiPreferiti, setGeneriPreferiti] = useState([]);
 
     const riceviNuoviArtisti = (array) => {         //funzione di callback che riceve un array di nuovi artisti preferiti e aggiorna lo stato.
         setArtistiPreferiti(array);
@@ -136,20 +136,24 @@ export default function ProfiloUtente() {
 
         if (!hasError) {
 
+            console.log(initialArtisti)
+
             /*Creazione oggetto Profilo*/
             const profilo = {
+                idUtente: utenteLoggato.idUtente,
                 email: utenteLoggato.email,
                 username: (showNewUser && newUsername.length !== 0) ? newUsername : utenteLoggato.username,
                 password: (showNewPassword && newPassword !== "" && newPasswordConf !== "") ? newPassword : utenteLoggato.password,
-                cantantiPreferiti: artistiPreferiti,
+                cantantiPreferiti: (artistiPreferiti.length < 3 || artistiPreferiti > 15)? initialArtisti : artistiPreferiti,
                 //generiPreferiti: generiPreferiti,
                 playlistProprie: utenteLoggato.playlistProprie,
-                playlistSalvate: utenteLoggato.playlistProprie,
+                playlistSalvate: utenteLoggato.playlistSalvate,
                 communities: utenteLoggato.communities
             }
 
             updateUser(profilo)
-            setUtenteLoggato(getUser(utenteLoggato.email))
+            setUtenteLoggato(getUser(utenteLoggato.idUtente))
+
             toast.success("Modifiche Salvate", {
                 position: "top-right",
                 autoClose: 5000,
@@ -192,13 +196,24 @@ export default function ProfiloUtente() {
         /* Recupero dati utente dal localStorage */
         const utenteLogged = getLoggedUser()
 
-        if (utenteLogged == null) return
+        if (utenteLogged === null) return
 
         setUtenteLoggato(utenteLogged);
 
-        setInizialeArtisti(utenteLogged.cantantiPreferiti);
-
     }, []);
+
+    useEffect(() => {
+        setInizialeArtisti(utenteLoggato.cantantiPreferiti);
+    }, [utenteLoggato]);
+
+    //Controllo Massimi e Minimi di Artisti Preferiti
+    useEffect(() => {
+        if (artistiPreferiti.length < 3 || artistiPreferiti.length > 15) {
+            setCabSubmit(false)
+        } else {
+            setCabSubmit(true)
+        }
+    }, [artistiPreferiti]);
 
     return (
         <div>
@@ -206,7 +221,7 @@ export default function ProfiloUtente() {
                 Profilo Utente
             </h1>
             <div className={"row d-flex flex-row justify-content-between"}>
-                <h2 className={"mx-auto col"}>
+                <h2 className={"mx-auto col text-capitalize"}>
                     Ciao, {utenteLoggato.username}
                 </h2>
                 <button
@@ -374,6 +389,7 @@ export default function ProfiloUtente() {
 
                 <input type={"button"} value="Salva Modifiche"
                        className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                       disabled={!canSubmit}
                        onClick={handleSubmit}
                 />
                 <input type={"button"} value="Esci"

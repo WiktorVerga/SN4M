@@ -16,7 +16,7 @@ export default function Navbar() {
     return (
         <nav className={"navbar navbar-ff bg-primary p-4 shadow"}>
             <div className="container">
-                <Link className={"navbar-brand text-white fw-bold"} to={"/"}><h2>SN4M</h2></Link>
+                <Link className={"navbar-brand text-white fw-bold"} to={"/esplora"}><h2>SN4M</h2></Link>
                 <Link className={"navbar-text text-white text-decoration-none text-center"} to={"/esplora"}>Esplora<br/>Communities</Link>
                 <Link className={"navbar-text text-white text-decoration-none text-center"} to={"/tueCommunities"}>Le Tue<br/>Communities</Link>
                 <Link className={"navbar-text text-white text-decoration-none text-center"} to={"/playlists"}>Libreria<br/>Playlists</Link>

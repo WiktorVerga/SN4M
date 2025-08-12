@@ -41,7 +41,7 @@ export const updateUser = (user) => {           //ottiene l'elenco degli utenti 
 export const getUserCommunities = () => {       //restituisce le community a cui l'utente loggato è iscritto
     const user = getLoggedUser()        //recupera l'utente loggato
 
-    if (user === undefined) return null;           //se non esiste, interrompe
+    if (!user) return null           //se non esiste, interrompe
 
     const communities = getCommunities()        //recupera tutte le community
 
@@ -53,7 +53,7 @@ export const getUserCommunities = () => {       //restituisce le community a cui
 export const getPlaylistsProprie = () => {      //restituisce le playlist create dall'utente loggato
     const user = getLoggedUser()
 
-    if (user === undefined) return null
+    if (!user) return null
 
     return user.playlistProprie
 }
@@ -73,9 +73,7 @@ export const getAutorePlaylist = (idPlaylist) => {      //restituisce le playlis
 export const getPlaylistsSalvate = () => {      //restituisce le playlist salvate dall'utente loggato
     const user = getLoggedUser()
 
-    if (user === undefined) return null
-
-
+    if (!user) return null
 
     return user.playlistSalvate
 }

@@ -78,7 +78,7 @@ export default function CommunityCard({community, esplora, update}) {        // 
         >
             <div className={"card-body p-5"}>
                 <div className={"row flex-row align-items-center"}>
-                    <h2 className={"col"}>
+                    <h2 className={"col text-capitalize"}>
                         {community.titolo}
                     </h2>
                     {/* Pulsante che cambia in base alla modalità:
@@ -118,7 +118,7 @@ export default function CommunityCard({community, esplora, update}) {        // 
                 <TagDisplayer
                     tags={community.tags}
                     withDelete={false}
-                    clear={false}
+                    clear={true}
                 />
             </div>
         </Link>

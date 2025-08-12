@@ -123,7 +123,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
         if (search !== "") {
             getData(search).then((dati) => {
                 //Filtro per rimuovere dalle ricerche gli artisti già inseriti
-                const availableArtists = dati.filter(item =>
+                const availableArtists = dati?.filter(item =>
                     !tags.includes(item.name)
                 );
                 setData(availableArtists)

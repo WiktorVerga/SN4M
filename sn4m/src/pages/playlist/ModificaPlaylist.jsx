@@ -13,6 +13,7 @@ export default function ModificaPlaylist() {
     const [searchParams] = useSearchParams()                //per leggere i parametri URL, in particolare idPlaylist per identificare la playlist da modificare.
     const playlistId = searchParams.get("idPlaylist")
     const [playlist, setPlaylist] = useState({})               //stato che conterrà i dati della playlist corrente
+    const [canSubmit, setCabSubmit] = useState(false);
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -157,6 +158,15 @@ export default function ModificaPlaylist() {
         setPlaylist(playlist)
     }, [])
 
+    //Controllo Massimi e Minimi di Tags
+    useEffect(() => {
+        if (tags.length < 3 || tags.length > 15) {
+            setCabSubmit(false)
+        } else {
+            setCabSubmit(true)
+        }
+    }, [tags]);
+
     return (
         <div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
@@ -278,6 +288,7 @@ export default function ModificaPlaylist() {
 
                 {/*Pulsanti per Confermare e Annullare e per Eliminare Playlist*/}
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
+                       disabled={!canSubmit}
                        onClick={handleSubmit}/>
 
                 <input type={"button"} value="Esci" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}

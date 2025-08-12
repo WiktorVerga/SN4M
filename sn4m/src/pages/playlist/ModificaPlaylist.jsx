@@ -3,7 +3,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import TagSelector from "../../Components/TagSelector";
 import {toast} from "react-toastify";
-import {getPlaylistsProprie, setPlaylistsProprie, updatePlaylistPropria, } from "../../utilities/users";
+import {getPlaylistsProprie, setPlaylistsProprie, updatePlaylistPropria, } from "../../utilities/playlists";
 
 
 export default function ModificaPlaylist() {

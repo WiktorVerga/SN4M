@@ -1,6 +1,7 @@
 import {useParams} from "react-router-dom";
-import {getAutorePlaylist, getLoggedUser, getPlaylist} from "../../utilities/users";
+import {getAutorePlaylist, getPlaylists} from "../../utilities/playlists";
 import {useEffect, useState} from "react";
+import {getLoggedUser} from "../../utilities/users";
 
 export const Playlist = () => {
     const {id} = useParams()
@@ -10,7 +11,7 @@ export const Playlist = () => {
     const [playlist, setPlaylist] = useState([])
 
     useEffect(() => {
-        setPlaylist(getPlaylist(id))
+        setPlaylist(getPlaylists(id))
     }, [id]);
 
     return (

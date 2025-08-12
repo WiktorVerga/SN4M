@@ -2,9 +2,9 @@ import SearchBar from "../../Components/SearchBar";
 import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import CommunityCard from "../../Components/CommunityCard";
-import {getLoggedUser, getPlaylistsProprie, getPlaylistsSalvate, updatePlaylistPropria} from "../../utilities/users";
+import {getPlaylistsProprie, getPlaylistsSalvate, updatePlaylistPropria} from "../../utilities/playlists";
 import {PlaylistCard} from "../../Components/PlaylistCard";
+import {getLoggedUser} from "../../utilities/users";
 
 export default function Playlists() {
 
@@ -74,7 +74,7 @@ export default function Playlists() {
                         }
                     </div>
                 </> : <>
-                    {/* Mostra le EsploraCommunities */}
+                    {/* Mostra le Playlist */}
                     <div className={"d-flex flex-row justify-content-center mt-5"}>
                         {visualizzaPlaylists.map((playlist, index) => (
                             <PlaylistCard

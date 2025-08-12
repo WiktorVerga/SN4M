@@ -181,9 +181,22 @@ body {
   max-width: 345px;
   background: linear-gradient(138deg, var(--Highlight, #2E5259) 12.59%, rgba(62, 145, 166, 0.50) 116.28%);
   border: solid 1px white;
+  transition-duration: .5s;
+  transition-timing-function: ease;
+  transition-property: all;
+  &:hover {
+    border: solid 1px black;
+  }
 }
 
 .community-card-bg {
   background: linear-gradient(96deg, #2E5259 12.78%, #191F20 100%);
   border: solid 1px white;
+  transition-duration: .5s;
+  transition-timing-function: ease;
+  transition-property: all;
+}
+
+.community-card-bg:hover {
+  border: solid 1px black;
 }

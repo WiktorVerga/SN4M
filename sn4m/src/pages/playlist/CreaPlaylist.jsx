@@ -1,8 +1,9 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {getLoggedUser, getPlaylistsProprie, getUsers, setUsers} from "../../utilities/users";
+import {getPlaylistsProprie} from "../../utilities/playlists";
 import TagSelector from "../../Components/TagSelector";
 import {toast} from "react-toastify";
+import {getLoggedUser, getUsers, setUsers} from "../../utilities/users";
 
 export default function CreaPlaylist() {
     /* Functional Vars */

@@ -1,6 +1,6 @@
 import TagDisplayer from "./TagDisplayer";
 import {Link} from "react-router-dom";
-import {getAutorePlaylist} from "../utilities/users";
+import {getAutorePlaylist} from "../utilities/playlists";
 
 
 export const PlaylistCard = ({playlist, esplora}) => {

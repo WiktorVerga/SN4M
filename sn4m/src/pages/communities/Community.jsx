@@ -6,6 +6,7 @@ import {getLoggedUser} from "../../utilities/users";
 import {PlaylistCard} from "../../Components/PlaylistCard";
 
 export const Community = () => {
+    /* Variabili Funzionali */
     const navigate = useNavigate();
 
     const {id} = useParams();
@@ -16,6 +17,8 @@ export const Community = () => {
 
     const loggedUser = getLoggedUser()
 
+    /* useEffect hooks */
+
     useEffect(() => {
         setCommunity(getCommunity(id));
         setCommunityPlaylists(getPlaylists(getCommunity(id)));
@@ -23,16 +26,16 @@ export const Community = () => {
 
     return (
         <div>
-            <h1 className={"h1 p-5 text-center text-uppercase"}>
-                Esplora COMMUNITIES
+            <h1 className={"h1 p-5 text-center text-capitalize fw-semibold"}>
+                {community.titolo}
             </h1>
 
-            {/* Intestazione Dinamica con Pulsante Filtro */}
+            {/* Intestazione Dinamica con Pulsante Modifica */}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
                     {community.descrizione}
                 </h3>
-                {community.autore === loggedUser.email &&
+                {community.autore === loggedUser.idUtente &&
                     <button className={"col-2 btn btn-primary text-uppercase"} onClick={() => {navigate("/modificaCommunity?idCommunity=" + id)}}><i className="bi bi-pencil"></i></button>
                 }
 
@@ -48,7 +51,7 @@ export const Community = () => {
                 <SearchBar/>
             </div>
 
-            {/* Mostra le EsploraCommunities */}
+            {/* Mostra le Playlist presenti all'interno della community */}
             <div className={"d-flex flex-row justify-content-center mt-5"}>
                 {communityPlaylists.map((playlist, index) => (
                     <PlaylistCard

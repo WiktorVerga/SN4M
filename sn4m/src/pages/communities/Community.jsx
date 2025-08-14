@@ -24,7 +24,7 @@ export const Community = () => {
         setCommunity(getCommunity(id));
         //recupera le playlist associate a questa community
         setCommunityPlaylists(getPlaylists(getCommunity(id)));
-    }, [id])            //si aggiorna ogni volta che cambia l'ID nella URL
+    }, [id])           //si aggiorna ogni volta che cambia l'ID nella URL
 
 
     return (

@@ -1,4 +1,5 @@
 import {getUser} from "./users";
+import {getAutorePlaylist, getPlaylist} from "./playlists";
 
 export const getCommunities = () => {       //recupera la voce "communities" da localStorage e trasforma il JSON in stringa
     return JSON.parse(localStorage.getItem("communities"))
@@ -26,10 +27,13 @@ export const getPlaylists = (community) => {            //restituisce tutte le p
     const playlistsTrovate = []
 
     //cicla tutte le playlist condivise nella community
-    playlists.forEach(playlist => {
-        const autore = playlist.autore
+    playlists.forEach(PlaylistCondivisa => {
+        console.log(PlaylistCondivisa)
+        const playlist = getPlaylist(PlaylistCondivisa.idPlaylist)
+        const autore = getAutorePlaylist(PlaylistCondivisa.idPlaylist)
+
         //cerca, tra le playlist proprie dell'autore, quella con lo stesso idPlaylist
-        const playlistTrovata = autore.playlistProprie.find(item => item.idPlaylist === playlist.idPlaylist)
+        const playlistTrovata = autore.playlistProprie?.find(item => item.idPlaylist === playlist.idPlaylist)
         //aggiunge la playlist trovata all'array di output
         playlistsTrovate.push(playlistTrovata)
     })

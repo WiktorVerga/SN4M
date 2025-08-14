@@ -46,7 +46,7 @@ export default function ProfiloUtente() {
     /*Dati errori Form*/
     const [userError, setUserError] = useState("");
     const [passwordError, setPasswordError] = useState("")
-    const [hasError, setHasError] = useState(false);
+    let hasError = false;
 
     /* handleFunction Logout */
     const handleLogout = () => {            //utente fa logout e ritorna alla schermata di login
@@ -71,7 +71,7 @@ export default function ProfiloUtente() {
             //Avviene errore:
             userInput.classList.add("is-invalid")
             setUserError("Inserire Nuovo Username")
-            setHasError(true)
+            hasError = true
         }
 
         //Controllo Unicità Username
@@ -79,7 +79,7 @@ export default function ProfiloUtente() {
             //Avviene errore:
             userInput.classList.add("is-invalid")
             setUserError("Username già in uso")
-            setHasError(true)
+            hasError = true
         }
     }
 
@@ -100,7 +100,7 @@ export default function ProfiloUtente() {
             //Avviene errore:
             passwordInput.classList.add("is-invalid")
             setPasswordError("Password deve essere lunga almeno 8 caratteri")
-            setHasError(true)
+            hasError = true
         }
 
         //Controllo Password Diverse
@@ -108,7 +108,7 @@ export default function ProfiloUtente() {
             //Avviene errore:
             passwordInput.classList.add("is-invalid")
             setPasswordError("Password non Uguali")
-            setHasError(true)
+            hasError = true
         }
 
         //Controllo Password Valida
@@ -116,7 +116,7 @@ export default function ProfiloUtente() {
             //Avviene errore:
             passwordInput.classList.add("is-invalid")
             setPasswordError("Password può contenere solo lettere, numeri e caratteri speciali")
-            setHasError(true)
+            hasError = true
         }
 
         //Controllo Struttura Password Valida
@@ -124,12 +124,12 @@ export default function ProfiloUtente() {
             //Avviene errore:
             passwordInput.classList.add("is-invalid")
             setPasswordError("Password deve contenere almeno una lettera maiuscola, un numero e un carattere speciale")
-            setHasError(true)
+            hasError = true
         }
     }
 
     const handleSubmit = () => {
-        if (showNewUser && newUsername.length !== 0) handleSaveUsername()
+        if (showNewUser) handleSaveUsername()
         if (showNewPassword) handleSavePassword()
 
         /* Salvataggio dati Utenti in LocalStorage */
@@ -177,7 +177,7 @@ export default function ProfiloUtente() {
                 theme: "dark",
             })
 
-            setHasError(false)
+            hasError = false
         }
     }
 

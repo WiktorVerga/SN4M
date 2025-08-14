@@ -15,10 +15,11 @@ export default function EsploraCommunities() {
 
     const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);         //stato che conterrà la lista di community filtrate da mostrare a schermo
 
+    const [defaultData, setDefaultData] = useState([]);
+
     const loggedUser = getLoggedUser()          //recupera utente loggato
 
-    useEffect(() => {
-
+    const setDefaultCommunities = () => {
         /* Applico Filtro se è selezionato "Suggerite" */
         if (!isTutte) {
 
@@ -40,12 +41,40 @@ export default function EsploraCommunities() {
                 }
 
             }
-            setVisualizzaCommunities(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
+            setDefaultData(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         } else {
             /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
-            setVisualizzaCommunities(communities.filter(community => (community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
+            setDefaultData(communities.filter(community => (community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         }
+    }
+
+    useEffect(() => {
+        setDefaultCommunities()
     }, [communities, isTutte])
+
+    /* Setup per Ricerca*/
+
+    //Imposta la lista di elementi senza filtri
+    useEffect(() => {
+        setVisualizzaCommunities(defaultData)
+    }, [defaultData]);
+
+    //Recupera il Termine di Ricerca dalla SearchBar
+    const [search, setSearch] = useState("");
+    const sendSearch = (searchTerm) => {
+        setSearch(searchTerm);
+    }
+
+    //Al momento della modifica del termine di ricerca avviene la ricerca e dunque l'applicazione dei filtri
+    useEffect(() => {
+        if (search !== "") {
+            setVisualizzaCommunities(defaultData.filter(community => (
+                community.titolo.toLowerCase().includes(search) || community.tags.some(tag => tag.toLowerCase().includes(search))
+            )));
+        } else {
+            setDefaultCommunities()
+        }
+    }, [search]);
 
     return (
         <div>
@@ -63,7 +92,7 @@ export default function EsploraCommunities() {
 
             {/* SearchBar */}
             <div className={"d-flex justify-content-center mt-5"}>
-                <SearchBar/>
+                <SearchBar sendSearch={sendSearch}/>
             </div>
 
             {visualizzaCommunities.length === 0?

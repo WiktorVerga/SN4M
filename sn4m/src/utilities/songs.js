@@ -24,8 +24,6 @@ export const getSong = async (idCanzone) => {
             return formatter.format(date);
         }
 
-        console.log(dati);
-
         const song = {
             titolo: dati.name,
             durata: msToMinutesSeconds(dati.duration_ms),
@@ -34,8 +32,6 @@ export const getSong = async (idCanzone) => {
             artista: dati.artists[0].name,
             idCanzone: dati.id
         }
-
-        console.log(song);
 
         return song             //ritorna lista artisti
     } catch (error) {

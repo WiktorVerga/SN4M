@@ -36,7 +36,7 @@ export default function ModificaCommunity() {
     const limMaxDescrizione = 150
     const limMinDescrizione = 10
 
-    const [hasError, setHasError] = useState(false)
+    let hasError = false
 
     const resetState = () => {      //resetta gli input, nasconde i campi di modifica, ricarica i dati della community da localStorage.
         setTitolo("");
@@ -64,7 +64,7 @@ export default function ModificaCommunity() {
             //Avviene Errore:
             titoloInput.classList.add("is-invalid")
             setTitoloError("Il Titolo deve essere lungo Tra 5 e 30 caratteri")
-            setHasError(true)
+            hasError = true
         }
 
         //C ontrollo UnicitàTitolo
@@ -72,7 +72,7 @@ export default function ModificaCommunity() {
             //Avviene errore:
             titoloInput.classList.add("is-invalid")
             setTitoloError("Il Titolo è già in uso")
-            setHasError(true)
+            hasError = true
         }
     }
 
@@ -88,13 +88,13 @@ export default function ModificaCommunity() {
             //Avviene Errore:
             descrizioneInput.classList.add("is-invalid")
             setDescrizioneError("La Descrizione deve essere lunga Tra 10 e 150 caratteri")
-            setHasError(true)
+            hasError = true
         }
     }
 
     const handleSubmit = () => {
-        if (showNewTitolo && titolo.length > 0) handleSaveTitolo()
-        if (showNewDescrizione && descrizione.length > 0) handleSaveDescrizione()
+        if (showNewTitolo) handleSaveTitolo()
+        if (showNewDescrizione) handleSaveDescrizione()
 
         if (!hasError) {
 
@@ -130,7 +130,7 @@ export default function ModificaCommunity() {
                 theme: "dark",
             })
 
-            setHasError(false)
+            hasError = false
         }
     }
 

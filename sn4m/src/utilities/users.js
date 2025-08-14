@@ -1,4 +1,4 @@
-import {getCommunities} from "./communities";
+import {getCommunities, getCommunity} from "./communities";
 
 export const getUsers = () => {         //restituisce tutti gli utenti salvati nel localStorage
     return JSON.parse(localStorage.getItem("utenti"))
@@ -49,3 +49,16 @@ export const getUserCommunities = () => {       //restituisce le community a cui
     return myCommunities
 }
 
+export const cleanCommunities = () => {
+    const user = getLoggedUser()        //recupera l'utente loggato
+
+    const communitiesAggiornate = user.communities.filter(item => getCommunities().some(community => community.idCommunity === item))
+
+    //crea una copia con le community aggiornate dell'utente
+    const utenteAggiornato = {
+        ...user,
+        communities: communitiesAggiornate
+    }
+
+    updateUser(utenteAggiornato)            //aggiorna dati dell'utente nello storage
+}

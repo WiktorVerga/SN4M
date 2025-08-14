@@ -4,8 +4,12 @@ export default function SearchBar({sendSearch}) {       //barra di ricerca con u
 
     const [search, setSearch] = useState("")
 
+    const sendData = (search) => {
+        sendSearch(search)
+    }
+
     useEffect(() => {
-        /*sendSearch(search)*/
+        sendData(search)
     }, [search])
 
     return (

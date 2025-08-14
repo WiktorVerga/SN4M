@@ -18,7 +18,6 @@ export const getPlaylists = (idPlaylist) => {      //restituisce le playlist cre
 
 export const getPlaylist = (idPlaylist) => {      //restituisce le playlist create dall'utente loggato
 
-    console.log(getPlaylists(idPlaylist).find(item => item.idPlaylist === idPlaylist))
     return getPlaylists(idPlaylist).find(item => item.idPlaylist === idPlaylist)
 }
 
@@ -69,8 +68,10 @@ export const setPlaylistsProprie = (playlists) => {         //modifica array pla
 export const isPublic = (idPlaylist) => {
     const loggedUser = getLoggedUser();
 
-    return loggedUser?.communities.forEach(idCommunity => {
-        return getCommunity(idCommunity).playlistCondivise.some(item => item.idPlaylist === idPlaylist)
+    return loggedUser?.communities.some(idCommunity => {
+        if (loggedUser?.communities.length > 0) {
+            return getCommunity(idCommunity)?.playlistCondivise.some(item => item.idPlaylist === idPlaylist)
+        } else return false
     })
 }
 
@@ -86,7 +87,7 @@ export const communitiesWhereShared = (idPlaylist) => {
     })
 
     tutteCommunities.forEach(community => {
-        if (community.playlistCondivise.some(item => item.idPlaylist === idPlaylist)) {
+        if (community?.playlistCondivise.some(item => item.idPlaylist === idPlaylist)) {
             whereShared.push(community.idCommunity)
         }
     })

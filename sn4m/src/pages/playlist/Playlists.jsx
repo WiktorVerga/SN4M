@@ -2,7 +2,7 @@ import SearchBar from "../../Components/SearchBar";
 import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getPlaylistsProprie, getPlaylistsSalvate} from "../../utilities/playlists";
+import {getAutorePlaylist, getPlaylistsProprie, getPlaylistsSalvate} from "../../utilities/playlists";
 import {PlaylistCard} from "../../Components/PlaylistCard";
 import {getLoggedUser} from "../../utilities/users";
 
@@ -11,22 +11,52 @@ export default function Playlists() {
     /*Variabili funzionali*/
     const navigate = useNavigate();
 
-    const [isTue, setIsTue] = useState(false);          //Stato booleano che indica se l’utente sta visualizzando le proprie playlist (true) oppure quelle salvate (false).
+    const [isTue, setIsTue] = useState(true);          //Stato booleano che indica se l’utente sta visualizzando le proprie playlist (true) oppure quelle salvate (false).
 
-    const [visualizzaPlaylists, setVisualizzaPlaylists] = useState([]);            //Stato che conterrà l’elenco delle playlist da mostrare nella pagina dopo eventuali filtri.
+    const [visualizzaPlaylists, setVisualizzaPlaylists] = useState(isTue?getPlaylistsProprie()? getPlaylistsProprie() : [] : getPlaylistsSalvate()? getPlaylistsSalvate() : []);            //Stato che conterrà l’elenco delle playlist da mostrare nella pagina dopo eventuali filtri.
 
+    const [defaultData, setDefaultData] = useState([]);
 
     useEffect(() => {
-
         /* Applico Filtro se è selezionato "Tue" */
         if (isTue) {
             //Mostra tutte le playlist create dall'utente loggato
-            setVisualizzaPlaylists(getPlaylistsProprie()? getPlaylistsProprie() : []);
+            setDefaultData(getPlaylistsProprie()? getPlaylistsProprie() : [])
         } else {
             //Mostra tutte le playlist salvate dall'utente loggato
-            setVisualizzaPlaylists(getPlaylistsSalvate()? getPlaylistsSalvate() : []);
+            setDefaultData(getPlaylistsSalvate()? getPlaylistsSalvate() : [])
         }
     }, [isTue])
+
+    useEffect(() => {
+        setVisualizzaPlaylists(defaultData)
+    }, [defaultData]);
+
+    /* Setup per Ricerca*/
+
+    //Imposta la lista di elementi senza filtri
+    const setDefault = () => {
+        setVisualizzaPlaylists(defaultData);
+    }
+
+    //Recupera il Termine di Ricerca dalla SearchBar
+    const [search, setSearch] = useState("");
+    const sendSearch = (searchTerm) => {
+        setSearch(searchTerm);
+    }
+
+    //Al momento della modifica del termine di ricerca avviene la ricerca e dunque l'applicazione dei filtri
+    useEffect(() => {
+        if (search !== "") {
+            setVisualizzaPlaylists(defaultData.filter(playlist => (
+                playlist.titolo.toLowerCase().includes(search)
+                || playlist.tags.some(tag => tag.toLowerCase().includes(search))
+                || getAutorePlaylist(playlist.idPlaylist).username.toLocaleLowerCase().includes(search)
+            )));
+        } else {
+            setDefault()
+        }
+    }, [search]);
 
     return (
         <div>
@@ -44,7 +74,7 @@ export default function Playlists() {
 
             {/* SearchBar */}
             <div className={"d-flex justify-content-center mt-5"}>
-                <SearchBar/>
+                <SearchBar sendSearch={sendSearch}/>
             </div>
 
             {visualizzaPlaylists.length === 0?

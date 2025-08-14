@@ -7,7 +7,7 @@ import {
     isPublic
 } from "../../utilities/playlists";
 import {useEffect, useState} from "react";
-import {getLoggedUser} from "../../utilities/users";
+import {cleanCommunities, getLoggedUser} from "../../utilities/users";
 import SearchBar from "../../Components/SearchBar";
 
 import share from "../../media/share.svg"
@@ -41,6 +41,8 @@ export const Playlist = () => {
     const [isPubblica, setIsPubblica] = useState(false);
 
     const [canzoni, setCanzoni] = useState([]);
+
+    const [defaultData, setDefaultData] = useState([]);
 
     const [sharableCommunities, setSharableCommunities] = useState([]);
     const [unsharableCommunities, setUnsharableCommunities] = useState([]);
@@ -108,13 +110,16 @@ export const Playlist = () => {
         setPlaylist(getPlaylist(id))
         setIsPubblica(isPublic(id))
 
-        setSharableCommunities(loggedUser.communities.filter(item => !communitiesWhereShared(id).includes(item)))
+        cleanCommunities()
+
+        setSharableCommunities(getLoggedUser().communities.filter(item => !communitiesWhereShared(id).includes(item)))
         setUnsharableCommunities(communitiesWhereShared(id))
     }, [id]);
 
     useEffect(() => {
         getSong("2nLtzopw4rPReszdYBJU6h").then(data => {
             setCanzoni([data])
+            setDefaultData([data])
         })
 
     }, [playlist]);
@@ -122,6 +127,34 @@ export const Playlist = () => {
     useEffect(() => {
         setCanShare(selectedItem === "");
     }, [selectedItem]);
+
+    useEffect(() => {
+        setIsPubblica(isPublic(id))
+    }, [isShareOpen, isUnshareOpen]);
+
+    /* Setup per Ricerca*/
+
+    //Imposta la lista di elementi senza filtri
+    const setDefault = () => {
+        setCanzoni(defaultData);
+    }
+
+    //Recupera il Termine di Ricerca dalla SearchBar
+    const [search, setSearch] = useState("");
+    const sendSearch = (searchTerm) => {
+        setSearch(searchTerm);
+    }
+
+    //Al momento della modifica del termine di ricerca avviene la ricerca e dunque l'applicazione dei filtri
+    useEffect(() => {
+        if (search !== "") {
+            setCanzoni(defaultData.filter(canzone => (
+                canzone.titolo.toLowerCase().includes(search) || canzone.artista.toLocaleLowerCase().includes(search)
+            )));
+        } else {
+            setDefault()
+        }
+    }, [search]);
 
     return (
         <div>
@@ -186,9 +219,9 @@ export const Playlist = () => {
                                                 onChange={(e) => setSelectedItem(e.target.value)}
                                             >
                                                 <option value="">-- Seleziona una Community --</option>
-                                                {unsharableCommunities.map(idCommunity => {
+                                                {unsharableCommunities.map((idCommunity, index) => {
                                                     const community = getCommunity(idCommunity)
-                                                    return <option value={community.idCommunity}>{community.titolo}</option>
+                                                    return <option key={index} value={community.idCommunity}>{community.titolo}</option>
                                                 })}
 
                                             </select>
@@ -204,7 +237,7 @@ export const Playlist = () => {
 
 
 
-
+                    {/* Pagina Effettiva */}
                     <h1 className={"h1 p-5 text-center text-uppercase"}>
                         {playlist.titolo}
                     </h1>
@@ -214,7 +247,7 @@ export const Playlist = () => {
                             {playlist.descrizione}
                         </h3>
 
-                        <p className={"col fs-3 text-center"}>{isPubblica? "Pubblica" : "Privata"}</p>
+                        <p className={"col fs-3 text-center"}>{isPubblica? "Pubblica" : "Privata"}{isPubblica? <i className={"bi-unlock ms-2"}></i>: <i className={"bi-lock ms-2"}></i>}</p>
 
                         <div className={"col-2 text-center"}>
                             <button className={"btn btn-primary w-100 text-uppercase"} onClick={() => {navigate("/modificaPlaylist?idPlaylist=" + id)}}><i className="bi bi-pencil"></i></button>
@@ -223,13 +256,13 @@ export const Playlist = () => {
 
                     {/* Sezione Pulsanti Share unshare e search bar */}
                     <div className={"d-flex flex-row align-items-center justify-content-evenly my-5"}>
-                        <SearchBar />
+                        <SearchBar sendSearch={sendSearch}/>
                         <div className={"mx-auto d-flex gap-3 h-50"}>
                             <button className={"mx-auto btn btn-primary text-uppercase"} onClick={() => setIsShareOpen(true)}>
                                 <img src={share} alt={"Share Icon"}/>
                             </button>
                             <button className={"btn btn-primary text-uppercase mx-auto"}
-                                    disabled={isPubblica}
+                                    disabled={!isPubblica}
                                     onClick={() => setIsUnshareOpen(true)}
                             >
                                 <img src={unshare} alt={"Unshare Icon"}/>
@@ -241,7 +274,14 @@ export const Playlist = () => {
                         to={`/playlist/${id}`}
                     >
                         <div className={"card-body d-flex gap-3 align-items-center"}>
-                            <FloatingAddBtn dim={4} navigateTo={""}/>
+                            <div className={"btn btn-primary p-4 rounded-4 no-hover"}
+                            >
+                                <i>
+                                    <svg width={40} height={40} viewBox="0 0 78 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M33.4286 44H5.57144C3.99287 44 2.67059 43.472 1.60459 42.416C0.538591 41.36 0.0037335 40.0547 1.92118e-05 38.5C-0.00369507 36.9453 0.531163 35.64 1.60459 34.584C2.67802 33.528 4.0003 33 5.57144 33H33.4286V5.50002C33.4286 3.94168 33.9634 2.63635 35.0331 1.58402C36.1029 0.531686 37.4251 0.00368563 39 1.89655e-05C40.5749 -0.0036477 41.899 0.524353 42.9724 1.58402C44.0459 2.64368 44.5789 3.94902 44.5714 5.50002V33H72.4286C74.0071 33 75.3313 33.528 76.401 34.584C77.4707 35.64 78.0037 36.9453 78 38.5C77.9963 40.0547 77.4614 41.3618 76.3954 42.4215C75.3294 43.4812 74.0071 44.0073 72.4286 44H44.5714V71.5C44.5714 73.0583 44.0366 74.3655 42.9669 75.4215C41.8971 76.4775 40.5749 77.0036 39 77C37.4251 76.9963 36.1029 76.4683 35.0331 75.416C33.9634 74.3636 33.4286 73.0583 33.4286 71.5V44Z" fill="white"/>
+                                    </svg>
+                                </i>
+                            </div>
                             <p className={"text-white fs-3 my-auto"}>Aggiungi Canzoni alla Playlist</p>
                         </div>
                     </Link>

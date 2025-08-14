@@ -245,3 +245,7 @@ body {
   max-width: 65%;
   text-align: center;
 }
+
+.no-hover {
+  pointer-events: none;
+}

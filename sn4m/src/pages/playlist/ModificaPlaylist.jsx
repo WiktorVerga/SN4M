@@ -37,7 +37,7 @@ export default function ModificaPlaylist() {
     const limMaxDescrizione = 150
     const limMinDescrizione = 10
 
-    const [hasError, setHasError] = useState(false)
+    let hasError = false
 
     const resetState = () => {          //resetta gli input, nasconde i campi di modifica, ricarica i dati della playlist da localStorage.
 
@@ -66,7 +66,7 @@ export default function ModificaPlaylist() {
             //Avviene Errore:
             titoloInput.classList.add("is-invalid")
             setTitoloError("Il Titolo deve essere lungo Tra 5 e 30 caratteri")
-            setHasError(true)
+            hasError = true
         }
 
         //Controllo Unicità Titolo
@@ -74,7 +74,7 @@ export default function ModificaPlaylist() {
             //Avviene errore:
             titoloInput.classList.add("is-invalid")
             setTitoloError("Il Titolo è già in uso")
-            setHasError(true)
+            hasError = true
         }
     }
 
@@ -90,13 +90,15 @@ export default function ModificaPlaylist() {
             //Avviene Errore:
             descrizioneInput.classList.add("is-invalid")
             setDescrizioneError("La Descrizione deve essere lunga Tra 10 e 150 caratteri")
-            setHasError(true)
+            hasError = true
         }
     }
 
-    const handleSubmit = () => {
-        if (showNewTitolo && titolo.length > 0) handleSaveTitolo()
-        if (showNewDescrizione && descrizione.length > 0) handleSaveDescrizione()
+    const handleSubmit = async () => {
+        console.log("titolo: ", showNewTitolo, "descrizione: ", showNewDescrizione, "descrizione: ", descrizione, "errore: ", hasError)
+
+        if (showNewTitolo) handleSaveTitolo()
+        if (showNewDescrizione) handleSaveDescrizione()
 
         if (!hasError) {
 
@@ -131,7 +133,7 @@ export default function ModificaPlaylist() {
                 theme: "dark",
             })
 
-            setHasError(false)
+            hasError = false
         }
     }
 

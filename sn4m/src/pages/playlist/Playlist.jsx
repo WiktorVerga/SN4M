@@ -1,18 +1,19 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {data, Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {
+    checkIfSaved,
     communitiesWhereShared,
-    getAutorePlaylist,
-    getPlaylist,
-    getPlaylists,
+    getAutorePlaylist, getIdCondivisionePlaylisty,
+    getPlaylist, getPlaylistSalvata, getPlaylistSalvate,
     isPublic
 } from "../../utilities/playlists";
 import {useEffect, useState} from "react";
-import {cleanCommunities, getLoggedUser} from "../../utilities/users";
+import {cleanCommunities, getLoggedUser, updateUser} from "../../utilities/users";
 import SearchBar from "../../Components/SearchBar";
 
 import share from "../../media/share.svg"
 import unshare from "../../media/un-share.svg"
-import FloatingAddBtn from "../../Components/FloatingAddBtn";
+import salva from "../../media/salva.svg"
+import salvata from "../../media/saved.svg"
 import {getSong} from "../../utilities/songs";
 import {SongCard} from "../../Components/SongCard";
 import {PlaylistCard} from "../../Components/PlaylistCard";
@@ -21,6 +22,7 @@ import {toast} from "react-toastify";
 
 export const Playlist = () => {
     const {id} = useParams()            //recupera l'id della playlist dall'URL
+    const [searchParams] = useSearchParams()
 
     const navigate = useNavigate();
 
@@ -37,23 +39,29 @@ export const Playlist = () => {
 
     const [canShare, setCanShare] = useState(false);
 
+    const [isSaved, setIsSaved] = useState(false);
+
     const [playlist, setPlaylist] = useState({})
     const [isPubblica, setIsPubblica] = useState(false);
 
     const [canzoni, setCanzoni] = useState([]);
+
+    const [autore, setAutore] = useState({});
 
     const [defaultData, setDefaultData] = useState([]);
 
     const [sharableCommunities, setSharableCommunities] = useState([]);
     const [unsharableCommunities, setUnsharableCommunities] = useState([]);
 
+    /* Generazione ID Univoco: basato su timestamp e numero casuale */
+    function generateId() {
+        return Date.now() + '-' + Math.floor(Math.random() * 10000);
+    }
+
     const handleCondividi = () => {
         const community = getCommunity(selectedItem)
 
-        /* Generazione ID Univoco: basato su timestamp e numero casuale */
-        function generateId() {
-            return Date.now() + '-' + Math.floor(Math.random() * 10000);
-        }
+
 
 
         const nuovaPlaylist = {
@@ -106,14 +114,62 @@ export const Playlist = () => {
         setIsUnshareOpen(false)
     }
 
-    useEffect(() => {
-        setPlaylist(getPlaylist(id))
-        setIsPubblica(isPublic(id))
+    const handleSalva = () => {
+        if (isSaved) {
+            loggedUser.playlistSalvate = loggedUser.playlistSalvate.filter(item => item.idCondivisione !== getIdCondivisionePlaylisty(searchParams.get("idCommunity"), id))
 
+            updateUser(loggedUser)
+            setIsSaved(checkIfSaved(id))
+
+            toast.success("Playlist Rimossa!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                theme: "dark",
+                progress: undefined,
+            });
+        } else {
+            //Se non è ancora stata salvata la playlist, crea l'oggetto per il salvataggio e aggiorna l'utente
+            loggedUser.playlistSalvate.push({
+                idCommunity: searchParams.get("idCommunity"),
+                idCondivisione: getIdCondivisionePlaylisty(searchParams.get("idCommunity"), id),
+            })
+            updateUser(loggedUser)
+            setIsSaved(checkIfSaved(id))
+
+            toast.success("Playlist Salvata!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                theme: "dark",
+                progress: undefined,
+            });
+        }
+
+    }
+
+    /* useEffect Hooks */
+
+    useEffect(() => {
+        setPlaylist(getPlaylist(id))        //Recupera i dati della playlist
+        setIsPubblica(isPublic(id))         //Controlla se la playlist è già stata precedentemente condivisa
+        setAutore(getAutorePlaylist(id))    //Recupera i dati dell'autore della playlist
+        setIsSaved(checkIfSaved(id))        //Controlla se la playlist è già stata salvata o no
+
+        //Imposta dati per permettere la ricerca (imposta i dati di default e i filtri di default
         cleanCommunities()
 
         setSharableCommunities(getLoggedUser().communities.filter(item => !communitiesWhereShared(id).includes(item)))
         setUnsharableCommunities(communitiesWhereShared(id))
+
+
+
     }, [id]);
 
     useEffect(() => {
@@ -121,7 +177,6 @@ export const Playlist = () => {
             setCanzoni([data])
             setDefaultData([data])
         })
-
     }, [playlist]);
 
     useEffect(() => {
@@ -304,10 +359,44 @@ export const Playlist = () => {
                 //Pagina Playlist Generica
                 <div>
                     <h1 className={"h1 p-5 text-center text-uppercase"}>
-                        titolo
+                        {playlist.titolo}
                     </h1>
+                    {/* Intestazione Dinamica con Pulsante Modifica solo per il proprietario della Playlist*/}
+                    <div className={"d-flex flex-row justify-content-between"}>
+                        <h3 className={"col-5 my-auto"}>
+                            {playlist.descrizione}
+                        </h3>
 
+                        <div className={"my-auto text-center"}>
+                            <button className={"btn btn-primary py-3 px-4 text-uppercase"} onClick={handleSalva}>{isSaved? <img src={salvata}/> : <img src={salva}/>}</button>
+                        </div>
+                    </div>
+                    <div className={"my-5"}>
+                        <hr/>
+                        <div className={"d-flex flex-row justify-content-between"}>
+                            <h2 className={"text-capitalize fs-1"}>{autore.username}</h2>
+                            <button className={"btn btn-primary text-uppercase"}>Leggi Commenti</button>
+                        </div>
 
+                    </div>
+
+                    {/* Sezione Pulsanti Share unshare e search bar */}
+                    <div className={"d-flex flex-row align-items-center justify-content-evenly my-5"}>
+                        <SearchBar sendSearch={sendSearch}/>
+                    </div>
+
+                    <div className={"d-flex flex-row justify-content-center mt-5"}>
+                        {canzoni.map((canzone, index) => (
+                            <SongCard
+                                key={index}
+                                song={canzone}
+                                isProprietaria={true}
+                            />
+                        ))
+                        }
+                    </div>
+
+                    <div className={"mt-5"}></div>
                 </div>
             }
         </div>

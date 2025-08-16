@@ -9,7 +9,7 @@ export default function SearchBar({sendSearch}) {       //barra di ricerca con u
     }
 
     useEffect(() => {
-        sendData(search)
+        sendData(search.toLocaleLowerCase())
     }, [search])
 
     return (

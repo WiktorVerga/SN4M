@@ -90,6 +90,7 @@ export const Community = () => {
                         <PlaylistCard
                             key={index}
                             playlist={playlist}
+                            idCommunity={id}
                         />
                     ))
                     }

@@ -2,7 +2,11 @@ import SearchBar from "../../Components/SearchBar";
 import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getAutorePlaylist, getPlaylistsProprie, getPlaylistsSalvate} from "../../utilities/playlists";
+import {
+    getAutorePlaylist,
+    getFullPlaylistsSalvate,
+    getPlaylistsProprie
+} from "../../utilities/playlists";
 import {PlaylistCard} from "../../Components/PlaylistCard";
 import {getLoggedUser} from "../../utilities/users";
 
@@ -13,7 +17,7 @@ export default function Playlists() {
 
     const [isTue, setIsTue] = useState(true);          //Stato booleano che indica se l’utente sta visualizzando le proprie playlist (true) oppure quelle salvate (false).
 
-    const [visualizzaPlaylists, setVisualizzaPlaylists] = useState(isTue?getPlaylistsProprie()? getPlaylistsProprie() : [] : getPlaylistsSalvate()? getPlaylistsSalvate() : []);            //Stato che conterrà l’elenco delle playlist da mostrare nella pagina dopo eventuali filtri.
+    const [visualizzaPlaylists, setVisualizzaPlaylists] = useState(isTue?getPlaylistsProprie()? getPlaylistsProprie() : [] : getFullPlaylistsSalvate()? getFullPlaylistsSalvate() : []);            //Stato che conterrà l’elenco delle playlist da mostrare nella pagina dopo eventuali filtri.
 
     const [defaultData, setDefaultData] = useState([]);
 
@@ -24,7 +28,7 @@ export default function Playlists() {
             setDefaultData(getPlaylistsProprie()? getPlaylistsProprie() : [])
         } else {
             //Mostra tutte le playlist salvate dall'utente loggato
-            setDefaultData(getPlaylistsSalvate()? getPlaylistsSalvate() : [])
+            setDefaultData(getFullPlaylistsSalvate()? getFullPlaylistsSalvate() : [])
         }
     }, [isTue])
 
@@ -107,6 +111,7 @@ export default function Playlists() {
                             <PlaylistCard
                                 key={index}
                                 playlist={playlist}
+                                idCommunity={playlist.idCommunity}
                             />
                         ))
                         }

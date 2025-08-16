@@ -15,7 +15,6 @@ export default function TagConChiusura({value, handleDelete}) {
                         fill="white"/>
                 </svg>
             </div>
-
         </div>
     )
 }

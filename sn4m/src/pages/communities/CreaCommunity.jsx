@@ -90,7 +90,6 @@ export default function CreaCommunity() {
             autore: loggedUser.idUtente,
             playlistCondivise: []
         }
-
         /* Salvataggio dati EsploraCommunities in LocalStorage */
 
         //Aggiungo alla lista di EsploraCommunities

@@ -143,7 +143,7 @@ export default function Signin() {
         if (existingUsers) setUsers([...existingUsers, profilo])
         else setUsers([profilo])
 
-        navigate("/login")
+        navigate("/")
     }
 
     const handleAnnulla = () => {       //Naviga indietro nella cronologia quindi torna alla pagina precedente.

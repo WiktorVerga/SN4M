@@ -28,52 +28,53 @@ export const Playlist = () => {
 
     const loggedUser = getLoggedUser()
 
-    const autorePlaylist = getAutorePlaylist(id)
+    const autorePlaylist = getAutorePlaylist(id)                //dati autore playlist corrente
 
-    const isProprietaria = (loggedUser.idUtente === autorePlaylist.idUtente)
+    const isProprietaria = (loggedUser.idUtente === autorePlaylist.idUtente)        //true se l'utente è il proprietario
 
-    const [isShareOpen, setIsShareOpen] = useState(false);
-    const [isUnshareOpen, setIsUnshareOpen] = useState(false);
+    const [isShareOpen, setIsShareOpen] = useState(false);              //visibilità overlay "Condividi"
+    const [isUnshareOpen, setIsUnshareOpen] = useState(false);          //visibilità overlay "Rimuovi condivisione"
 
-    const [selectedItem, setSelectedItem] = useState("");
+    const [selectedItem, setSelectedItem] = useState("");               //opzione selezionata nel select
 
-    const [canShare, setCanShare] = useState(false);
+    const [canShare, setCanShare] = useState(false);            //disabilita/abilita pulsante per la condivisione o scondivisione dell'overlay
 
     const [isSaved, setIsSaved] = useState(false);
 
-    const [playlist, setPlaylist] = useState({})
-    const [isPubblica, setIsPubblica] = useState(false);
+    const [playlist, setPlaylist] = useState({})                //dati playlist
+    const [isPubblica, setIsPubblica] = useState(false);    //flag pubblica/privata
 
     const [canzoni, setCanzoni] = useState([]);
 
-    const [autore, setAutore] = useState({});
+    const [autore, setAutore] = useState({});           //dati autore (username, ecc.) della playlist
 
-    const [defaultData, setDefaultData] = useState([]);
+    const [defaultData, setDefaultData] = useState([]);             //stato per reset filtri ricerca
 
-    const [sharableCommunities, setSharableCommunities] = useState([]);
-    const [unsharableCommunities, setUnsharableCommunities] = useState([]);
+    const [sharableCommunities, setSharableCommunities] = useState([]);         //community in cui si può condividere playlist
+    const [unsharableCommunities, setUnsharableCommunities] = useState([]);     //community in cui si può togliere la condivisione playlist
 
-    /* Generazione ID Univoco: basato su timestamp e numero casuale */
+    /* Generazione ID Univoco per la condivisione: basato su timestamp e numero casuale */
     function generateId() {
         return Date.now() + '-' + Math.floor(Math.random() * 10000);
     }
 
     const handleCondividi = () => {
-        const community = getCommunity(selectedItem)
+        const community = getCommunity(selectedItem)        //carica la community scelta
 
-
-
-
+        /* Creazione oggetto Playlist Condivisibile*/
         const nuovaPlaylist = {
             idPlaylist: id,
             idCondivisione: generateId(),
             commenti: []
         }
 
+        //Aggiunto elemento all'array playlistCondivise in community
         community.playlistCondivise.push(nuovaPlaylist);
 
+        //salvati nel localStorage i dati
         updateCommunity(community)
 
+        //Notifica di successo
         toast.success("Playlist Condivisa!", {
             position: "top-right",
             autoClose: 5000,
@@ -85,19 +86,22 @@ export const Playlist = () => {
             progress: undefined,
         });
 
+        //ricalcola liste condivisibili/non condivisibili dopo l'operazione
         setSharableCommunities(loggedUser.communities.filter(item => !communitiesWhereShared(id).includes(item)))
         setUnsharableCommunities(communitiesWhereShared(id))
         setIsShareOpen(false)
     }
 
     const handleScondividi = () => {
-        const community = getCommunity(selectedItem)
+        const community = getCommunity(selectedItem)        //community da cui rimuovere
 
+        //crea e salva nuova community con playlistCondivise aggiornate
         updateCommunity({
             ...community,
-            playlistCondivise: community.playlistCondivise.filter(item => item.idPlaylist !== id)
+            playlistCondivise: community.playlistCondivise.filter(item => item.idPlaylist !== id)       //rimuove playlist corrente dalle playlistCondivise
         })
 
+        //Notifica di successo
         toast.success("Playlist Rimossa!", {
             position: "top-right",
             autoClose: 5000,
@@ -109,6 +113,7 @@ export const Playlist = () => {
             progress: undefined,
         });
 
+        //ricalcola liste condivisibili/non condivisibili dopo l'operazione
         setUnsharableCommunities(communitiesWhereShared(id))
         setSharableCommunities(loggedUser.communities.filter(item => !communitiesWhereShared(id).includes(item)))
         setIsUnshareOpen(false)
@@ -116,11 +121,13 @@ export const Playlist = () => {
 
     const handleSalva = () => {
         if (isSaved) {
+            //se già salvata si rimuove dai salvati dell'utente questa playlist
             loggedUser.playlistSalvate = loggedUser.playlistSalvate.filter(item => item.idCondivisione !== getIdCondivisionePlaylisty(searchParams.get("idCommunity"), id))
 
             updateUser(loggedUser)
             setIsSaved(checkIfSaved(id))
 
+            //Notifica di Successo
             toast.success("Playlist Rimossa!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -140,6 +147,7 @@ export const Playlist = () => {
             updateUser(loggedUser)
             setIsSaved(checkIfSaved(id))
 
+            //Notifica di successo
             toast.success("Playlist Salvata!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -165,12 +173,11 @@ export const Playlist = () => {
         //Imposta dati per permettere la ricerca (imposta i dati di default e i filtri di default
         cleanCommunities()
 
+        // calcola community in cui si può condividere e dove è già condivisa
         setSharableCommunities(getLoggedUser().communities.filter(item => !communitiesWhereShared(id).includes(item)))
         setUnsharableCommunities(communitiesWhereShared(id))
+    }, [id]);       //ricalcola quando cambia l'ID playlist in URL
 
-
-
-    }, [id]);
 
     useEffect(() => {
         getSong("2nLtzopw4rPReszdYBJU6h").then(data => {
@@ -179,11 +186,14 @@ export const Playlist = () => {
         })
     }, [playlist]);
 
+
     useEffect(() => {
+        //Disabilita pulsante se non è stato selezionato niente
         setCanShare(selectedItem === "");
     }, [selectedItem]);
 
     useEffect(() => {
+        //se apro/chiudo overlay, ricalcolo flag pubblica
         setIsPubblica(isPublic(id))
     }, [isShareOpen, isUnshareOpen]);
 
@@ -224,10 +234,9 @@ export const Playlist = () => {
                                 <h2>Scegli Dove Condividere</h2>
                                 <p>Scegli in quale communities vuoi condividere la playlist</p>
                                 {sharableCommunities.length > 0?
-
                                     <>
                                         <div className="input-group mb-3">
-
+                                            {/* Select community in cui condividere */}
                                             <select
                                                 className={"form-control"}
                                                 value={selectedItem}
@@ -240,19 +249,21 @@ export const Playlist = () => {
                                                 })}
 
                                             </select>
+                                            {/* pulsante "Condividi" disabilitato se nulla selezionato */}
                                             <button className={"btn btn-primary"} disabled={canShare} onClick={handleCondividi}>Condividi
                                             </button>
                                         </div>
                                     </>
 
                                     :
+                                    //caso: non ci sono nuove community dove condividere
                                     <div className={"d-flex flex-column m-3"}>
                                         <p>Nessuna Nuova Community in cui Condividere!</p>
                                         <button className={"btn btn-primary text-uppercase"} onClick={() => navigate("/esplora")}>Esplora Communities</button>
                                     </div>
 
                                 }
-
+                                {/* chiusura overlay */}
                                 <button className={"btn btn-primary"} onClick={() => setIsShareOpen(false)}>Chiudi</button>
                             </div>
                         </div>
@@ -264,10 +275,9 @@ export const Playlist = () => {
                             <div className="overlay-content">
                                 <h2>Scegli Dove Togliere la Condivisione</h2>
                                 <p>Da quale communities vuoi togliere la condivisione della playlist</p>
-
                                     <>
                                         <div className="input-group mb-3">
-
+                                            {/* Select community da cui rimuovere la condivisione */}
                                             <select
                                                 className={"form-control"}
                                                 value={selectedItem}
@@ -280,23 +290,23 @@ export const Playlist = () => {
                                                 })}
 
                                             </select>
+                                            {/* pulsante "Rimuovi" disabilitato se nulla selezionato */}
                                             <button className={"btn btn-primary"} disabled={canShare} onClick={handleScondividi}>Rimuovi
                                             </button>
                                         </div>
                                     </>
-
+                                {/* chiusura overlay */}
                                 <button className={"btn btn-primary"} onClick={() => setIsUnshareOpen(false)}>Chiudi</button>
                             </div>
                         </div>
                     )}
 
 
-
-                    {/* Pagina Effettiva */}
+                    {/* Pagina Effettiva: Playlist proprietaria */}
                     <h1 className={"h1 p-5 text-center text-uppercase"}>
                         {playlist.titolo}
                     </h1>
-                    {/* Intestazione Dinamica con Pulsante Modifica solo per il proprietario della Playlist*/}
+                    {/* Intestazione Dinamica con stato pubblica/privata e Pulsante Modifica*/}
                     <div className={"row flex-row "}>
                         <h3 className={"col my-auto"}>
                             {playlist.descrizione}
@@ -324,7 +334,7 @@ export const Playlist = () => {
                             </button>
                         </div>
                     </div>
-
+                    {/* Sezione Canzoni: aggiungere canzoni e mostrare card canzoni*/}
                     <Link className={"card add-song-card-bg text-decoration-none"}
                         to={`/playlist/${id}`}
                     >
@@ -356,12 +366,12 @@ export const Playlist = () => {
                 </div>
                 :
 
-                //Pagina Playlist Generica
+                //Pagina Playlist Generica (non proprietario)
                 <div>
                     <h1 className={"h1 p-5 text-center text-uppercase"}>
                         {playlist.titolo}
                     </h1>
-                    {/* Intestazione Dinamica con Pulsante Modifica solo per il proprietario della Playlist*/}
+                    {/* intestazione: descrizione + salva/rimuovi */}
                     <div className={"d-flex flex-row justify-content-between"}>
                         <h3 className={"col-5 my-auto"}>
                             {playlist.descrizione}
@@ -373,18 +383,19 @@ export const Playlist = () => {
                     </div>
                     <div className={"my-5"}>
                         <hr/>
+                        {/* autore playlist e pulsante leggi commenti */}
                         <div className={"d-flex flex-row justify-content-between"}>
                             <h2 className={"text-capitalize fs-1"}>{autore.username}</h2>
                             <button className={"btn btn-primary text-uppercase"}>Leggi Commenti</button>
                         </div>
-
                     </div>
 
-                    {/* Sezione Pulsanti Share unshare e search bar */}
+                    {/* Sezione search bar */}
                     <div className={"d-flex flex-row align-items-center justify-content-evenly my-5"}>
                         <SearchBar sendSearch={sendSearch}/>
                     </div>
 
+                    {/* Sezione Canzoni */}
                     <div className={"d-flex flex-row justify-content-center mt-5"}>
                         {canzoni.map((canzone, index) => (
                             <SongCard

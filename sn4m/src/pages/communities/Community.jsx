@@ -17,7 +17,7 @@ export const Community = () => {
 
     const [communityPlaylists, setCommunityPlaylists] = useState([]);       //stato per le playlist della community
 
-    const [defaultData, setDefaultData] = useState([]);
+    const [defaultData, setDefaultData] = useState([]);         //stato con i dati originali delle playlist
 
     const loggedUser = getLoggedUser()
 
@@ -31,31 +31,38 @@ export const Community = () => {
     }, [id])           //si aggiorna ogni volta che cambia l'ID nella URL
 
     useEffect(() => {
+        //aggiorna lo stato delle playlist mostrate ogni volta che cambiano i dati di default
         setCommunityPlaylists(defaultData)
     }, [defaultData]);
+
     /* Setup per Ricerca*/
     const setDefault = () => {
+        //reimposta lo stato delle playlist a quello originale
         setCommunityPlaylists(defaultData);
     }
 
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("");           //stato per il termine di ricerca
 
     const sendSearch = (searchTerm) => {
+        //aggiorna il termine di ricerca quando la SearchBar invia un valore
         setSearch(searchTerm);
     }
 
     useEffect(() => {
+        // Aggiorna il termine di ricerca quando la SearchBar invia un valore
         if (search !== "") {
             setCommunityPlaylists(defaultData.filter(playlist => (
                 playlist.titolo.toLowerCase().includes(search) || playlist.tags.some(tag => tag.toLowerCase().includes(search)) || getAutorePlaylist(playlist.idPlaylist).username.toLocaleLowerCase().includes(search)
             )));
         } else {
+            //se non c’è ricerca → mostra tutto
             setDefault()
         }
-    }, [search]);
+    }, [search]);           //si attiva ogni volta che cambia "search"
 
     return (
         <div>
+            {/* Titolo della community */}
             <h1 className={"h1 p-5 text-center text-capitalize fw-semibold"}>
                 {community.titolo}
             </h1>
@@ -72,7 +79,7 @@ export const Community = () => {
             </div>
 
             <hr className={"my-5"}/>
-
+            {/* Sezione playlist */}
             <h2 className={"h1 text-center text-uppercase"}>
                 Esplora PLAYLISTS
             </h2>
@@ -96,6 +103,7 @@ export const Community = () => {
                     }
                 </div>
                 :
+                /* Messaggio alternativo se non ci sono playlist */
                 <div className={"d-flex flex-column justify-content-center mt-5 text-center"}>
                     <h2 className={"fs-2"}>Troppo silenzio qui...</h2>
                     <p className={"fs-5"}>Non è stata ancora condivisa nessuna playlist

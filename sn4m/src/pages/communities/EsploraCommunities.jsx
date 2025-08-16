@@ -15,7 +15,7 @@ export default function EsploraCommunities() {
 
     const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);         //stato che conterrà la lista di community filtrate da mostrare a schermo
 
-    const [defaultData, setDefaultData] = useState([]);
+    const [defaultData, setDefaultData] = useState([]);                      //stato con i dati originali delle community (senza filtri)
 
     const loggedUser = getLoggedUser()          //recupera utente loggato
 
@@ -49,6 +49,7 @@ export default function EsploraCommunities() {
     }
 
     useEffect(() => {
+        //aggiorna lo stato delle community mostrate ogni volta che cambiano i dati di default
         setDefaultCommunities()
     }, [communities, isTutte])
 
@@ -56,25 +57,29 @@ export default function EsploraCommunities() {
 
     //Imposta la lista di elementi senza filtri
     useEffect(() => {
+        //reimposta lo stato delle community a quello originale
         setVisualizzaCommunities(defaultData)
     }, [defaultData]);
 
     //Recupera il Termine di Ricerca dalla SearchBar
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("");               //stato per il termine di ricerca
     const sendSearch = (searchTerm) => {
+        //aggiorna il termine di ricerca quando la SearchBar invia un valore
         setSearch(searchTerm);
     }
 
     //Al momento della modifica del termine di ricerca avviene la ricerca e dunque l'applicazione dei filtri
     useEffect(() => {
+        // Aggiorna il termine di ricerca quando la SearchBar invia un valore
         if (search !== "") {
             setVisualizzaCommunities(defaultData.filter(community => (
                 community.titolo.toLowerCase().includes(search) || community.tags.some(tag => tag.toLowerCase().includes(search))
             )));
         } else {
+            //se non c’è ricerca → mostra tutto
             setDefaultCommunities()
         }
-    }, [search]);
+    }, [search]);               //si attiva ogni volta che cambia "search"
 
     return (
         <div>
@@ -118,6 +123,7 @@ export default function EsploraCommunities() {
                     ))
                     }
                 </div>
+                    {/* Floating Button per creare community */}
                     <div className={"floating-btn-div"}>
                         <FloatingAddBtn navigateTo={"/creaCommunity"}
                         dim={4}/>

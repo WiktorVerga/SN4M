@@ -16,8 +16,7 @@ export const getPlaylists = (idPlaylist) => {      //restituisce le playlist cre
     return [utente.playlistProprie?.find(item => item.idPlaylist === idPlaylist), utente.playlistSalvate?.find(item => item.idPlaylist === idPlaylist)]
 }
 
-export const getPlaylist = (idPlaylist) => {      //restituisce le playlist create dall'utente loggato
-
+export const getPlaylist = (idPlaylist) => {      //restituisce dati playlist dal idPlyalist
     return getPlaylists(idPlaylist).find(item => item.idPlaylist === idPlaylist)
 }
 
@@ -58,10 +57,12 @@ export const setPlaylistsProprie = (playlists) => {         //modifica array pla
 }
 
 export const isPublic = (idPlaylist) => {
-    const loggedUser = getLoggedUser();
+    const loggedUser = getLoggedUser();         //Recupera l'utente attualmente loggato
 
-    return loggedUser?.communities.some(idCommunity => {
+    //Controlla se l'utente ha condiviso la playlist in almeno una delle community
+    return loggedUser?.communities.some(idCommunity => {        //cicla sulle community dell'utente
         if (loggedUser?.communities.length > 0) {
+            //controlla se la community corrente ha nelle playlistCondivise la playlist input
             return getCommunity(idCommunity)?.playlistCondivise.some(item => item.idPlaylist === idPlaylist)
         } else return false
     })
@@ -71,7 +72,7 @@ export const isPublic = (idPlaylist) => {
 export const getFullPlaylistsSalvate = () => {
     const loggedUser = getLoggedUser();
 
-    const playlistSalvate = loggedUser?.playlistSalvate.map(playlist => {
+    const playlistSalvate = loggedUser?.playlistSalvate.map(playlist => {           //cicla sulle playlist salvate dall'utente e le trasforma in oggetti completi
 
         //Trovo la community per ogni playlist
         const community = getCommunity(playlist.idCommunity)
@@ -105,12 +106,12 @@ export const checkIfSaved = (idPlaylist) => {
     return getFullPlaylistsSalvate()?.some(item => item.idPlaylist === idPlaylist)
 }
 
-export const communitiesWhereShared = (idPlaylist) => {
-    const whereShared = []
+export const communitiesWhereShared = (idPlaylist) => {         //restituisce un array con gli id delle community in cui una playlist è stata condivisa
+    const whereShared = []              //array dove memorizzare le community in cui la playlist è condivisa
 
     const loggedUser = getLoggedUser();
 
-    const tuttiIdCommunities = loggedUser?.communities
+    const tuttiIdCommunities = loggedUser?.communities      //recupera tutti gli id delle community dell'utente
 
     //Crea un array di oggetti per ogni idCommunity nell'array
     const tutteCommunities = tuttiIdCommunities.map(idCommunity => {

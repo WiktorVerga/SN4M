@@ -47,7 +47,7 @@ export default function CommunityCard({community, esplora, update}) {        // 
 
         updateUser(utenteAggiornato)            //aggiorna dati dell'utente nello storage
 
-        // Chiama la funzione passata come prop per aggiornare la UI estern
+        // Chiama la funzione passata come prop per aggiornare la UI esterna
         update()
 
         toast.success("Uscito dalla Community", {

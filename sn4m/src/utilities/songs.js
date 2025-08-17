@@ -25,12 +25,13 @@ export const getSong = async (idCanzone) => {
             });
             return formatter.format(date);      //ritorna la stringa formattata MM:SS
         }
+        console.log(dati)
 
         //crea un oggetto "song" con tutte le informazioni principali della traccia
         const song = {
             titolo: dati.name,
             durata: msToMinutesSeconds(dati.duration_ms),
-            album: dati.album.name,
+            anno: dati.album.release_date.split("-")[0],
             img: dati.album.images[1],
             artista: dati.artists[0].name,
             idCanzone: dati.id

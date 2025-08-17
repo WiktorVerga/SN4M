@@ -18,7 +18,7 @@ export const SongCard = ({song, isProprietaria, esplora}) => {
                 </div>
                 {/* Sezione destra: anno pubblicazione, durata e (se proprietaria) bottone di aggiunta/rimozione */}
                 <div className={"d-flex gap-3 align-items-center text-white gap-5 fs-5"}>
-                    <p className={"my-auto"}>{song.album}</p>
+                    <p className={"my-auto"}>{song.anno}</p>
                     <p className={"my-auto mx-5"}>{song.durata}</p>
                     {/* Se la playlist è dell’utente → mostra pulsante (aggiungi o rimuovi a seconda di "esplora": se è true c'è aggiunge se false è rimuovi) */}
                     {isProprietaria &&

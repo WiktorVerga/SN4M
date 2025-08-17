@@ -25,7 +25,6 @@ export const getSong = async (idCanzone) => {
             });
             return formatter.format(date);      //ritorna la stringa formattata MM:SS
         }
-        console.log(dati)
 
         //crea un oggetto "song" con tutte le informazioni principali della traccia
         const song = {

@@ -37,14 +37,14 @@ export default function Login() {
 
     //Layout pagina Login
     return (
-        <div>
+        <div className={"vh-100"}>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Social Network for Music
             </h1>
             <div className={"row flex-row justify-content-center mt-5"}>
                 {/* Immagine Log In SX */}
-                <div className={"col d-flex justify-content-center align-items-center"}><img className={"mx-auto"}
-                                                                                             src={loginsx}/></div>
+                <div className={"col d-flex justify-content-center align-items-center"}>
+                    <img className={"mx-auto"} src={loginsx}/></div>
 
                 {/* Card Log In */}
                 <div className={"col"}>
@@ -104,8 +104,9 @@ export default function Login() {
                     </div>
                 </div>
                 {/* Immagine Log In DX */}
-                <div className={"col d-flex justify-content-center align-items-center"}><img className={"mx-auto"}
-                                                                                             src={logindx}/></div>
+                <div className={"col d-flex justify-content-center align-items-center"}>
+                    <img className={"mx-auto"} src={logindx}/>
+                </div>
 
             </div>
         </div>

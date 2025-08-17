@@ -59,7 +59,8 @@ export default function TueCommunities() {
     useEffect(() => {
         if (search !== "") {
             setVisualizzaCommunities(defaultData.filter(community => (
-                community.titolo.toLowerCase().includes(search) || community.tags.some(tag => tag.toLowerCase().includes(search))
+                community.titolo.toLowerCase().includes(search)
+                || community.tags.some(tag => tag.toLowerCase().includes(search))
             )));
         } else {
             setDefaultCommunities()

@@ -23,10 +23,12 @@ export default function Navbar() {
         <nav className={"navbar navbar-ff bg-primary p-4 shadow"}>
             <div className="container">
                 <Link className={"navbar-brand text-white fw-bold"} to={"/esplora"}><h2>SN4M</h2></Link>
-                <Link className={isSelected("/esplora")? "navbar-text text-white text-decoration-none text-center fw-bold" : "navbar-text text-white text-decoration-none text-center"} to={"/esplora"}>Esplora<br/>Communities</Link>
-                <Link className={isSelected("/tueCommunities")? "navbar-text text-white text-decoration-none text-center fw-bold" : "navbar-text text-white text-decoration-none text-center"} to={"/tueCommunities"}>Le Tue<br/>Communities</Link>
-                <Link className={isSelected("/playlists")? "navbar-text text-white text-decoration-none text-center fw-bold" : "navbar-text text-white text-decoration-none text-center"} to={"/playlists"}>Libreria<br/>Playlists</Link>
-                <Link className={"navbar-button text-decoration-none"} to={"/profiloUtente"} onClick={() => {
+                <div className={"d-flex w-75 justify-content-evenly align-items-center mx-auto"}>
+                    <Link className={isSelected("/esplora")? "navbar-text text-white text-decoration-none text-center fw-bold" : "navbar-text text-white text-decoration-none text-center"} to={"/esplora"}>Esplora<br/>Communities</Link>
+                    <Link className={isSelected("/tueCommunities")? "navbar-text text-white text-decoration-none text-center fw-bold" : "navbar-text text-white text-decoration-none text-center"} to={"/tueCommunities"}>Le Tue<br/>Communities</Link>
+                    <Link className={isSelected("/playlists")? "navbar-text text-white text-decoration-none text-center fw-bold" : "navbar-text text-white text-decoration-none text-center"} to={"/playlists"}>Libreria<br/>Playlists</Link>
+                </div>
+                <Link className={"navbar-button text-decoration-none mx-auto"} to={"/profiloUtente"} onClick={() => {
                 }}>
                     <div className={"avatar"}>{getLetter()}</div>
                 </Link>

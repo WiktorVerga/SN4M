@@ -14,6 +14,7 @@ import TueCommunities from "./pages/communities/TueCommunities";
 import Playlists from "./pages/playlist/Playlists";
 import {Playlist} from "./pages/playlist/Playlist";
 import {Community} from "./pages/communities/Community";
+import {Footer} from "./Components/Footer";
 
 
 function App() {
@@ -65,7 +66,9 @@ function App() {
                         <Route path={"/modificaPlaylist"} element={<ModificaPlaylist/>}/>
                     </Routes>
                 </div>
+                <Footer />
                 <ToastContainer/>
+
             </div>
         </>
     );

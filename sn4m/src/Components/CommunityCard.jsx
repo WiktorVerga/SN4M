@@ -5,7 +5,7 @@ import {setCommunities} from "../utilities/communities";
 import {toast} from "react-toastify";
 import {Link, useNavigate} from "react-router-dom";
 
-export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
+    export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
     const loggedUser = getLoggedUser()
 
     const navigate = useNavigate();
@@ -73,8 +73,8 @@ export default function CommunityCard({community, esplora, update}) {        // 
 
 
     return (
-        <Link className={"card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none"}
-            to={`/communities/${community.idCommunity}`}
+        <div className={esplora? "card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none " : "card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none cursor-pointer"}
+            onClick={() => {!esplora && navigate(`/communities/${community.idCommunity}`)}}
         >
             <div className={"card-body p-5"}>
                 <div className={"row flex-row align-items-center"}>
@@ -121,6 +121,6 @@ export default function CommunityCard({community, esplora, update}) {        // 
                     clear={true}
                 />
             </div>
-        </Link>
+        </div>
     )
 }

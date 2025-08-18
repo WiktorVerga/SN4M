@@ -1,10 +1,10 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import SearchBar from "../../Components/SearchBar";
 import {useEffect, useState} from "react";
-import {getCommunity, getPlaylists} from "../../utilities/communities";
+import {cleanPlaylists, getCommunity, getPlaylistsDaCommunity} from "../../utilities/communities";
 import {getLoggedUser} from "../../utilities/users";
 import {PlaylistCard} from "../../Components/PlaylistCard";
-import {getAutorePlaylist} from "../../utilities/playlists";
+import {getAutorePlaylist, getFullPlaylistsSalvate} from "../../utilities/playlists";
 import share from "../../media/share.svg";
 
 export const Community = () => {
@@ -24,10 +24,12 @@ export const Community = () => {
     /* useEffect hooks */
 
     useEffect(() => {
+        cleanPlaylists(id)
+
         //recupera i dati della community usando l'ID preso dai parametri della URL
         setCommunity(getCommunity(id));
         //recupera le playlist associate a questa community
-        setDefaultData(getPlaylists(getCommunity(id)))
+        setDefaultData(getPlaylistsDaCommunity(getCommunity(id)))
     }, [id])           //si aggiorna ogni volta che cambia l'ID nella URL
 
     useEffect(() => {

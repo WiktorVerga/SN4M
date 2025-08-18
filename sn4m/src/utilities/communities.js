@@ -22,21 +22,44 @@ export const updateCommunity = (community) => {   //ottiene la lista esistente d
     else setCommunities([community])                                           //Se no: crea un nuovo array con solo la community da aggiornare/inserire.
 }
 
-export const getPlaylists = (community) => {            //restituisce tutte le playlist condivise all'interno di una determinata community
+export const getPlaylistsDaCommunity = (community) => {            //restituisce tutte le playlist condivise all'interno di una determinata community
     const playlists = community.playlistCondivise                    //prende l'array delle playlist condivise dalla community
 
     const playlistsTrovate = []
 
     //cicla tutte le playlist condivise nella community
-    playlists.map(PlaylistCondivisa => {
-        const playlist = getPlaylist(PlaylistCondivisa.idPlaylist)
-        const autore = getAutorePlaylist(PlaylistCondivisa.idPlaylist)
+    playlists.map(playlistCondivisa => {
+        const playlist = getPlaylist(playlistCondivisa.idPlaylist)
+        const autore = getAutorePlaylist(playlistCondivisa.idPlaylist)
 
         //cerca, tra le playlist proprie dell'autore, quella con lo stesso idPlaylist
-        const playlistTrovata = autore.playlistProprie?.find(item => item.idPlaylist === playlist.idPlaylist)
+        const playlistTrovata = {
+            ...autore.playlistProprie?.find(item => item.idPlaylist === playlist.idPlaylist),
+            idCondivisione: playlistCondivisa.idCondivisione,
+        }
         //aggiunge la playlist trovata all'array di output
         playlistsTrovate.push(playlistTrovata)
     })
 
     return playlistsTrovate
+}
+
+export const cleanPlaylists = (idCommunty) => {
+    const community = getCommunity(idCommunty)
+
+    const playlists = community.playlistCondivise
+
+    const playlistAggiornate = playlists.map(playlistCondivisa => {
+        const autore = getAutorePlaylist(playlistCondivisa.idPlaylist)
+
+        //cerca, tra le playlist proprie dell'autore, quella con lo stesso idPlaylist
+
+        const esisteAncora = autore.playlistProprie?.some(item => item.idPlaylist === playlistCondivisa.idPlaylist)
+
+        return esisteAncora? playlistCondivisa : undefined
+    })
+
+    community.playlistCondivise = playlistAggiornate.filter(item => typeof item !== "undefined")
+
+    updateCommunity(community)
 }

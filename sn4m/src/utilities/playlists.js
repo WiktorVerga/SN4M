@@ -1,4 +1,4 @@
-import {getLoggedUser, getUser, getUsers, setUsers} from "./users";
+import {cleanPlaylistSalvate, getLoggedUser, getUser, getUsers, setUsers, updateUser} from "./users";
 import {getCommunity} from "./communities";
 
 export const getPlaylistsProprie = () => {      //restituisce le playlist create dall'utente loggato
@@ -10,6 +10,7 @@ export const getPlaylistsProprie = () => {      //restituisce le playlist create
 }
 
 export const getPlaylists = (idPlaylist) => {      //restituisce le playlist create e salvate dall'utente loggato
+    if (!idPlaylist) return null
     const idUtente = idPlaylist.split(".")[0]
     const utente = getUser(idUtente)
 
@@ -17,7 +18,7 @@ export const getPlaylists = (idPlaylist) => {      //restituisce le playlist cre
 }
 
 export const getPlaylist = (idPlaylist) => {      //restituisce dati playlist dal idPlyalist
-    return getPlaylists(idPlaylist).find(item => item.idPlaylist === idPlaylist)
+    return getPlaylists(idPlaylist)?.find(item => item.idPlaylist === idPlaylist)
 }
 
 export const getAutorePlaylist = (idPlaylist) => {      //restituisce l'oggetto dell'autore della playlist, dato in ingresso l'id della playlist
@@ -70,6 +71,7 @@ export const isPublic = (idPlaylist) => {
 
 //Restituisce un array con gli oggetti delle playlist salvate con tutte le informazioni
 export const getFullPlaylistsSalvate = () => {
+
     const loggedUser = getLoggedUser();
 
     const playlistSalvate = loggedUser?.playlistSalvate.map(playlist => {           //cicla sulle playlist salvate dall'utente e le trasforma in oggetti completi
@@ -126,4 +128,26 @@ export const communitiesWhereShared = (idPlaylist) => {         //restituisce un
     })
 
     return whereShared
+}
+
+export const addSong = (idPlaylist, idCanzone) => {
+    const loggedUser = getLoggedUser();
+
+    loggedUser?.playlistProprie.find(item => item.idPlaylist === idPlaylist).canzoni.push(idCanzone)
+
+    updateUser(loggedUser)
+}
+
+export const removeSong = (idPlaylist, idCanzone) => {
+    const loggedUser = getLoggedUser();
+
+    const playlist = loggedUser?.playlistProprie.find(item => item.idPlaylist === idPlaylist)
+
+    const canzoniAggiornate = playlist.canzoni.filter(item => item !== idCanzone)
+
+    playlist.canzoni = canzoniAggiornate
+
+    loggedUser.playlistProprie = [...loggedUser?.playlistProprie.filter(item => item.idPlaylist !== idPlaylist), playlist]
+
+    updateUser(loggedUser)
 }

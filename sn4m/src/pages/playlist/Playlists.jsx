@@ -8,7 +8,7 @@ import {
     getPlaylistsProprie
 } from "../../utilities/playlists";
 import {PlaylistCard} from "../../Components/PlaylistCard";
-import {getLoggedUser} from "../../utilities/users";
+import {cleanPlaylistSalvate, getLoggedUser} from "../../utilities/users";
 
 export default function Playlists() {
 
@@ -27,6 +27,7 @@ export default function Playlists() {
             //Mostra tutte le playlist create dall'utente loggato
             setDefaultData(getPlaylistsProprie()? getPlaylistsProprie() : [])
         } else {
+            cleanPlaylistSalvate()
             //Mostra tutte le playlist salvate dall'utente loggato
             setDefaultData(getFullPlaylistsSalvate()? getFullPlaylistsSalvate() : [])
         }

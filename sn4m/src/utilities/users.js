@@ -62,3 +62,24 @@ export const cleanCommunities = () => {
 
     updateUser(utenteAggiornato)            //aggiorna dati dell'utente nello storage
 }
+
+export const cleanPlaylistSalvate = () => {
+    cleanCommunities()
+    const user = getLoggedUser()        //recupera l'utente loggato
+
+    //Per ogni playlist salvata, controllo se nella community da cui è stata salvata è ancora condivisa, se no restituisce undefined
+    const playlistSalvateAggiornate = user.playlistSalvate.map((playlistSalvata) => {
+
+
+        //Recuperlo la community da cui è stata salvata la playlist
+        const communty = getCommunity(playlistSalvata.idCommunity)
+
+        const esisteAncora = communty.playlistCondivise.some(item => item.idCondivisione === playlistSalvata.idCondivisione)
+        return communty? esisteAncora? playlistSalvata : undefined : undefined
+    })
+
+    user.playlistSalvate = playlistSalvateAggiornate.filter(item => typeof item !== "undefined")
+
+    updateUser(user)
+}
+

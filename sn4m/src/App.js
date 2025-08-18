@@ -15,6 +15,7 @@ import Playlists from "./pages/playlist/Playlists";
 import {Playlist} from "./pages/playlist/Playlist";
 import {Community} from "./pages/communities/Community";
 import {Footer} from "./Components/Footer";
+import AddSongs from "./pages/playlist/AddSong";
 
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
                         <Route path={"/tueCommunities"} element={<TueCommunities/>}/>
                         <Route path={"/playlists"} element={<Playlists/>}/>
                         <Route path={"/playlists/:id"} element={<Playlist/>}/>
+                        <Route path={"/playlists/:id/canzoni"} element={<AddSongs/>}/>
                         <Route path={"/creaPlaylist"} element={<CreaPlaylist/>}/>
                         <Route path={"/modificaPlaylist"} element={<ModificaPlaylist/>}/>
                     </Routes>

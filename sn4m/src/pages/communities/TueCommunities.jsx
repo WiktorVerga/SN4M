@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
 import {getCommunities, setCommunities} from "../../utilities/communities";
-import {getLoggedUser, getUserCommunities} from "../../utilities/users";
+import {cleanCommunities, getLoggedUser, getUserCommunities} from "../../utilities/users";
 
 export default function TueCommunities() {
     const navigate = useNavigate();
@@ -29,6 +29,8 @@ export default function TueCommunities() {
      - se isTue = true => mostra solo le communities create dall'utente*/
 
     const setDefaultCommunities = () => {
+        cleanCommunities()
+
         /* Applico Filtro se è selezionato "Sei Iscritto" */
         if (!isTue) {
             setDefaultData(communities.filter(community => (community.autore !== loggedUser.idUtente)));

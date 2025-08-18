@@ -14,7 +14,7 @@ import share from "../../media/share.svg"
 import unshare from "../../media/un-share.svg"
 import salva from "../../media/salva.svg"
 import salvata from "../../media/saved.svg"
-import {getSong} from "../../utilities/songs";
+import {getSong, getSongs} from "../../utilities/songs";
 import {SongCard} from "../../Components/SongCard";
 import {PlaylistCard} from "../../Components/PlaylistCard";
 import {getCommunity, updateCommunity} from "../../utilities/communities";
@@ -144,6 +144,10 @@ export const Playlist = () => {
                 idCommunity: searchParams.get("idCommunity"),
                 idCondivisione: getIdCondivisionePlaylisty(searchParams.get("idCommunity"), id),
             })
+
+            console.log(loggedUser.playlistSalvate)
+
+
             updateUser(loggedUser)
             setIsSaved(checkIfSaved(id))
 
@@ -160,6 +164,10 @@ export const Playlist = () => {
             });
         }
 
+    }
+
+    const update = () => {
+        setPlaylist(getPlaylist(id))
     }
 
     /* useEffect Hooks */
@@ -180,10 +188,12 @@ export const Playlist = () => {
 
 
     useEffect(() => {
-        getSong("2nLtzopw4rPReszdYBJU6h").then(data => {
-            setCanzoni([data])
-            setDefaultData([data])
-        })
+        if (typeof playlist.canzoni !== "undefined") {
+            getSongs(playlist.canzoni).then(data => {
+                setCanzoni(data)
+                setDefaultData(data)
+            })
+        }
     }, [playlist]);
 
 
@@ -336,7 +346,7 @@ export const Playlist = () => {
                     </div>
                     {/* Sezione Canzoni: aggiungere canzoni e mostrare card canzoni*/}
                     <Link className={"card add-song-card-bg text-decoration-none"}
-                        to={`/playlist/${id}`}
+                        to={`/playlists/${id}/canzoni`}
                     >
                         <div className={"card-body d-flex gap-3 align-items-center"}>
                             <div className={"btn btn-primary p-4 rounded-4 no-hover"}
@@ -351,16 +361,21 @@ export const Playlist = () => {
                         </div>
                     </Link>
 
-                    <div className={"d-flex flex-row justify-content-center mt-5"}>
+                    {playlist?.canzoni?.length > 0 ?
+                        <div className={"d-flex flex-column gap-5 justify-content-center mt-5"}>
                         {canzoni.map((canzone, index) => (
                             <SongCard
                                 key={index}
                                 song={canzone}
                                 isProprietaria={true}
+                                update={update}
                             />
                         ))
                         }
                     </div>
+                        :
+                        <h3 className={"text-center w-100 mt-5 d-flex flex-column justify-content-center align-items-center"} style={{height: "20vh"}}>Non ci sono ancora canzoni!</h3>
+                    }
 
                     <div className={"mt-5"}></div>
                 </div>
@@ -396,16 +411,21 @@ export const Playlist = () => {
                     </div>
 
                     {/* Sezione Canzoni */}
-                    <div className={"d-flex flex-row justify-content-center mt-5"}>
-                        {canzoni.map((canzone, index) => (
-                            <SongCard
-                                key={index}
-                                song={canzone}
-                                isProprietaria={true}
-                            />
-                        ))
-                        }
-                    </div>
+                    {playlist?.canzoni?.length > 0 ?
+                        <div className={"d-flex flex-column gap-5 justify-content-center mt-5"}>
+                            {canzoni.map((canzone, index) => (
+                                <SongCard
+                                    key={index}
+                                    song={canzone}
+                                    isProprietaria={false}
+                                />
+                            ))
+                            }
+                        </div>
+                        :
+                        <h3 className={"text-center w-100 mt-5 d-flex flex-column justify-content-center align-items-center"}
+                            style={{height: "20vh"}}>Non ci sono ancora canzoni!</h3>
+                    }
 
                     <div className={"mt-5"}></div>
                 </div>

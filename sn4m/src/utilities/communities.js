@@ -1,4 +1,4 @@
-import {getLoggedUser, getUser} from "./users";
+import {getLoggedUser, getUser, getUsers} from "./users";
 import {getAutorePlaylist, getPlaylist} from "./playlists";
 
 export const getCommunities = () => {       //recupera la voce "communities" da localStorage e trasforma il JSON in stringa
@@ -44,22 +44,48 @@ export const getPlaylistsDaCommunity = (community) => {            //restituisce
     return playlistsTrovate
 }
 
+export const getCommentiPlaylist = (idCommunity, idPlaylist) => {
+    const community = getCommunity(idCommunity)
+    const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)
+
+    return playlist.commenti
+}
+
 export const cleanPlaylists = (idCommunty) => {
     const community = getCommunity(idCommunty)
 
-    const playlists = community.playlistCondivise
+    if (typeof community === null || community === undefined) {
+        return null
+    } else {
+        const playlists = community.playlistCondivise
 
-    const playlistAggiornate = playlists.map(playlistCondivisa => {
-        const autore = getAutorePlaylist(playlistCondivisa.idPlaylist)
+        const playlistAggiornate = playlists.map(playlistCondivisa => {
+            const autore = getAutorePlaylist(playlistCondivisa.idPlaylist)
 
-        //cerca, tra le playlist proprie dell'autore, quella con lo stesso idPlaylist
+            //cerca, tra le playlist proprie dell'autore, quella con lo stesso idPlaylist
 
-        const esisteAncora = autore.playlistProprie?.some(item => item.idPlaylist === playlistCondivisa.idPlaylist)
+            const esisteAncora = autore.playlistProprie?.some(item => item.idPlaylist === playlistCondivisa.idPlaylist)
 
-        return esisteAncora? playlistCondivisa : undefined
+            return esisteAncora? playlistCondivisa : undefined
+        })
+
+        community.playlistCondivise = playlistAggiornate.filter(item => typeof item !== "undefined")
+
+        updateCommunity(community)
+    }
+}
+
+export const cleanCommunities = () => {
+    const communities = getCommunities()
+    const users = getUsers()
+
+    if (communities.length === 0 || users.length === 0) return null
+
+    const communitiesAggiornate = communities.map(community => {
+        const esisteAncora = users.some(item => item.idUtente === community.autore)
+
+        return esisteAncora? community : undefined
     })
 
-    community.playlistCondivise = playlistAggiornate.filter(item => typeof item !== "undefined")
-
-    updateCommunity(community)
+    setCommunities(communitiesAggiornate.filter(item => typeof item !== "undefined"))
 }

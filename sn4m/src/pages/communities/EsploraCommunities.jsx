@@ -3,7 +3,7 @@ import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
-import {getCommunities, setCommunities} from "../../utilities/communities";
+import {cleanCommunities, getCommunities, setCommunities} from "../../utilities/communities";
 import {getLoggedUser} from "../../utilities/users";
 
 export default function EsploraCommunities() {
@@ -20,6 +20,7 @@ export default function EsploraCommunities() {
     const loggedUser = getLoggedUser()          //recupera utente loggato
 
     const setDefaultCommunities = () => {
+        cleanCommunities()
         /* Applico Filtro se è selezionato "Suggerite" */
         if (!isTutte) {
 

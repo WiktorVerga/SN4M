@@ -7,7 +7,7 @@ import {
     isPublic
 } from "../../utilities/playlists";
 import {useEffect, useState} from "react";
-import {cleanCommunities, getLoggedUser, updateUser} from "../../utilities/users";
+import {cleanSubscribedCommunities, getLoggedUser, updateUser} from "../../utilities/users";
 import SearchBar from "../../Components/SearchBar";
 
 import share from "../../media/share.svg"
@@ -42,6 +42,7 @@ export const Playlist = () => {
     const [isSaved, setIsSaved] = useState(false);
 
     const [playlist, setPlaylist] = useState({})                //dati playlist
+
     const [isPubblica, setIsPubblica] = useState(false);    //flag pubblica/privata
 
     const [canzoni, setCanzoni] = useState([]);
@@ -179,7 +180,7 @@ export const Playlist = () => {
         setIsSaved(checkIfSaved(id))        //Controlla se la playlist è già stata salvata o no
 
         //Imposta dati per permettere la ricerca (imposta i dati di default e i filtri di default
-        cleanCommunities()
+        cleanSubscribedCommunities()
 
         // calcola community in cui si può condividere e dove è già condivisa
         setSharableCommunities(getLoggedUser().communities.filter(item => !communitiesWhereShared(id).includes(item)))
@@ -401,7 +402,6 @@ export const Playlist = () => {
                         {/* autore playlist e pulsante leggi commenti */}
                         <div className={"d-flex flex-row justify-content-between"}>
                             <h2 className={"text-capitalize fs-1"}>{autore.username}</h2>
-                            <button className={"btn btn-primary text-uppercase"}>Leggi Commenti</button>
                         </div>
                     </div>
 

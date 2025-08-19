@@ -16,6 +16,10 @@ import {Playlist} from "./pages/playlist/Playlist";
 import {Community} from "./pages/communities/Community";
 import {Footer} from "./Components/Footer";
 import AddSongs from "./pages/playlist/AddSong";
+import {cleanCommunities} from "./utilities/communities";
+import {cleanPlaylistSalvate, cleanSubscribedCommunities} from "./utilities/users";
+import {Commenti} from "./pages/playlist/Commenti";
+import {PlaylistCommunity} from "./pages/playlist/playlistCommunity";
 
 
 function App() {
@@ -27,6 +31,10 @@ function App() {
 
 
     useEffect(() => {
+        cleanCommunities()
+        cleanSubscribedCommunities()
+        cleanPlaylistSalvate()
+
         const checkLogin = () => {
             const token = sessionStorage.getItem("loginSession") === null
 
@@ -63,6 +71,8 @@ function App() {
                         <Route path={"/tueCommunities"} element={<TueCommunities/>}/>
                         <Route path={"/playlists"} element={<Playlists/>}/>
                         <Route path={"/playlists/:id"} element={<Playlist/>}/>
+                        <Route path={"/communities/:idCommunity/playlists/:idPlaylist"} element={<PlaylistCommunity/>}/>
+                        <Route path={"/communities/:idCommunity/playlists/:idPlaylist/commenti"} element={<Commenti/>}/>
                         <Route path={"/playlists/:id/canzoni"} element={<AddSongs/>}/>
                         <Route path={"/creaPlaylist"} element={<CreaPlaylist/>}/>
                         <Route path={"/modificaPlaylist"} element={<ModificaPlaylist/>}/>

@@ -1,17 +1,18 @@
 import add from "../media/add-song.svg"
 import remove from "../media/rem-song.svg"
 import salvata from "../media/salvata.svg"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {getLoggedUser} from "../utilities/users";
 import {useParams} from "react-router-dom";
 import {addSong, removeSong} from "../utilities/playlists";
 import {toast} from "react-toastify";
+import {songAlreadyAdded} from "../utilities/songs";
 
 export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
 
     const {id} = useParams();
 
-    const [aggiunta, setAggiunta] = useState(false);
+    const [aggiunta, setAggiunta] = useState(songAlreadyAdded(id, song.idCanzone));
 
     const loggedUser = getLoggedUser()
 
@@ -48,6 +49,10 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
 
         update()
     }
+
+    useEffect(() => {
+        setAggiunta(songAlreadyAdded(id, song.idCanzone))
+    }, [song])
 
     return (
         <div className={"card song-card-bg text-decoration-none w-100"}>

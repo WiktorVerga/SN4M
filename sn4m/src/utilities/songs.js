@@ -1,4 +1,5 @@
 import {getToken} from "./getToken";
+import {getPlaylist} from "./playlists";
 
 //funzione interna che trasforma i millisecondi in formato minuti:secondi
 function msToMinutesSeconds(ms) {
@@ -116,4 +117,8 @@ export const searchSong = async (searchTerm) => {
     } catch (error) {
         console.log(error.message);
     }
+}
+
+export const songAlreadyAdded = (idPlaylist, idCanzone) => {
+    return getPlaylist(idPlaylist)?.canzoni?.some((item) => item === idCanzone)
 }

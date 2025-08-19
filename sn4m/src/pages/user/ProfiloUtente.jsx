@@ -136,8 +136,6 @@ export default function ProfiloUtente() {
 
         if (!hasError) {
 
-            console.log(initialArtisti)
-
             /*Creazione oggetto Profilo*/
             const profilo = {
                 idUtente: utenteLoggato.idUtente,
@@ -184,8 +182,11 @@ export default function ProfiloUtente() {
     const handleDeleteAccount = () => {         //eliminazione account dopo che l'utente scriva ELIMINA
         const validate = prompt("Digita: ELIMINA")
 
+        const idUtente = utenteLoggato.idUtente
+
         if (validate === "ELIMINA") {
-            setUsers(getUsers()?.filter(item => item.email !== utenteLoggato.email))        //rimuove l’utente loggato dal localStorage.
+            setUsers(getUsers().filter(item => item.idUtente !== idUtente))        //rimuove l’utente loggato dal localStorage.
+            logout()
             navigate("/")       //reindirizza alla home page dopo l’eliminazione.
         }
     }

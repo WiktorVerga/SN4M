@@ -1,5 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import {getLoggedUser} from "../utilities/users";
+import {getLetter, getLoggedUser} from "../utilities/users";
 import {useEffect, useState} from "react";
 
 export default function Navbar() {
@@ -10,13 +10,6 @@ export default function Navbar() {
 
         if (window.location.pathname === uri) return true
         else return false
-    }
-
-    const getLetter = () => {
-        const loggedUser = getLoggedUser()
-        if (loggedUser === null) return
-
-        return loggedUser?.username.charAt(0).toUpperCase()
     }
 
     return (
@@ -30,7 +23,7 @@ export default function Navbar() {
                 </div>
                 <Link className={"navbar-button text-decoration-none mx-auto"} to={"/profiloUtente"} onClick={() => {
                 }}>
-                    <div className={"avatar"}>{getLetter()}</div>
+                    <div className={"avatar"}>{getLetter(getLoggedUser().idUtente)}</div>
                 </Link>
             </div>
         </nav>

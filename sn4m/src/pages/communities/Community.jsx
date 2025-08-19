@@ -112,16 +112,9 @@ export const Community = () => {
                         <br/>
                         {community.autore === loggedUser.idUtente && "Inizia tu a condividere!"}
                     </p>
-                    {community.autore === loggedUser.idUtente &&
-                        <Link className={"btn btn-primary p-3 mx-auto"} to={"/playlists"}><img src={share}
-                                                                                               alt={"Share Icon"}/></Link>
-                    }
+                    <Link className={"btn btn-primary p-3 mx-auto"} to={"/playlists"}><img src={share} alt={"Share Icon"}/></Link>
                 </div>
             }
-
-
         </div>
-
-
     )
 }

@@ -3,8 +3,8 @@ import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
-import {getCommunities, setCommunities} from "../../utilities/communities";
-import {cleanCommunities, getLoggedUser, getUserCommunities} from "../../utilities/users";
+import {cleanCommunities, getCommunities, setCommunities} from "../../utilities/communities";
+import {cleanSubscribedCommunities, getLoggedUser, getUserCommunities} from "../../utilities/users";
 
 export default function TueCommunities() {
     const navigate = useNavigate();
@@ -30,6 +30,7 @@ export default function TueCommunities() {
 
     const setDefaultCommunities = () => {
         cleanCommunities()
+        cleanSubscribedCommunities()
 
         /* Applico Filtro se è selezionato "Sei Iscritto" */
         if (!isTue) {

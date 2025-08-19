@@ -249,3 +249,36 @@ body {
 .no-hover {
   pointer-events: none;
 }
+
+.comment-bg {
+  background: linear-gradient(96deg, #2E5259 12.78%, #191F20 100%);
+  border: none;
+  min-height: 260px;
+}
+
+.scrivi-commento {
+  padding: 10px;
+  width: 100%;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-family: raleway, sans-serif;
+  outline: none;
+  background: inherit;
+  resize: none;
+  &::placeholder {
+    color: white;
+  }
+  &:focus {
+    padding: 10px;
+    width: 100%;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-family: raleway, sans-serif;
+    outline: none;
+    background: inherit;
+    resize: none;
+    box-shadow: none;
+  }
+}

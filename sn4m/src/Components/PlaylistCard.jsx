@@ -1,6 +1,8 @@
 import TagDisplayer from "./TagDisplayer";
 import {Link} from "react-router-dom";
 import {getAutorePlaylist} from "../utilities/playlists";
+import {type} from "@testing-library/user-event/dist/type";
+import {useDebugValue} from "react";
 
 
 export const PlaylistCard = ({playlist, idCommunity}) => {
@@ -8,7 +10,7 @@ export const PlaylistCard = ({playlist, idCommunity}) => {
     return (
         //la card è un Link che porta alla pagina della playlist in base al suo id
         <Link className={"card playlist-card-bg text-white m-auto shadow w-25 h-25 shadow text-decoration-none"}
-            to={`/playlists/${playlist.idPlaylist}?idCommunity=${idCommunity}`}
+            to={typeof idCommunity === 'undefined'? `/playlists/${playlist.idPlaylist}` : `/communities/${idCommunity}/playlists/${playlist.idPlaylist}`}
         >
             {/* Parte superiore della card con titolo e descrizione */}
             <div className="card-body d-flex flex-column">

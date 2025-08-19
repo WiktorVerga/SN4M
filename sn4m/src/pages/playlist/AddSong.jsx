@@ -2,9 +2,12 @@ import SearchBar from "../../Components/SearchBar";
 import {SongCard} from "../../Components/SongCard";
 import {useEffect, useState} from "react";
 import {searchSong} from "../../utilities/songs";
+import {useParams} from "react-router-dom";
+import {getPlaylist} from "../../utilities/playlists";
 
 export default function AddSongs() {
 
+    const {id} = useParams();
     const [canzoni, setCanzoni] = useState([]);
 
     //Recupera il Termine di Ricerca dalla SearchBar
@@ -17,7 +20,8 @@ export default function AddSongs() {
     useEffect(() => {
         if (search !== "") {
             searchSong(search).then(dati => {
-                setCanzoni(dati);
+                const canzoniFiltrate = dati.filter(canzone => !getPlaylist(id).canzoni.some(canzonePlaylist => canzonePlaylist === canzone.idCanzone));
+                setCanzoni(canzoniFiltrate);
             })
         }
     }, [search]);

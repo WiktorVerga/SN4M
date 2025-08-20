@@ -13,26 +13,27 @@ import {useEffect, useState} from "react";
 import {getSongs} from "../../utilities/songs";
 
 export const PlaylistCommunity = () => {
-    const {idPlaylist, idCommunity} = useParams()
+    const {idPlaylist, idCommunity} = useParams()       //ottiene parametri URL
 
     const navigate = useNavigate();
 
-    const loggedUser = getLoggedUser()
+    const loggedUser = getLoggedUser()          //recupera utente loggato
 
     const autorePlaylist = getAutorePlaylist(idPlaylist)                //dati autore playlist corrente
 
     const isProprietaria = (loggedUser.idUtente === autorePlaylist.idUtente)        //true se l'utente è il proprietario
 
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);      //stato per controllo se playlist è stata salvata
 
-    const [playlist, setPlaylist] = useState({})                //dati playlist
+    const [playlist, setPlaylist] = useState({})                //stato dati playlist
 
-    const [canzoni, setCanzoni] = useState([]);
+    const [canzoni, setCanzoni] = useState([]);                 //stato lista canzoni
 
-    const [autore, setAutore] = useState({});           //dati autore (username, ecc.) della playlist
+    const [autore, setAutore] = useState({});           //stato autore della playlist
 
     const [defaultData, setDefaultData] = useState([]);             //stato per reset filtri ricerca
 
+    //Funzione per gestire salvataggio/rimozione playlist
     const handleSalva = () => {
         if (isSaved) {
             //se già salvata si rimuove dai salvati dell'utente questa playlist
@@ -59,9 +60,6 @@ export const PlaylistCommunity = () => {
                 idCondivisione: getIdCondivisionePlaylisty(idCommunity, idPlaylist),
             })
 
-            console.log(loggedUser.playlistSalvate)
-
-
             updateUser(loggedUser)
             setIsSaved(checkIfSaved(idPlaylist))
 
@@ -77,11 +75,10 @@ export const PlaylistCommunity = () => {
                 progress: undefined,
             });
         }
-
     }
 
     /* useEffect Hooks */
-
+    //Inizializza dati playlist, autore e stato salvata
     useEffect(() => {
         setPlaylist(getPlaylist(idPlaylist))        //Recupera i dati della playlist
         setAutore(getAutorePlaylist(idPlaylist))    //Recupera i dati dell'autore della playlist
@@ -91,6 +88,7 @@ export const PlaylistCommunity = () => {
         cleanSubscribedCommunities()
     }, [idPlaylist]);       //ricalcola quando cambia l'ID playlist in URL
 
+    //Recupera i dettagli delle canzoni della playlist
     useEffect(() => {
         if (typeof playlist.canzoni !== "undefined") {
             getSongs(playlist.canzoni).then(data => {
@@ -126,8 +124,8 @@ export const PlaylistCommunity = () => {
 
     return (
         <div>
-            {/*Pagina Playlist Generica (non proprietario) */}
             <div>
+                {/* Titolo playlist */}
                 <h1 className={"h1 p-5 text-center text-uppercase"}>
                     {playlist.titolo}
                 </h1>
@@ -175,7 +173,6 @@ export const PlaylistCommunity = () => {
                     <h3 className={"text-center w-100 mt-5 d-flex flex-column justify-content-center align-items-center"}
                         style={{height: "20vh"}}>Non ci sono ancora canzoni!</h3>
                 }
-
                 <div className={"mt-5"}></div>
             </div>
         </div>

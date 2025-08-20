@@ -4,21 +4,23 @@ import {getLetter, getLoggedUser, getUser, getUsers, logout, setUsers} from "../
 import {getCommunity, updateCommunity} from "../utilities/communities";
 import {toast} from "react-toastify";
 
+//Componente che riceve come props: il commento, id della community, id della playlist e funzione update
 export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
 
-    const [autore, setAutore] = useState({});
+    const [autore, setAutore] = useState({});           //stato per memorizzare i dati dell'autore del commento
 
-    const [letter, setLetter] = useState("");
+    const [letter, setLetter] = useState("");       //stato per memorizzare la lettera iniziale dell'autore
 
-    const [isProprietario, setIsProprietario] = useState(false);
+    const [isProprietario, setIsProprietario] = useState(false);     //stato che verifica se l'utente loggato è proprietario del commento
 
-    const [testoCommento, setTestoCommento] = useState("");
-    const [testoErrore, setTestoErrore] = useState("");
+    const [testoCommento, setTestoCommento] = useState("");      //stato per il testo del commento
+    const [testoErrore, setTestoErrore] = useState("");         //stato per gestire messaggi di errore del commento
 
-    const [openEdit, setOpenEdit] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);      //stato per gestire l'apertura della modalità modifica (overlay)
 
-    const loggedUser = getLoggedUser();
+    const loggedUser = getLoggedUser();         //ottiene l'utente attualmente loggato
 
+    //Funzione per validare il testo del commento
     const checkTesto = () => {
 
         const txtArea = document.getElementById("testoCommento");
@@ -38,6 +40,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
         return true
     }
 
+    //Funzione per ottenere la data corrente in formato gg-mm-aaaa
     function getData() {
         const oggi = new Date();
 
@@ -50,11 +53,13 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
         return dataFormattata;
     }
 
+    //Funzione per modificare un commento
     const handleSubmit = () => {
-        if (checkTesto()) {
-            const community = getCommunity(idCommunity)
-            const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)
+        if (checkTesto()) {     //se il testo è valido
+            const community = getCommunity(idCommunity)     //ottiene la community
+            const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)       //trova la playlist
 
+            /*Crea oggetto Commento Modificato*/
             const nuovoCommento = {
                 idCommento: commento.idCommento,
                 testo: testoCommento,
@@ -62,16 +67,22 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                 autore: loggedUser.idUtente
             }
 
+            //aggiorna i commenti della playlist modificando il giusto commento
             playlist.commenti = [...playlist.commenti.filter(item => item.idCommento !== commento.idCommento), nuovoCommento]
 
+            //aggiorna le playlist condivise della community
             community.playlistCondivise = [...community.playlistCondivise.filter(item => item.idPlaylist !== idPlaylist), playlist]
 
+            //salva modifiche nel localStorage
             updateCommunity(community)
 
+            //chiude overlay
             setOpenEdit(false)
 
+            // Aggiorna la UI genitore
             update()
 
+            //Notifica di successo
             toast.success("Commento Modificato!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -82,7 +93,8 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                 theme: "dark",
                 progress: undefined,
             });
-        } else {
+        } else {    //se il testo non è valido
+            //Notifica di errore
             toast.error("Errore nella Modifica!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -95,12 +107,15 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
         }
     }
 
+    //Funzione per eliminare un commento
     const handleDelete = () => {
-        const community = getCommunity(idCommunity)
-        const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)
+        const community = getCommunity(idCommunity)     //ottiene la community
+        const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)   //trova la playlist
 
+        //elimina dai commenti il commento selezionato dall'utente
         playlist.commenti = playlist.commenti.filter(item => item.idCommento !== commento.idCommento)
 
+        // Richiede conferma
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
@@ -108,6 +123,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
 
             update()
 
+            //Notifica di successo
             toast.success("Commento Eliminato!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -119,6 +135,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                 progress: undefined,
             });
         } else {
+            //Notifica di errore
             toast.error("Commento non Eliminato!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -129,11 +146,9 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                 theme: "dark",
             })
         }
-
-
-
     }
 
+    //useEffect per aggiornare stati derivati dal commento all'inizializzazione o quando cambia il commento
     useEffect(() => {
         setAutore(getUser(commento.autore));
         setLetter(getLetter(commento.autore))
@@ -145,6 +160,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
         <>
             {openEdit &&
                 <div className="overlay">
+                    {/* Overlay per modifica commento */}
                     <div className="overlay-content w-100">
                         <h2 className={"my-5"}>Modifica il Commento</h2>
                         <div className={"card comment-bg w-100 h-50"}>
@@ -159,9 +175,9 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                                             <h4 className={"m-0"}>{loggedUser.username}</h4>
                                             <p className={"fs-5 m-0"}>{commento.data}</p>
                                         </div>
-
                                     </div>
                                 </div>
+                                {/* Form modifica Commento */}
                                 <form name={"commenta"} autoComplete={"off"}>
                                     <div className={"position-relative"}>
                                         <textarea
@@ -185,6 +201,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                                         </div>
                                         <div className="invalid-feedback">{testoErrore}</div>
                                     </div>
+                                    {/* Pulsante Annulla e Conferma */}
                                     <div className={"d-flex w-100 justify-content-end mt-3 gap-3"}>
                                         <button className={"btn btn-primary"}
                                                 onClick={() => {
@@ -201,6 +218,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                     </div>
                 </div>
             }
+            {/* Card commento */}
             <div className={"w-75"}>
                 <div className={"card comment-bg"}>
                     <div className={"card-body d-flex flex-column gap-3"}>
@@ -215,7 +233,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                                     <p className={"fs-5 m-0"}>{commento.data}</p>
                                 </div>
                             </div>
-
+                            {/* Pulsanti Modifica e Elimina solo se proprietario */}
                             {isProprietario &&
                                 <div className={""}>
                                     <button className="btn btn-primary mx-2"
@@ -231,6 +249,7 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
                                 </div>
                             }
                         </div>
+                        {/* Textarea commento in sola lettura */}
                         <form name={"commenta"} autoComplete={"off"}>
                             <div className={"position-relative"}>
                             <textarea

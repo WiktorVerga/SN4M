@@ -10,17 +10,17 @@ import {songAlreadyAdded} from "../utilities/songs";
 
 export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
 
-    const {id} = useParams();
+    const {id} = useParams();        //prende l'id della playlist dai parametri dell'URL
 
-    const [aggiunta, setAggiunta] = useState(songAlreadyAdded(id, song.idCanzone));
+    const [aggiunta, setAggiunta] = useState(songAlreadyAdded(id, song.idCanzone));     //stato per sapere se la canzone è già aggiunta alla playlist
 
-    const loggedUser = getLoggedUser()
-
+    //Funzione per aggiungere la canzone alla playlist
     const handleAggiungi = () => {
         if (!aggiunta) {
-            addSong(id, song.idCanzone)
+            addSong(id, song.idCanzone)     //aggiorna la playlist aggiungendo canzone
             setAggiunta(true);
 
+            //Notifica di successo
             toast.success("Canzone Aggiunta", {
                 position: "top-right",
                 autoClose: 5000,
@@ -34,8 +34,10 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
         }
     }
 
+    //Funzione per rimuovere la canzone dalla playlist
     const handleRimuovi = () => {
         removeSong(id, song.idCanzone)
+        //Notifica di successo
         toast.success("Canzone Rimossa", {
             position: "top-right",
             autoClose: 5000,
@@ -50,6 +52,7 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
         update()
     }
 
+    //UseEffetto che aggiorna lo stato 'aggiunta' quando cambia la canzone
     useEffect(() => {
         setAggiunta(songAlreadyAdded(id, song.idCanzone))
     }, [song])
@@ -71,7 +74,7 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
                 <div className={"d-flex gap-3 align-items-center text-white gap-5 fs-5"}>
                     <p className={"my-auto"}>{song.anno}</p>
                     <p className={"my-auto mx-5"}>{song.durata}</p>
-                    {/* Se la playlist è dell’utente → mostra pulsante (aggiungi o rimuovi a seconda di "esplora": se è true c'è aggiunge se false è rimuovi) */}
+                    {/* Se la playlist è dell’utente → mostra pulsante (aggiungi o rimuovi a seconda di isProprietaria: se è true c'è aggiunge se false è rimuovi) */}
                     {isProprietaria &&
                         <button className={"bottone-canzone"}
                                 onClick={aggiungi? handleAggiungi : handleRimuovi}

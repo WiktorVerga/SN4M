@@ -17,7 +17,7 @@ export const getPlaylists = (idPlaylist) => {      //restituisce le playlist cre
     return [utente.playlistProprie?.find(item => item.idPlaylist === idPlaylist), utente.playlistSalvate?.find(item => item.idPlaylist === idPlaylist)]
 }
 
-export const getPlaylist = (idPlaylist) => {      //restituisce dati playlist dal idPlyalist
+export const getPlaylist = (idPlaylist) => {      //restituisce dati playlist dal idPlaylist
     return getPlaylists(idPlaylist)?.find(item => item.idPlaylist === idPlaylist)
 }
 

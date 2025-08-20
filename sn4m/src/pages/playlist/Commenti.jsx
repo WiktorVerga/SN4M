@@ -1,15 +1,15 @@
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {getLetter, getLoggedUser} from "../../utilities/users";
 import send from "../../media/send.svg";
 import {useEffect, useState} from "react";
 import {getCommentiPlaylist, getCommunity, updateCommunity} from "../../utilities/communities";
 import {CommentoCard} from "../../Components/CommentoCard";
 import {toast} from "react-toastify";
+import {getPlaylist} from "../../utilities/playlists.js";
 
 
 export const Commenti = () => {
     const {idPlaylist, idCommunity} = useParams()
-    const [community] = useSearchParams()
 
     const [testoCommento, setTestoCommento] = useState("")
     const [testoErrore, setTestoErrore] = useState("")
@@ -17,6 +17,7 @@ export const Commenti = () => {
     const [commenti, setCommenti] = useState([])
 
     const loggedUser = getLoggedUser()
+    const [playlist, setPlaylist] = useState()
 
     const update = () => {
         setCommenti(getCommentiPlaylist(idCommunity, idPlaylist))
@@ -108,6 +109,10 @@ export const Commenti = () => {
     }
 
     useEffect(() => {
+        setPlaylist(getPlaylist(idPlaylist))
+
+        console.log(playlist)
+
         const dati = getCommentiPlaylist(idCommunity, idPlaylist)
 
         // Ordinamento dal più vecchio al più recente
@@ -120,7 +125,7 @@ export const Commenti = () => {
     return (
         <div>
             <h1 className={"h1 p-5 text-center text-uppercase"}>
-                Commenti: {community.get("idCommunity")}
+                Commenti: {playlist?.titolo}
             </h1>
 
             <div className={"d-flex flex-column align-items-center gap-5"}>

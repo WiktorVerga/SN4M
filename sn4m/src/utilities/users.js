@@ -1,27 +1,33 @@
 import {cleanCommunities, getCommunities, getCommunity} from "./communities";
 
+//Restituisce la prima lettera del nome utente di un utente dato il suo ID
 export const getLetter = (idUtente) => {
+    const user = getUser(idUtente);     //recupera l'utente dal localStorage
 
-    const user = getUser(idUtente);
-
+    //se l'utente non esiste, ritorna undefined
     if (user === null) return
 
+    //restituisce la prima lettera del username e la converte in maiuscolo
     return user?.username.charAt(0).toUpperCase()
 }
 
-export const getUsers = () => {         //restituisce tutti gli utenti salvati nel localStorage
+//restituisce tutti gli utenti salvati nel localStorage
+export const getUsers = () => {
     return JSON.parse(localStorage.getItem("utenti"))
 }
 
-export const setUsers = (users) => {            //salva oggetto users, convertendolo in json nel localStorage
+//salva oggetto users, convertendolo in json nel localStorage
+export const setUsers = (users) => {
     localStorage.setItem("utenti", JSON.stringify(users))
 }
 
-export const getUser = (idUtente) => {         //cerca un utente nella lista degli utenti nel localStorage, confrontando l’email.
+//cerca un utente nella lista degli utenti nel localStorage, confrontando idUtente.
+export const getUser = (idUtente) => {
     return getUsers().find(item => item.idUtente === idUtente)
 }
 
-export const getLoggedUser = () => {            //recupera l'utente attualmente loggato.
+//recupera l'utente attualmente loggato.
+export const getLoggedUser = () => {
 
     if (sessionStorage.getItem("loginSession") === null)        //Controlla se esiste una sessione salvata nel sessionStorage.
         return null
@@ -33,20 +39,22 @@ export const getLoggedUser = () => {            //recupera l'utente attualmente 
     return loggedUser
 }
 
-export const logout = () => {           //rimuove la sessione attiva dal sessionStorage, effettuando il logout dell’utente.
+//rimuove la sessione attiva dal sessionStorage, effettuando il logout dell’utente.
+export const logout = () => {
     sessionStorage.removeItem("loginSession")
 }
 
-export const updateUser = (user) => {           //ottiene l'elenco degli utenti salvati nel localStorage
+//aggiorna un utente nel localStorage
+export const updateUser = (user) => {
     const existingUsers = getUsers()
-    const users = existingUsers?.filter(item => item.idUtente !== user.idUtente)  //rimuove l’utente con la stessa email, così da poterlo aggiornare.
+    const users = existingUsers?.filter(item => item.idUtente !== user.idUtente)  //rimuove l’utente con la stesso idUtente, così da poterlo aggiornare.
 
     if (existingUsers) setUsers([...users, user])      //se c’erano utenti già salvati: salva la lista aggiornata
     else setUsers([user])       //Se no: crea una nuova lista con l’utente passato.
-
 }
 
-export const getUserCommunities = () => {       //restituisce le community a cui l'utente loggato è iscritto
+//restituisce le community a cui l'utente loggato è iscritto o ha creato
+export const getUserCommunities = () => {
     const user = getLoggedUser()        //recupera l'utente loggato
 
     if (!user) return null           //se non esiste, interrompe
@@ -58,51 +66,54 @@ export const getUserCommunities = () => {       //restituisce le community a cui
     return myCommunities
 }
 
+//Pulisce le iscrizioni dell'utente alle community che non esistono più
 export const cleanSubscribedCommunities = () => {
-
     const user = getLoggedUser()        //recupera l'utente loggato
 
+    //controlla l'esistenza dell'utente
     if (typeof user === 'undefined' || user === null) {
         return null
     } else {
+        //mantiene solo le community esistenti
         const communitiesAggiornate = user?.communities?.filter(item => getCommunities().some(community => community.idCommunity === item))
 
-        //crea una copia con le community aggiornate dell'utente
+        //aggiorna la lista community dell'utente
         const utenteAggiornato = {
             ...user,
             communities: communitiesAggiornate
         }
 
-        updateUser(utenteAggiornato)            //aggiorna dati dell'utente nello storage
+        updateUser(utenteAggiornato)            //salva modifiche nello storage
     }
 }
 
+//Pulisce le playlist salvate dall'utente rimuovendo quelle non più condivise
 export const cleanPlaylistSalvate = () => {
     const user = getLoggedUser()        //recupera l'utente loggato
 
+    //controlla l'esistenza dell'utente
     if (typeof user === 'undefined' || user === null) {
         return null
     } else {
         //Per ogni playlist salvata, controllo se nella community da cui è stata salvata è ancora condivisa, se no restituisce undefined
         const playlistSalvateAggiornate = user?.playlistSalvate.map((playlistSalvata) => {
 
-            //Recuperlo la community da cui è stata salvata la playlist
+            //Recupero la community da cui è stata salvata la playlist
             const communty = getCommunity(playlistSalvata.idCommunity)
 
+            //se la community non esiste, ritorna undefined
             if (typeof communty === null) {
                 return undefined
             } else {
                 const esisteAncora = communty?.playlistCondivise.some(item => item.idCondivisione === playlistSalvata.idCondivisione)
                 return esisteAncora? playlistSalvata : undefined
             }
-
         })
 
+        //mantiene solo se la playlist è ancora condivisa
         user.playlistSalvate = playlistSalvateAggiornate?.filter(item => typeof item !== "undefined")
 
-        updateUser(user)
+        updateUser(user)        //salva le modifiche dell'utente nello storage
     }
-
-
 }
 

@@ -26,7 +26,7 @@ function App() {
 
     const location = useLocation()
     const navigate = useNavigate()
-    const excludeNavbar = ["/", "/signin", "/modificaCommunity", "/creaCommunity"].includes(location.pathname);
+    const excludeNavbar = ["/", "/signin"].includes(location.pathname);
     const [checkingAuth, setCheckingAuth] = useState(true);             //serve a bloccare il rendering della pagina finché non è stato verificato se l’utente è autenticato.
 
 

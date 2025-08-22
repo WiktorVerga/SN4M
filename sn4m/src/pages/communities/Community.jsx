@@ -4,11 +4,11 @@ import {useEffect, useState} from "react";
 import {cleanPlaylists, getCommunity, getPlaylistsDaCommunity} from "../../utilities/communities";
 import {getLoggedUser} from "../../utilities/users";
 import {PlaylistCard} from "../../Components/PlaylistCard";
-import {getAutorePlaylist, getFullPlaylistsSalvate} from "../../utilities/playlists";
+import {getAutorePlaylist} from "../../utilities/playlists";
 import share from "../../media/share.svg";
 
 export const Community = () => {
-    /* Variabili Funzionali */
+    /* Variabili */
     const navigate = useNavigate();
 
     const {id} = useParams();       //recupera l'ID della community dalla URL
@@ -19,7 +19,7 @@ export const Community = () => {
 
     const [defaultData, setDefaultData] = useState([]);         //stato con i dati originali delle playlist
 
-    const loggedUser = getLoggedUser()
+    const loggedUser = getLoggedUser()          //ottiene utente loggato
 
     /* useEffect hooks */
 
@@ -68,7 +68,6 @@ export const Community = () => {
             <h1 className={"h1 p-5 text-center text-capitalize fw-semibold"}>
                 {community.titolo}
             </h1>
-
             {/* Intestazione Dinamica con Pulsante Modifica solo per il proprietario della community*/}
             <div className={"row flex-row align-items-center "}>
                 <h3 className={"col fs-5"}>
@@ -77,21 +76,16 @@ export const Community = () => {
                 {community.autore === loggedUser.idUtente &&
                     <button className={"col-2 btn btn-primary text-uppercase"} onClick={() => {navigate("/modificaCommunity?idCommunity=" + id)}}><i className="bi bi-pencil"></i></button>
                 }
-
             </div>
-
             <hr className={"my-5"}/>
             {/* Sezione playlist */}
             <h2 className={"h1 text-center text-uppercase"}>
                 Esplora PLAYLISTS
             </h2>
-
-
             {/* SearchBar */}
             <div className={"d-flex justify-content-center mt-5"}>
                 <SearchBar sendSearch={sendSearch} />
             </div>
-
             {communityPlaylists.length > 0?
                 /* Mostra le Playlist presenti all'interno della community */
                 <div className={"d-flex flex-row justify-content-center mt-5"}>

@@ -1,13 +1,18 @@
+//Componente che mostra un "tag" con una "X" per rimuoverlo e ha come props: value: il testo del tag e handleDelete: funzione callback da eseguire quando si clicca sulla "X".
 export default function TagConChiusura({value, handleDelete}) {
     return (
         <div className={"tag"}>
+            {/* testo del tag */}
             <span>
                 {value}
             </span>
+            {/* bottone di chiusura (icona a cerchio con X dentro) */}
             <div className={"closing-x-tag"} onClick={handleDelete}>
+                {/* sfondo circolare grigio/nero semitrasparente */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <circle cx="10" cy="10" r="10" fill="black" fillOpacity="0.3"/>
                 </svg>
+                {/* icona della X bianca sovrapposta */}
                 <svg className={"x"} xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10"
                      fill="none">
                     <path

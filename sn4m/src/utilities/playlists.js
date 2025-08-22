@@ -1,64 +1,74 @@
-import {cleanPlaylistSalvate, getLoggedUser, getUser, getUsers, setUsers, updateUser} from "./users";
+import {getLoggedUser, getUser, getUsers, setUsers, updateUser} from "./users";
 import {getCommunity} from "./communities";
 
-export const getPlaylistsProprie = () => {      //restituisce le playlist create dall'utente loggato
-    const user = getLoggedUser()
+//restituisce le playlist create dall'utente loggato
+export const getPlaylistsProprie = () => {
+    const user = getLoggedUser()            //ottiene l'utente loggato
 
-    if (!user) return null
+    if (!user) return null                  //se utente è null restituisce null
 
     return user.playlistProprie
 }
 
-export const getPlaylists = (idPlaylist) => {      //restituisce le playlist create e salvate dall'utente loggato
+//restituisce le playlist create e salvate dall'utente loggato
+export const getPlaylists = (idPlaylist) => {
     if (!idPlaylist) return null
+    //si ottiene l'utente tramite idPlaylist
     const idUtente = idPlaylist.split(".")[0]
     const utente = getUser(idUtente)
 
     return [utente.playlistProprie?.find(item => item.idPlaylist === idPlaylist), utente.playlistSalvate?.find(item => item.idPlaylist === idPlaylist)]
 }
 
-export const getPlaylist = (idPlaylist) => {      //restituisce dati playlist dal idPlaylist
+//restituisce dati playlist dal idPlaylist
+export const getPlaylist = (idPlaylist) => {
     return getPlaylists(idPlaylist)?.find(item => item.idPlaylist === idPlaylist)
 }
 
-export const getAutorePlaylist = (idPlaylist) => {      //restituisce l'oggetto dell'autore della playlist, dato in ingresso l'id della playlist
-    const idUtente = idPlaylist.split(".")[0]           //l'id Utente è la parte prima del . dell'idPlaylist
+//restituisce l'oggetto dell'autore della playlist dall'idPlaylist
+export const getAutorePlaylist = (idPlaylist) => {
+    const idUtente = idPlaylist.split(".")[0]           //idUtente è la parte prima del . dell'idPlaylist
     const utente = getUser(idUtente)
     return utente
 }
 
-export const updatePlaylistPropria = (playlist) => {            //aggiornare una playlist già esistente nell'array playlistProprie dell'utente loggato
-
+//aggiornare una playlist già esistente nell'array playlistProprie dell'utente loggato
+export const updatePlaylistPropria = (playlist) => {
     const existingUsers = getUsers();           //prende l'array completo di utenti.
     const loggedUser = getLoggedUser();         //prende utente loggato
 
+    //nuovo array in cui ogni elemento resta uguale, tranne quello con id uguale che viene sostituito con la playlist aggiornata.
     const updatedPlaylists = loggedUser.playlistProprie.map(p =>
-        p.idPlaylist === playlist.idPlaylist ? playlist : p                //nuovo array in cui ogni elemento resta uguale, tranne quello con id uguale che viene sostituito con la playlist aggiornata.
+        p.idPlaylist === playlist.idPlaylist ? playlist : p
     );
 
     if (!updatedPlaylists.some(p => p.idPlaylist === playlist.idPlaylist)) {        //se non viene trovata nessuna playlist nelle playlistProprie viene restituito null
         return null
     }
 
-    const updatedUser = { ...loggedUser, playlistProprie: updatedPlaylists };       //sovrascrivo la proprietà playlistProprie con la versione aggiornata mantenendo immutati gli altri campi dell'utente.
+    //sovrascrivo la proprietà playlistProprie con la versione aggiornata mantenendo immutati gli altri campi dell'utente.
+    const updatedUser = { ...loggedUser, playlistProprie: updatedPlaylists };
 
+    //Filtra utenti togliendo l'utente loggato
     const users = existingUsers?.filter(item => item.idUtente !== loggedUser.idUtente)
-    setUsers([...users, updatedUser]);
+    setUsers([...users, updatedUser]);          //salva nel localStorage utenti con utenteAggiornato
 }
 
-export const setPlaylistsProprie = (playlists) => {         //modifica array playlistProprie dell'utente loggato
-
+//modifica array playlistProprie dell'utente loggato
+export const setPlaylistsProprie = (playlists) => {
     const existingUsers = getUsers();           //prende l'array completo di utenti.
     const loggedUser = getLoggedUser();         //prende utente loggato
 
-    const updatedUser = { ...loggedUser, playlistProprie: playlists };       //sovrascrivo la proprietà playlistProprie con l'input della funzione mantenendo immutati gli altri campi dell'utente.
+    //sovrascrivo la proprietà playlistProprie con l'input della funzione mantenendo immutati gli altri campi dell'utente.
+    const updatedUser = { ...loggedUser, playlistProprie: playlists };
 
     const users = existingUsers?.filter(item => item.idUtente !== loggedUser.idUtente)        //rimuovo utente loggato dalla lista degli utenti
     setUsers([...users, updatedUser]);          //salvataggio nel localStorage
 }
 
+//controlla se la playlist è stata condivisa in qualche communities
 export const isPublic = (idPlaylist) => {
-    const loggedUser = getLoggedUser();         //Recupera l'utente attualmente loggato
+    const loggedUser = getLoggedUser();         //recupera l'utente attualmente loggato
 
     //Controlla se l'utente ha condiviso la playlist in almeno una delle community
     return loggedUser?.communities.some(idCommunity => {        //cicla sulle community dell'utente
@@ -72,7 +82,7 @@ export const isPublic = (idPlaylist) => {
 //Restituisce un array con gli oggetti delle playlist salvate con tutte le informazioni
 export const getFullPlaylistsSalvate = () => {
 
-    const loggedUser = getLoggedUser();
+    const loggedUser = getLoggedUser();         //ottiene utente loggato
 
     const playlistSalvate = loggedUser?.playlistSalvate.map(playlist => {           //cicla sulle playlist salvate dall'utente e le trasforma in oggetti completi
 
@@ -108,11 +118,10 @@ export const checkIfSaved = (idPlaylist) => {
     return getFullPlaylistsSalvate()?.some(item => item.idPlaylist === idPlaylist)
 }
 
-export const communitiesWhereShared = (idPlaylist) => {         //restituisce un array con gli id delle community in cui una playlist è stata condivisa
+//restituisce un array con gli id delle community in cui una playlist è stata condivisa
+export const communitiesWhereShared = (idPlaylist) => {
     const whereShared = []              //array dove memorizzare le community in cui la playlist è condivisa
-
-    const loggedUser = getLoggedUser();
-
+    const loggedUser = getLoggedUser();     //ottiene utente loggato
     const tuttiIdCommunities = loggedUser?.communities      //recupera tutti gli id delle community dell'utente
 
     //Crea un array di oggetti per ogni idCommunity nell'array
@@ -130,24 +139,29 @@ export const communitiesWhereShared = (idPlaylist) => {         //restituisce un
     return whereShared
 }
 
+//aggiunge idCanzone in una playlist
 export const addSong = (idPlaylist, idCanzone) => {
-    const loggedUser = getLoggedUser();
+    const loggedUser = getLoggedUser();         //ottiene utente loggato
 
+    //trova nella lista delle playlist proprie dell'utente quella con l'id specificato e aggiunge l'id della canzone all'array delle canzoni
     loggedUser?.playlistProprie.find(item => item.idPlaylist === idPlaylist).canzoni.push(idCanzone)
 
-    updateUser(loggedUser)
+    updateUser(loggedUser)      //aggiorna i dati nel localStorage
 }
 
+//rimuove idCanzone da una playlist
 export const removeSong = (idPlaylist, idCanzone) => {
-    const loggedUser = getLoggedUser();
+    const loggedUser = getLoggedUser();         //ottiene utente loggato
 
+    //trova la playlist da cui rimuovere la canzone
     const playlist = loggedUser?.playlistProprie.find(item => item.idPlaylist === idPlaylist)
 
+    //filtra l'array delle canzoni rimuovendo l'id della canzone specificata
     const canzoniAggiornate = playlist.canzoni.filter(item => item !== idCanzone)
 
+    //aggiorna l'array delle canzoni della playlist e aggiorna la lista delle playlist proprie dell'utente sostituendo quella aggiornata
     playlist.canzoni = canzoniAggiornate
-
     loggedUser.playlistProprie = [...loggedUser?.playlistProprie.filter(item => item.idPlaylist !== idPlaylist), playlist]
 
-    updateUser(loggedUser)
+    updateUser(loggedUser)      //aggiorna localStorage
 }

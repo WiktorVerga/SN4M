@@ -1,19 +1,23 @@
 import {useEffect, useState} from "react";
 
-export default function SearchBar({sendSearch}) {       //barra di ricerca con un campo di input
+//barra di ricerca con un campo di input
+export default function SearchBar({sendSearch}) {
 
-    const [search, setSearch] = useState("")
+    const [search, setSearch] = useState("")    //stato per memorizzare il testo digitato dall’utente
 
+    //Funzione che invia il testo della ricerca al componente padre
     const sendData = (search) => {
         sendSearch(search)
     }
 
+    //UseEffect che si attiva ogni volta che cambia il valore di search e invia al padre il testo in minuscolo e senza spazi
     useEffect(() => {
         sendData(search.toLocaleLowerCase().trim())
     }, [search])
 
     return (
         <div className={"search-bar mx-auto"}>
+            {/* Contenitore della search bar */}
             <input
                 type={"text"}
                 placeholder={"Cerca"}
@@ -22,7 +26,9 @@ export default function SearchBar({sendSearch}) {       //barra di ricerca con u
                     setSearch(e.target.value)
                 }}
             />
+            {/* Pulsante che invia la ricerca */}
             <button onClick={() => {sendData(search.toLocaleLowerCase().trim())}}>
+                {/* Icona lente d’ingrandimento (SVG) */}
                 <svg width="40" height="40" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M22.4166 27.5834C17.5416 22.7084 17.5416 14.7917 22.4166 9.89587C27.2916 5.02087 35.2083 5.02087 40.1041 9.89587C44.9791 14.7709 44.9791 22.6875 40.1041 27.5834C35.2291 32.4584 27.3125 32.4584 22.4166 27.5834Z"

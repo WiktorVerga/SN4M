@@ -1,9 +1,8 @@
 import TagDisplayer from "./TagDisplayer";
 import {getLoggedUser, getUsers, setUsers, updateUser} from "../utilities/users";
 import {useEffect, useState} from "react";
-import {setCommunities} from "../utilities/communities";
 import {toast} from "react-toastify";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
     export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
     const loggedUser = getLoggedUser()

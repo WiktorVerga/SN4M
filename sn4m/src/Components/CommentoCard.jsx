@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 
 //Componente che riceve come props: il commento, id della community, id della playlist e funzione update
 export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
-
+    /*Variabili*/
     const [autore, setAutore] = useState({});           //stato per memorizzare i dati dell'autore del commento
 
     const [letter, setLetter] = useState("");       //stato per memorizzare la lettera iniziale dell'autore
@@ -26,17 +26,13 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
         const txtArea = document.getElementById("testoCommento");
         txtArea.classList.remove("is-invalid")
 
-        /* Controllo Testo Commento */
-
         //Controllo Lunghezza Testo Commento
         if (testoCommento.length > 150 || testoCommento.length < 10) {
-
             //Avviene Errore:
             txtArea.classList.add("is-invalid")
             setTestoErrore("Il Testo del Commento deve essere lungo Tra 10 e 150 caratteri")
             return false
         }
-
         return true
     }
 

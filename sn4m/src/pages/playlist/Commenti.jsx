@@ -9,55 +9,55 @@ import {getPlaylist} from "../../utilities/playlists.js";
 
 
 export const Commenti = () => {
-    const {idPlaylist, idCommunity} = useParams()
+    /* Variabili */
+    const {idPlaylist, idCommunity} = useParams()    //recupera parametri da URL
 
-    const [testoCommento, setTestoCommento] = useState("")
-    const [testoErrore, setTestoErrore] = useState("")
+    const [testoCommento, setTestoCommento] = useState("")      //stato testo inserito nel commento
+    const [testoErrore, setTestoErrore] = useState("")      //messaggio errore validazione testo commento
 
-    const [isTuoi, setIsTuoi] = useState(false)
+    const [isTuoi, setIsTuoi] = useState(false)      //indica se mostrare solo i commenti dell’utente loggato
 
-    const [commenti, setCommenti] = useState([])
+    const [commenti, setCommenti] = useState([])    //lista commenti caricati
 
-    const loggedUser = getLoggedUser()
-    const [playlist, setPlaylist] = useState()
+    const loggedUser = getLoggedUser()          //utente attualmente loggato
+    const [playlist, setPlaylist] = useState()      //playlist a cui appartengono i commenti
 
-    //Aggiorna lo stato della pagina per mostrare i dati aggiornati con le modifiche
+
+    //Aggiorna lo stato della pagina per mostrare i dati più recenti
     const update = () => {
+        //recupera i commenti della playlist
         const dati = getCommentiPlaylist(idCommunity, idPlaylist)
 
-        // Ordinamento dal più vecchio al più recente
+        //Ordina dal più vecchio al più recente
         dati.sort((a, b) => parseDate(b.data) - parseDate(a.data));
 
-        if (isTuoi) {
+        if (isTuoi) {   //se è attivo il filtro "i tuoi commenti"
+            //filtra solo i commenti dell’utente
             const commentiProprietari = dati.filter(item => item.autore === loggedUser.idUtente)
             if (commentiProprietari.length > 0) {
-                setCommenti(commentiProprietari)
+                setCommenti(commentiProprietari)        //aggiorna stato con i propri commenti
             } else {
-                setIsTuoi(false)
+                setIsTuoi(false)        //se non ci sono commenti propri, disattiva filtro
             }
         } else {
-            setCommenti(dati)
+            setCommenti(dati)       //altrimenti mostra tutti i commenti
         }
     }
 
-    //Effettua i controlli sul testo inserito dal commento
+    //Funzione per validare il testo del commento
     const checkTesto = () => {
 
         const txtArea = document.getElementById("testoCommento");
         txtArea.classList.remove("is-invalid")
 
-        /* Controllo Testo Commento */
-
         //Controllo Lunghezza Testo Commento
         if (testoCommento.length > 150 || testoCommento.length < 10) {
-
             //Avviene Errore:
             txtArea.classList.add("is-invalid")
             setTestoErrore("Il Testo del Commento deve essere lungo Tra 10 e 150 caratteri")
             return false
         }
-
-        return true
+        return true         //testo valido
     }
 
     /* Generazione ID Univoco: basato su timestamp e numero casuale */
@@ -65,6 +65,7 @@ export const Commenti = () => {
         return Date.now() + '-' + Math.floor(Math.random() * 10000);
     }
 
+    //Restituisce data odierna in formato "gg-mm-aaaa"
     function getData() {
         const oggi = new Date();
 
@@ -77,10 +78,11 @@ export const Commenti = () => {
         return dataFormattata;
     }
 
+    //Funzione per la Gestione della pubblicazione del commento
     const handleSubmit = () => {
-        if (checkTesto()) {
-            const community = getCommunity(idCommunity)
-            const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)
+        if (checkTesto()) {     //se il testo è valido
+            const community = getCommunity(idCommunity)     //recupera community
+            const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)       //trova playlist interessata
 
             //Aggiungo un nuovo oggetto commento all'array di commenti
             playlist.commenti.push({
@@ -93,13 +95,14 @@ export const Commenti = () => {
             //Aggiorno l'array di playlist condivise
             community.playlistCondivise = [...community.playlistCondivise.filter(item => item.idPlaylist !== idPlaylist), playlist]
 
-            updateCommunity(community)
+            updateCommunity(community)          //salvo nel localStorage
 
             //Reimposto lo stato della pagina e la aggiorno
             setTestoCommento("")
 
             update()
 
+            //Notifica di successo
             toast.success("Commento Aggiunto!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -111,6 +114,7 @@ export const Commenti = () => {
                 progress: undefined,
             });
         } else {
+            //Notifica di errore
             toast.error("Errore nella Creazione!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -123,14 +127,15 @@ export const Commenti = () => {
         }
     }
 
-    // Funzione di supporto per convertire "gg-mm-aaaa" in Date
+    // Funzione per convertire "gg-mm-aaaa" in Date
     function parseDate(str) {
         const [giorno, mese, anno] = str.split('-').map(Number);
         return new Date(anno, mese - 1, giorno); // mese parte da 0
     }
 
+    //UseEffect si aggiorna al cambio di IdCommunity, idPlaylist e isTuoi
     useEffect(() => {
-        setPlaylist(getPlaylist(idPlaylist))
+        setPlaylist(getPlaylist(idPlaylist))        //recupera playlist
 
         //Imposta tutti i dati iniziali dello stato
         update()
@@ -139,11 +144,12 @@ export const Commenti = () => {
 
     return (
         <div>
+            {/*Titolo dinamico*/}
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Commenti: {playlist?.titolo}
             </h1>
 
-            {/* Scheda Aggiunta Commento */}
+            {/* Card per scrivere un nuovo commento */}
             <div className={"d-flex flex-column align-items-center gap-5"}>
                 <div className={"card comment-bg w-75 h-50"}>
                     <div className={"card-body d-flex flex-column gap-3"}>
@@ -151,8 +157,10 @@ export const Commenti = () => {
                             <div className={"d-flex align-items-center"}>
                                 <div className={"text-decoration-none mx-auto "} onClick={() => {
                                 }}>
+                                    {/* Avatar con iniziale username */}
                                     <div className={"avatar"}>{getLetter(loggedUser.idUtente)}</div>
                                 </div>
+                                {/*nome utente e data*/}
                                 <div className={"ms-3 text-white"}>
                                     <h4 className={"m-0"}>{loggedUser.username}</h4>
                                     <p className={"fs-5 m-0"}>{getData()}</p>
@@ -160,6 +168,7 @@ export const Commenti = () => {
 
                             </div>
                         </div>
+                        {/* Form scrittura commento */}
                         <form name={"commenta"} autoComplete={"off"}>
                             <div className={"position-relative"}>
                                 <textarea className={"form-control scrivi-commento w-100 text-white position-relative"}
@@ -176,11 +185,14 @@ export const Commenti = () => {
                                           onFocus={(e) => (e.target.placeholder = "")}
                                           onBlur={(e) => (e.target.placeholder = "Scrivi commento...")}
                                 />
+                                {/* Contatore caratteri */}
                                 <div className={"position-absolute bottom-0 end-0 me-2 mb-1"}>
                                     <span className={(testoCommento.length < 10 || testoCommento.length > 150) ? " text-danger " : "text-secondary"}>{testoCommento.length}/{150}</span>
                                 </div>
+                                {/* Messaggio errore validazione */}
                                 <div className="invalid-feedback">{testoErrore}</div>
                             </div>
+                            {/* Pulsante invio */}
                             <div className={"d-flex w-100 justify-content-end mt-3"}>
                                 <button type={"button"} className={"btn btn-primary  col-1"} onClick={handleSubmit}><img src={send}/></button>
                             </div>
@@ -199,7 +211,7 @@ export const Commenti = () => {
                     <button className={"col-2 btn btn-primary text-uppercase"}
                             onClick={() => setIsTuoi(!isTuoi)}>{isTuoi ? "Vedi Tutti" : "vedi i Tuoi"}</button>
                 </div>}
-
+                {/* Lista commenti o messaggio vuoto */}
                 {commenti?.length > 0 ?
                     commenti?.map((commento, index) => (
                     <CommentoCard
@@ -213,7 +225,6 @@ export const Commenti = () => {
                     <div>Non ci sono ancora commenti!</div>
                 }
             </div>
-
         </div>
     )
 }

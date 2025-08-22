@@ -15,8 +15,8 @@ export default function TagSelector({personalizzati, returnData, initialState, l
     const tagPersonalizzato = document.getElementById("tag-personalizzato");        //input tag personalizzato
 
     //Var di Controllo
-    const [limitExceeded, setLimitExceeded] = useState(false);          //Flag limite massimo
-    const [searchError, setSearchError] = useState("");
+    const [limitExceeded, setLimitExceeded] = useState(false);          //flag limite massimo
+    const [searchError, setSearchError] = useState("");         //stato che memorizza un messaggio di errore nella ricerca
 
     /* Fetch API Spotify per ottenere artisti da ricerca */
     const getData = async (query) => {
@@ -26,12 +26,14 @@ export default function TagSelector({personalizzati, returnData, initialState, l
         const url = "https://api.spotify.com/v1/search?q=" + query + "&type=artist"
 
         try {
+            // Effettua la richiesta GET all’API di Spotify
             const response = await fetch(url, {
                 method: 'GET', headers: {
                     'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'
                 }
             })
 
+            // Converte la risposta in formato JSON
             const dati = await response.json();
 
             return dati.artists.items             //ritorna lista artisti
@@ -43,7 +45,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
 
     /* Aggiunta Artista alla lista dei Tag */
     const addArtist = (elem) => {
-        const searchInput = document.getElementById('search')
+        const searchInput = document.getElementById('search')       // recupera il campo input della barra di ricerca
 
         //Controllo sul Limite Massimo dei Tags
         setLimitExceeded(tags.length >= limMax)
@@ -52,9 +54,11 @@ export default function TagSelector({personalizzati, returnData, initialState, l
             setSearchError("Limite raggiunto")
         } else {
             searchInput.classList.remove("is-invalid")
+            //Aggiunge il nuovo artista alla lista dei tag, evitando duplicati con "new Set"
             setTags([...new Set([...tags, elem])])
         }
 
+        //Reset input e risultati ricerca
         setSearch("")
         searchInput.value = "";
         setData([]);
@@ -62,9 +66,11 @@ export default function TagSelector({personalizzati, returnData, initialState, l
 
     /* Aggiunta Tag Personalizzato */
     const handleAddTag = (elem) => {
+        //Aggiunge un tag personalizzato solo se non è già presente e il campo non è vuoto
         if (!tags.includes(elem) && tagPersonalizzato.value !== "")
             setTags(prevSelectedItems => [...prevSelectedItems, elem]);
 
+        //Reset campo di input
         tagPersonalizzato.value = "";
     }
 
@@ -76,17 +82,21 @@ export default function TagSelector({personalizzati, returnData, initialState, l
     /* Gestione Navigazione Lista di Artisti */
     const handleNavigateList = (e) => {
         if (e.key === "ArrowDown") {
+            // Se viene premuta la freccia giù, sposta la selezione sull'elemento successivo della lista
             setSelectedIndex((prev) =>
                 prev < data.length - 1 ? prev + 1 : prev
             );
 
         } else if (e.key === "ArrowUp") {
+            // Se viene premuta la freccia su, sposta la selezione sull'elemento precedente
             setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
 
-        } else if (e.key === "Enter" && data.length > 0) {
+        } else if (e.key === "Enter" && data.length > 0) {       // Se viene premuto "Enter"
             if (selectedIndex === -1) {
+                //Se nessun elemento è selezionato, aggiunge il primo artista della lista
                 addArtist(data[0].name);
             } else {
+                //Altrimenti aggiunge l’artista attualmente selezionato
                 addArtist(data[selectedIndex].name);
             }
         }
@@ -94,20 +104,23 @@ export default function TagSelector({personalizzati, returnData, initialState, l
 
     /* Selezione artista cliccando sulla lista */
     const handleChoice = (e) => {
+        //Recupera il valore (nome artista) dall’attributo HTML
         const element = e.target.getAttribute('value')
 
-        addArtist(element);
+        addArtist(element);    // Aggiunge l’artista ai tag
     }
 
     /* Gestione Invio per Tag Personalizzati */
     const handleKeyboard = (e) => {
         if (e.key === "Enter" && e.target.value !== "") {
+            //Se viene premuto "Enter" e il campo non è vuoto, aggiunge un tag personalizzato
             handleAddTag(e.target.value);
         }
     }
 
     /* Rimuove un tag dalla lista */
     const handleDelete = (elem) => {
+        //Filtra la lista dei tag mantenendo solo quelli diversi dall’elemento da eliminare
         setTags(prevSelectedItems => prevSelectedItems.filter(item => item !== elem));
     }
 
@@ -116,6 +129,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
     /* Imposta uno stato iniziale per i tags, se c'è */
     useEffect(() => {
         if (initialState?.length > 0) {
+            //Se il componente riceve un "initialState" con uno o più tag, li copia nello stato `tags`
             setTags([...initialState])
         }
     }, [initialState]);
@@ -123,25 +137,29 @@ export default function TagSelector({personalizzati, returnData, initialState, l
     /* Carica dati da API Spotify quando viene digitato un termine di ricerca */
     useEffect(() => {
         if (search !== "") {
+            //Se il campo di ricerca non è vuoto, chiama l'API Spotify
             getData(search).then((dati) => {
                 //Filtro per rimuovere dalle ricerche gli artisti già inseriti
                 const availableArtists = dati?.filter(item =>
                     !tags.includes(item.name)
                 );
+                //Aggiorna la lista di risultati disponibili
                 setData(availableArtists)
+                //Resetta l’indice della selezione nella lista (nessun elemento evidenziato)
                 setSelectedIndex(-1)
             })
         } else {
+            //Se la ricerca è vuota, pulisce i risultati
             setData([]);
         }
     }, [search]);
 
 
     /* Invio Tags al componente padre, ogni volta che cambiano i tags */
-
     useEffect(() => {
-        sendTags(tags)
-        setData([]);
+        sendTags(tags)      //Passa la lista aggiornata dei tag al componente genitore
+        setData([]);    //Pulisce i risultati della ricerca
+        //Aggiorna lo stato per verificare se è stato raggiunto il limite massimo
         setLimitExceeded(tags.length >= limMax)
         if (!(tags.length >= limMax)) {
             document.getElementById('search').classList.remove("is-invalid")
@@ -151,7 +169,6 @@ export default function TagSelector({personalizzati, returnData, initialState, l
     return (
         <div className={"row flex-row justify-content-between mt-5"}>
             <div className={"col-5"}>
-
                 {/* Input per Ricerca Artisti */}
                 <div>
                     <label className={"mb-1"} htmlFor="floatingInput">Artisti Preferiti</label>
@@ -194,7 +211,6 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                         </ul>
                     </div>
                 </div>
-
                 {/* Input per Tag Personalizzati */}
                 {personalizzati && <div className="d-flex align-items-center">
                     <div className="form-floating flex-grow-1 me-2">
@@ -222,7 +238,6 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                     </button>
                 </div>}
             </div>
-
             {/* Colonna che mostra i tag selezionati */}
             <div className={"col-5"}>
                 <TagDisplayer
@@ -234,7 +249,6 @@ export default function TagSelector({personalizzati, returnData, initialState, l
                     limMax={limMax}
                 />
             </div>
-
         </div>
     )
 }

@@ -1,10 +1,7 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {getLetter, getLoggedUser} from "../utilities/users";
-import {useEffect, useState} from "react";
 
 export default function Navbar() {
-
-    const navigate = useNavigate();      //Hook per navigare programmaticamente tra le pagine
 
     //Funzione per determinare se un link deve essere evidenziato come "attivo"
     const isSelected = (uri) => {

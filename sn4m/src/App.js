@@ -1,5 +1,5 @@
 import Signin from "./pages/user/Signin";
-import {BrowserRouter, Route, Routes, useLocation, useNavigate} from "react-router-dom";
+import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import Login from "./pages/user/Login";
 import ProfiloUtente from "./pages/user/ProfiloUtente";
 import Navbar from "./Components/Navbar";
@@ -23,18 +23,19 @@ import {PlaylistCommunity} from "./pages/playlist/playlistCommunity";
 
 
 function App() {
-
-    const location = useLocation()
-    const navigate = useNavigate()
-    const excludeNavbar = ["/", "/signin"].includes(location.pathname);
+    const location = useLocation()          //recupera il percorso attuale (URL)
+    const navigate = useNavigate()      //permette la navigazione programmata
+    const excludeNavbar = ["/", "/signin"].includes(location.pathname);         //nasconde Navbar per pagine di login e registrazione
     const [checkingAuth, setCheckingAuth] = useState(true);             //serve a bloccare il rendering della pagina finché non è stato verificato se l’utente è autenticato.
 
-
+    /* UseEffect principale: pulizia dati e controllo login */
     useEffect(() => {
+        //pulisce eventuali dati obsoleti in localStorage
         cleanCommunities()
         cleanSubscribedCommunities()
         cleanPlaylistSalvate()
 
+        //verifica presenza sessione
         const checkLogin = () => {
             const token = sessionStorage.getItem("loginSession") === null
 
@@ -46,7 +47,7 @@ function App() {
         };
 
         checkLogin();
-    }, [location.pathname]); //funzione eseguita ogni volta che cambia il percorso della pagina (location.pathname).
+    }, [location.pathname]); //funzione eseguita ogni volta che cambia il percorso della pagina.
 
 
     if (checkingAuth) return null       //finché checkingAuth è true, non viene renderizzato nulla. Questo evita che l'interfaccia compaia brevemente anche se l'utente non è autenticato.
@@ -55,6 +56,7 @@ function App() {
     return (                        //rendering app
         <>
             <div className="App">
+                {/* Navbar*/}
                 {!excludeNavbar &&
                     <Navbar/>
                 }
@@ -78,9 +80,10 @@ function App() {
                         <Route path={"/modificaPlaylist"} element={<ModificaPlaylist/>}/>
                     </Routes>
                 </div>
-                <Footer />
+                {/* Footer sempre presente */}
+                <Footer/>
+                {/* Container per notifiche toast */}
                 <ToastContainer/>
-
             </div>
         </>
     );

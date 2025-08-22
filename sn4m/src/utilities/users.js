@@ -1,4 +1,4 @@
-import {cleanCommunities, getCommunities, getCommunity} from "./communities";
+import {getCommunities, getCommunity} from "./communities";
 
 //Restituisce la prima lettera del nome utente di un utente dato il suo ID
 export const getLetter = (idUtente) => {

@@ -2,11 +2,10 @@ import {useEffect, useState} from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import TagSelector from "../../Components/TagSelector";
-import {getCommunities, getCommunity, setCommunities, updateCommunity} from "../../utilities/communities";
+import {getCommunities, setCommunities, updateCommunity} from "../../utilities/communities";
 import {toast} from "react-toastify";
 
 export default function ModificaCommunity() {
-
     /* Variabili Funzionali */
     const navigate = useNavigate();
     const [searchParams] = useSearchParams()            //per leggere i parametri URL, in particolare idCommunity per identificare la community da modificare.
@@ -67,7 +66,7 @@ export default function ModificaCommunity() {
             hasError = true
         }
 
-        //C ontrollo UnicitàTitolo
+        //Controllo UnicitàTitolo
         if (existingCommunities?.some(item => (item.titolo === titolo))) {
             //Avviene errore:
             titoloInput.classList.add("is-invalid")
@@ -92,12 +91,14 @@ export default function ModificaCommunity() {
         }
     }
 
+    //Funzione conferma modifica
     const handleSubmit = () => {
         if (showNewTitolo) handleSaveTitolo()
         if (showNewDescrizione) handleSaveDescrizione()
 
         if (!hasError) {
 
+            //Aggiorna la community con i nuovi dati
             updateCommunity({
                 idCommunity: community.idCommunity,
                 titolo: showNewTitolo ? titolo : community.titolo,
@@ -107,6 +108,7 @@ export default function ModificaCommunity() {
                 playlistCondivise: community.playlistCondivise
             })
 
+            //Notifica di successo
             toast.success("Modifiche Salvate", {
                 position: "top-right",
                 autoClose: 5000,
@@ -120,6 +122,7 @@ export default function ModificaCommunity() {
 
             resetState()
         } else {
+            //Notifica di errore
             toast.error("Errore nel Salvataggio", {
                 position: "top-right",
                 autoClose: 5000,
@@ -134,6 +137,7 @@ export default function ModificaCommunity() {
         }
     }
 
+    //Funzione per eliminare community
     const handleDeleteCommunity = () => {       //richiede conferma testuale per l’eliminazione della community.
         const validate = prompt("Digita: ELIMINA")
 
@@ -174,16 +178,13 @@ export default function ModificaCommunity() {
             <h3>
                 Informazioni sulla Community
             </h3>
-
             <form
                 name={"modificaCommunity"}
                 className={"mt-5"}
                 autoComplete={"off"}
             >
-
                 {/*Riga Titolo*/}
                 <div className={"row flex-row justify-content-between"}>
-
                     {/*Primo Gruppo: Titolo + Bottone Modifica */}
                     <div className={"col-5 d-flex align-items-center"}>
                         <div className="form-floating flex-grow-1 me-2">
@@ -203,7 +204,6 @@ export default function ModificaCommunity() {
                             {showNewTitolo? <i className="bi bi-x-lg"></i> : <i className="bi bi-pencil"></i>}
                         </button>
                     </div>
-
                     {/*Secondo Gruppo: Nuovo Titolo */}
                     {showNewTitolo && <div className={"col-5 d-flex align-items-center"}>
                         <div className="form-floating flex-grow-1 me-2">
@@ -223,10 +223,8 @@ export default function ModificaCommunity() {
                         </div>
                     </div>}
                 </div>
-
                 {/*Riga per Descrizione*/}
                 <div className={"row flex-row justify-content-between mt-5"}>
-
                     {/*Primo Gruppo: Descrizione + Bottone Modifica */}
                     <div className={"col-5 d-flex"}>
                         <div className="form-floating flex-grow-1 me-2">
@@ -248,7 +246,6 @@ export default function ModificaCommunity() {
                             {showNewDescrizione? <i className="bi bi-x-lg"></i> : <i className="bi bi-pencil"></i>}
                         </button>
                     </div>
-
                     {/*Secondo Gruppo: Nuova Descrizione */}
                     {showNewDescrizione && <div className={"col-5 d-flex"}>
                         <div className="form-floating flex-grow-1 me-2">
@@ -270,12 +267,10 @@ export default function ModificaCommunity() {
                         </div>
                     </div>}
                 </div>
-
                 {/*Riga per Select Tags*/}
                 <h3 className={"mt-5"}>
                     Tags
                 </h3>
-
                 <TagSelector
                     personalizzati={true}
                     returnData={getTags}
@@ -283,8 +278,7 @@ export default function ModificaCommunity() {
                     limMin={3}
                     initialState={community.tags}
                 />
-
-                {/*Pulsanti per Confermare e Annullare e per Eliminare Community*/}
+                {/*Pulsanti per Confermare e Annullare*/}
                 <input type={"button"} value="Salva Modifiche" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        disabled={!canSubmit}
                        onClick={handleSubmit}/>
@@ -292,7 +286,7 @@ export default function ModificaCommunity() {
                 <input type={"button"} value="Esci" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                        onClick={handleAnnulla}/>
             </form>
-
+            {/*Pulsante per eliminare community */}
             <h4 className={"spacer text-danger fw-bold"}>
                 Elimina Community
             </h4>

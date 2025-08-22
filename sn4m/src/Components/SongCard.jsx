@@ -2,14 +2,13 @@ import add from "../media/add-song.svg"
 import remove from "../media/rem-song.svg"
 import salvata from "../media/salvata.svg"
 import {useEffect, useState} from "react";
-import {getLoggedUser} from "../utilities/users";
 import {useParams} from "react-router-dom";
 import {addSong, removeSong} from "../utilities/playlists";
 import {toast} from "react-toastify";
 import {songAlreadyAdded} from "../utilities/songs";
 
 export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
-
+    /*Variabili*/
     const {id} = useParams();        //prende l'id della playlist dai parametri dell'URL
 
     const [aggiunta, setAggiunta] = useState(songAlreadyAdded(id, song.idCanzone));     //stato per sapere se la canzone è già aggiunta alla playlist
@@ -30,6 +29,17 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
                 draggable: false,
                 theme: "dark",
                 progress: undefined,
+            })
+        } else {
+            //Notifica di errore
+            toast.error("Errore nell'Aggiunta!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                theme: "dark",
             })
         }
     }
@@ -83,7 +93,6 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
                         </button>
                     }
                 </div>
-
             </div>
         </div>
     )

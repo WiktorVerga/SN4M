@@ -15,7 +15,6 @@ export default function CreaCommunity() {
 
     const [descrizione, setDescrizione] = useState("");
 
-
     /* Dati Errori Form */
     const [titoloError, setTitoloError] = useState("");
     const limMaxTitolo = 30
@@ -30,8 +29,8 @@ export default function CreaCommunity() {
         setTags(array)
     }
 
-
-    const handleSubmit = () => {            //creazione community
+    //Funzione per la creazione community
+    const handleSubmit = () => {
         const existingCommunities = getCommunities()        //recupera le community esistenti dal localStorage
 
         /* Controlli Form */
@@ -90,8 +89,8 @@ export default function CreaCommunity() {
             autore: loggedUser.idUtente,
             playlistCondivise: []
         }
-        /* Salvataggio dati EsploraCommunities in LocalStorage */
 
+        /* Salvataggio dati EsploraCommunities in LocalStorage */
         //Aggiungo alla lista di EsploraCommunities
         if (existingCommunities) setCommunities([...existingCommunities, community])
         else setCommunities([community])
@@ -138,13 +137,11 @@ export default function CreaCommunity() {
             <h3>
                 Informazioni sulla Community
             </h3>
-
             <form
                 name={"creaCommunity"}
                 className={"mt-5"}
                 autoComplete={"off"}
             >
-
                 {/*Riga Titolo*/}
                 <div className={"row flex-row justify-content-between"}>
                     <div className={"col-5"}>
@@ -165,12 +162,10 @@ export default function CreaCommunity() {
 
                             <div className="invalid-feedback">{titoloError}</div>
                         </div>
-
                     </div>
                     <div className={"col-5"}>
                     </div>
                 </div>
-
                 {/*Riga per Descrizione*/}
                 <div className={"row flex-row justify-content-between mt-5"}>
                     <div className={"col-5"}>
@@ -191,29 +186,24 @@ export default function CreaCommunity() {
                             </div>
                             <div className="invalid-feedback">{descrizioneError}</div>
                         </div>
-
                     </div>
                     <div className={"col-5"}>
                     </div>
                 </div>
-
                 {/*Riga per Select Tag*/}
                 <h3 className={"mt-5"}>
                     Tags
                 </h3>
-
                 <TagSelector
                     personalizzati={true}
                     returnData={getTags}
                     limMin={3}
                     limMax={25}
                 />
-
                 {/*Pulsanti Conferma e Annulla*/}
                 <input type={"button"} value="Crea Community" className={"btn btn-secondary mt-5 p-2 text-uppercase"}
                        disabled={!canSubmit}
                        onClick={handleSubmit}/>
-
                 <input type={"button"} value="Annulla" className={"btn btn-secondary mt-5 mx-5 p-2 text-uppercase"}
                        onClick={handleAnnulla}/>
             </form>

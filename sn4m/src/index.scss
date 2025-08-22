@@ -1,8 +1,10 @@
+/* Variabili principali per colori */
 $primary: #183840;
 $secondary: #4F6A6D;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+/* Definizione font personalizzati */
 @font-face {
     font-family: "raleway";
     src: url("../public/fonts/Raleway-VariableFont_wght.ttf");
@@ -13,34 +15,33 @@ $secondary: #4F6A6D;
     src: url("../public/fonts/Jura-VariableFont_wght.ttf");
 }
 
+/* Variabili CSS globali */
 :root {
-    --toastify-color-success: #183840;
+    --toastify-color-success: #183840;    //Colore successo per notifiche Toast
 }
-
+/* Reset margini e smoothing font */
 body {
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
 }
-
+/* Stile globale per App e HTML */
 .App, html {
     background: #2B292E;
     color: white;
     font-family: raleway, sans-serif;
 }
 
-/*Utility Classes*/
+/* Utility Classes */
 .cursor-pointer{
-    cursor: pointer;
+    cursor: pointer;       //cambia il cursore in pointer
 }
 
 .btn {
     border: 1px solid white;
 }
 
-
-/*Tags*/
+/* Tags */
 .tag-displayer-outline {
   display: flex;
   position: relative;
@@ -65,6 +66,7 @@ body {
   cursor: default;
 }
 
+/* Singolo tag */
 .tag {
     display: flex;
     align-items: center;
@@ -74,6 +76,7 @@ body {
     max-height: fit-content;
     border-radius: 10px;
     background: #bcbaba;
+    /* Pulsante di chiusura "X" */
     .closing-x-tag {
         position: relative;
         margin-left: 5px;
@@ -86,7 +89,7 @@ body {
         }
     }
 }
-
+/* Stato selezionato o hover per tag */
 .selected {
     background: #bababa !important;
 }
@@ -94,16 +97,23 @@ body {
 .option:hover {
     background: #bababa;
 }
-
+/* Spaziature utility */
 .spacer {
     margin-top: 10rem;
 }
-
+/* Navbar */
 .navbar-ff {
     font-family: jura, sans-serif;
     font-size: 20px;
 }
+.navbar-text {
+  transition: text-shadow 0.25s ease-in-out;
+}
 
+.navbar-text:hover {
+  text-shadow: #0dcaf0 0 0 2px;
+}
+/* Avatar utente */
 .avatar {
     width: 55px;
     height: 55px;
@@ -120,7 +130,7 @@ body {
     border: 2px solid white;
     text-decoration: none !important;
 }
-
+/* Barra di ricerca */
 .search-bar {
     width: 55%;
     padding: 10px 20px;
@@ -152,17 +162,7 @@ body {
     }
 }
 
-
-
-.navbar-text {
-    transition: text-shadow 0.25s ease-in-out;
-}
-
-.navbar-text:hover {
-    text-shadow: #0dcaf0 0 0 2px;
-}
 /* Floating Button */
-
 .floating-btn-add {
   font-size: 20rem;
 }
@@ -173,7 +173,7 @@ body {
 }
 
 /* Cards */
-
+/* Card Playlist */
 .playlist-card-bg {
   min-height: 347px;
   min-width: 345px;
@@ -188,7 +188,7 @@ body {
     border: solid 1px black;
   }
 }
-
+/* Card Community */
 .community-card-bg {
   background: linear-gradient(96deg, #2E5259 12.78%, #191F20 100%);
   border: solid 1px white;
@@ -201,6 +201,7 @@ body {
   border: solid 1px black;
 }
 
+/* Card canzone */
 .add-song-card-bg {
   background: linear-gradient(96deg, #2E5259 12.78%, #191F20 100%);
   border: none;
@@ -225,6 +226,7 @@ body {
 
 }
 
+/* Overlay */
 .overlay {
   position: fixed;
   top: 0;
@@ -250,6 +252,7 @@ body {
   pointer-events: none;
 }
 
+/* Card commenti */
 .comment-bg {
   background: linear-gradient(96deg, #2E5259 12.78%, #191F20 100%);
   border: none;

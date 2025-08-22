@@ -1,8 +1,6 @@
 export const getToken = async () => {
-
     try {
         //Invia una richiesta POST all’endpoint di Spotify per ottenere un token.
-
         const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {

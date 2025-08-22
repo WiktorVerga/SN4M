@@ -3,7 +3,7 @@ import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
-import {cleanCommunities, getCommunities, setCommunities} from "../../utilities/communities";
+import {cleanCommunities} from "../../utilities/communities";
 import {cleanSubscribedCommunities, getLoggedUser, getUserCommunities} from "../../utilities/users";
 
 export default function TueCommunities() {
@@ -17,7 +17,7 @@ export default function TueCommunities() {
 
     const [defaultData, setDefaultData] = useState([]);
 
-    const loggedUser = getLoggedUser()
+    const loggedUser = getLoggedUser()      //ottiene utente loggato
 
     //funzione che aggiorna lo stato delle communities recuperandole di nuovo
     const update = () => {
@@ -27,7 +27,6 @@ export default function TueCommunities() {
     /*Effetto che si attiva quando cambiano 'communities' o 'isTue': viene applicato il filtro:
      - se isTue = false => mostra communities a cui l'utente è iscritto ma NON create da lui
      - se isTue = true => mostra solo le communities create dall'utente*/
-
     const setDefaultCommunities = () => {
         cleanCommunities()
         cleanSubscribedCommunities()
@@ -68,7 +67,6 @@ export default function TueCommunities() {
         } else {
             setDefaultCommunities()
         }
-
     }, [search]);
 
     return (
@@ -76,7 +74,6 @@ export default function TueCommunities() {
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 COMMUNITIES
             </h1>
-
             {/* Intestazione Dinamica con Pulsante Filtro */}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
@@ -84,12 +81,10 @@ export default function TueCommunities() {
                 </h3>
                 <button className={"col-2 btn btn-primary text-uppercase"} onClick={() => setIsTue(!isTue)}>{isTue? "vedi iscrizioni" : "vedi le tue"}</button>
             </div>
-
             {/* SearchBar */}
             <div className={"d-flex justify-content-center mt-5"}>
                 <SearchBar sendSearch={sendSearch}/>
             </div>
-
             {visualizzaCommunities.length === 0?
                 <>
                     {/*Nessuna community trovata*/}

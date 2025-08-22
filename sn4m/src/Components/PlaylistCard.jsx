@@ -1,12 +1,9 @@
 import TagDisplayer from "./TagDisplayer";
 import {Link} from "react-router-dom";
 import {getAutorePlaylist} from "../utilities/playlists";
-import {type} from "@testing-library/user-event/dist/type";
-import {useDebugValue} from "react";
 
 
 export const PlaylistCard = ({playlist, idCommunity}) => {
-
     return (
         //la card è un Link che porta alla pagina della playlist in base al suo id
         <Link className={"card playlist-card-bg text-white m-auto shadow w-25 h-25 shadow text-decoration-none"}

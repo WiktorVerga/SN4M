@@ -1,4 +1,4 @@
-import {getLoggedUser, getUser, getUsers} from "./users";
+import {getUsers} from "./users";
 import {getAutorePlaylist, getPlaylist} from "./playlists";
 
 //recupera la voce "communities" da localStorage e trasforma il JSON in stringa

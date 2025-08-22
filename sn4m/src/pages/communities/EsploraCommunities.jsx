@@ -3,19 +3,17 @@ import FloatingAddBtn from "../../Components/FloatingAddBtn";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
-import {cleanCommunities, getCommunities, setCommunities} from "../../utilities/communities";
+import {cleanCommunities, getCommunities} from "../../utilities/communities";
 import {getLoggedUser} from "../../utilities/users";
 
 export default function EsploraCommunities() {
-    const navigate = useNavigate();
-
     const [isTutte, setIsTutte] = useState(false);      //flag per visualizzare tutte le communities oppure solo quelle suggerite
 
     const [communities, setCommunities] = useState(getCommunities()? getCommunities() : []);        //tutte le communities salvate nel localStorage o array vuoto
 
     const [visualizzaCommunities, setVisualizzaCommunities] = useState([]);         //stato che conterrà la lista di community filtrate da mostrare a schermo
 
-    const [defaultData, setDefaultData] = useState([]);                      //stato con i dati originali delle community (senza filtri)
+    const [defaultData, setDefaultData] = useState([]);         //stato con i dati originali delle community (senza filtri)
 
     const loggedUser = getLoggedUser()          //recupera utente loggato
 
@@ -23,12 +21,10 @@ export default function EsploraCommunities() {
         cleanCommunities()
         /* Applico Filtro se è selezionato "Suggerite" */
         if (!isTutte) {
-
             /* Algoritmo di verifica di Correlazione con Profilo Utente: verifica la correlazione tra i tag della community e i tag cantanti preferiti dell’utente.
                 Soglia: almeno il 55% dei tag dell’utente devono combaciare.
                 Esclude: community create dall’utente stesso e community a cui l’utente partecipa già */
             const verifyValidity = (community) => {
-
                 if (loggedUser) {
                     const numTagsUser = loggedUser.cantantiPreferiti.length
                     const numMinCorr = Math.round(numTagsUser/100*55);
@@ -40,7 +36,6 @@ export default function EsploraCommunities() {
 
                     return numCorr >= numMinCorr
                 }
-
             }
             setDefaultData(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         } else {
@@ -87,7 +82,6 @@ export default function EsploraCommunities() {
             <h1 className={"h1 p-5 text-center text-uppercase"}>
                 Esplora COMMUNITIES
             </h1>
-
             {/* Intestazione Dinamica con Pulsante Filtro */}
             <div className={"row flex-row align-items-center"}>
                 <h3 className={"col"}>
@@ -95,12 +89,10 @@ export default function EsploraCommunities() {
                 </h3>
                 <button className={"col-2 btn btn-primary text-uppercase"} onClick={() => setIsTutte(!isTutte)}>{isTutte? "scopri suggerite" : "scopri tutte"}</button>
             </div>
-
             {/* SearchBar */}
             <div className={"d-flex justify-content-center mt-5"}>
                 <SearchBar sendSearch={sendSearch}/>
             </div>
-
             {visualizzaCommunities.length === 0?
                 <>
                     {/*Nessuna community trovata*/}

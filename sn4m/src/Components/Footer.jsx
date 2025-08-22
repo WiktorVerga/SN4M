@@ -10,6 +10,7 @@ export const Footer = () => {
                         <h5 className="fw-bold">Social Network for Music</h5>
                         <p className="small">
                             Progetto universitario sviluppato per il corso di Applicazioni Web e Cloud –
+                            {/* Link all'università */}
                             <Link className={"text-white text-decoration-none"} to={"https://www.unimi.it/it"}>Università degli Studi di Milano.</Link>
                         </p>
                     </div>
@@ -36,7 +37,7 @@ export const Footer = () => {
 
                 <hr className="border-light" />
 
-                {/* Footer bottom */}
+                {/* Footer bottom con anno */}
                 <div className="text-center small">
                     {new Date().getFullYear()} - SN4M
                 </div>

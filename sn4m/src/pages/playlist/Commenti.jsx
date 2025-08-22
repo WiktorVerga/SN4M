@@ -14,15 +14,33 @@ export const Commenti = () => {
     const [testoCommento, setTestoCommento] = useState("")
     const [testoErrore, setTestoErrore] = useState("")
 
+    const [isTuoi, setIsTuoi] = useState(false)
+
     const [commenti, setCommenti] = useState([])
 
     const loggedUser = getLoggedUser()
     const [playlist, setPlaylist] = useState()
 
+    //Aggiorna lo stato della pagina per mostrare i dati aggiornati con le modifiche
     const update = () => {
-        setCommenti(getCommentiPlaylist(idCommunity, idPlaylist))
+        const dati = getCommentiPlaylist(idCommunity, idPlaylist)
+
+        // Ordinamento dal più vecchio al più recente
+        dati.sort((a, b) => parseDate(b.data) - parseDate(a.data));
+
+        if (isTuoi) {
+            const commentiProprietari = dati.filter(item => item.autore === loggedUser.idUtente)
+            if (commentiProprietari.length > 0) {
+                setCommenti(commentiProprietari)
+            } else {
+                setIsTuoi(false)
+            }
+        } else {
+            setCommenti(dati)
+        }
     }
 
+    //Effettua i controlli sul testo inserito dal commento
     const checkTesto = () => {
 
         const txtArea = document.getElementById("testoCommento");
@@ -51,7 +69,7 @@ export const Commenti = () => {
         const oggi = new Date();
 
         const giorno = String(oggi.getDate()).padStart(2, '0'); // gg
-        const mese = String(oggi.getMonth() + 1).padStart(2, '0'); // mm (i mesi partono da 0)
+        const mese = String(oggi.getMonth() + 1).padStart(2, '0'); // mm
         const anno = oggi.getFullYear(); // aaaa
 
         const dataFormattata = `${giorno}-${mese}-${anno}`;
@@ -64,6 +82,7 @@ export const Commenti = () => {
             const community = getCommunity(idCommunity)
             const playlist = community.playlistCondivise.find(item => item.idPlaylist === idPlaylist)
 
+            //Aggiungo un nuovo oggetto commento all'array di commenti
             playlist.commenti.push({
                 idCommento: generateId(),
                 testo: testoCommento,
@@ -71,10 +90,12 @@ export const Commenti = () => {
                 autore: loggedUser.idUtente
             })
 
+            //Aggiorno l'array di playlist condivise
             community.playlistCondivise = [...community.playlistCondivise.filter(item => item.idPlaylist !== idPlaylist), playlist]
 
             updateCommunity(community)
 
+            //Reimposto lo stato della pagina e la aggiorno
             setTestoCommento("")
 
             update()
@@ -111,16 +132,10 @@ export const Commenti = () => {
     useEffect(() => {
         setPlaylist(getPlaylist(idPlaylist))
 
-        console.log(playlist)
+        //Imposta tutti i dati iniziali dello stato
+        update()
 
-        const dati = getCommentiPlaylist(idCommunity, idPlaylist)
-
-        // Ordinamento dal più vecchio al più recente
-        dati.sort((a, b) => parseDate(b.data) - parseDate(a.data));
-
-        setCommenti(dati)
-
-    }, [idCommunity, idPlaylist])
+    }, [idCommunity, idPlaylist, isTuoi])
 
     return (
         <div>
@@ -128,6 +143,7 @@ export const Commenti = () => {
                 Commenti: {playlist?.titolo}
             </h1>
 
+            {/* Scheda Aggiunta Commento */}
             <div className={"d-flex flex-column align-items-center gap-5"}>
                 <div className={"card comment-bg w-75 h-50"}>
                     <div className={"card-body d-flex flex-column gap-3"}>
@@ -173,6 +189,16 @@ export const Commenti = () => {
                 </div>
 
                 <hr className={"w-100"}/>
+
+                {/* Intestazione Dinamica con Pulsante Filtro, appare solo se ci sono commenti propri*/}
+                {commenti.filter(item => item.autore === loggedUser.idUtente).length > 0 &&
+                    <div className={"row flex-row align-items-center w-100"}>
+                    <h3 className={"col"}>
+                        {isTuoi ? "I Tuoi Commenti" : "Tutti i Commenti"}
+                    </h3>
+                    <button className={"col-2 btn btn-primary text-uppercase"}
+                            onClick={() => setIsTuoi(!isTuoi)}>{isTuoi ? "Vedi Tutti" : "vedi i Tuoi"}</button>
+                </div>}
 
                 {commenti?.length > 0 ?
                     commenti?.map((commento, index) => (

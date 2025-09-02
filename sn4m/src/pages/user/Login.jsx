@@ -24,7 +24,7 @@ export default function Login() {
         const passwordInput = document.getElementById("password");
 
         //Controlla se esiste un utente con le credenziali fornite.
-        if (existingUsers.some(item => (item.username === username && item.password === password))) {
+        if (existingUsers && existingUsers.some(item => (item.username === username && item.password === password))) {
             //Se sì: reindirizza pagina profilo utente e salva email utente nel sessionStorage
             navigate("/esplora")
             sessionStorage.setItem("loginSession", JSON.stringify({user: existingUsers.find(item => item.password === password && item.username === username).idUtente}))

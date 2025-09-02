@@ -90,9 +90,9 @@ export const cleanCommunities = () => {
     const users = getUsers()        // ottiene tutti gli utenti
 
     //se non ci sono community o utenti, termina
-    if (communities.length === 0 || users.length === 0) return null
+    if (!communities || !users || communities?.length === 0 || users?.length === 0) return null
 
-    const communitiesAggiornate = communities.map(community => {
+    const communitiesAggiornate = communities?.map(community => {
         //verifica se l'autore della community esiste ancora tra gli utenti
         const esisteAncora = users.some(item => item.idUtente === community.autore)
 
@@ -100,5 +100,5 @@ export const cleanCommunities = () => {
     })
 
     // salva solo le community valide nel localStorage, filtrando quelle rimosse
-    setCommunities(communitiesAggiornate.filter(item => typeof item !== "undefined"))
+    setCommunities(communitiesAggiornate?.filter(item => typeof item !== "undefined"))
 }

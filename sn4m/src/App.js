@@ -24,9 +24,9 @@ import {PlaylistCommunity} from "./pages/playlist/playlistCommunity";
 
 function App() {
     const location = useLocation()          //recupera il percorso attuale (URL)
-    const navigate = useNavigate()      //permette la navigazione programmata
+    const navigate = useNavigate()      //permette la navigazione
     const excludeNavbar = ["/", "/signin"].includes(location.pathname);         //nasconde Navbar per pagine di login e registrazione
-    const [checkingAuth, setCheckingAuth] = useState(true);             //serve a bloccare il rendering della pagina finché non è stato verificato se l’utente è autenticato.
+    const [checkingAuth, setCheckingAuth] = useState(true);           //serve a bloccare il rendering della pagina finché non è stato verificato se l’utente è autenticato.
 
     /* UseEffect principale: pulizia dati e controllo login */
     useEffect(() => {

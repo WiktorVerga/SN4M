@@ -10,13 +10,14 @@ export const getPlaylistsProprie = () => {
     return user.playlistProprie
 }
 
-//restituisce le playlist create e salvate dall'utente loggato
+//Restituisce le playlist dell'utente creatore di una specifica playlist
 export const getPlaylists = (idPlaylist) => {
     if (!idPlaylist) return null
     //si ottiene l'utente tramite idPlaylist
     const idUtente = idPlaylist.split(".")[0]
     const utente = getUser(idUtente)
 
+    //restituisce le playlist salvate e proprie dell'utente loggato
     return [utente.playlistProprie?.find(item => item.idPlaylist === idPlaylist), utente.playlistSalvate?.find(item => item.idPlaylist === idPlaylist)]
 }
 

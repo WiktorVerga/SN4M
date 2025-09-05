@@ -19,12 +19,14 @@ $secondary: #4F6A6D;
 :root {
     --toastify-color-success: #183840;    //Colore successo per notifiche Toast
 }
+
 /* Reset margini e smoothing font */
 body {
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 /* Stile globale per App e HTML */
 .App, html {
     background: #2B292E;
@@ -89,6 +91,7 @@ body {
         }
     }
 }
+
 /* Stato selezionato o hover per tag */
 .selected {
     background: #bababa !important;
@@ -97,10 +100,12 @@ body {
 .option:hover {
     background: #bababa;
 }
+
 /* Spaziature utility */
 .spacer {
     margin-top: 10rem;
 }
+
 /* Navbar */
 .navbar-ff {
     font-family: jura, sans-serif;
@@ -113,6 +118,7 @@ body {
 .navbar-text:hover {
   text-shadow: #0dcaf0 0 0 2px;
 }
+
 /* Avatar utente */
 .avatar {
     width: 55px;
@@ -130,6 +136,7 @@ body {
     border: 2px solid white;
     text-decoration: none !important;
 }
+
 /* Barra di ricerca */
 .search-bar {
     width: 55%;
@@ -173,6 +180,7 @@ body {
 }
 
 /* Cards */
+
 /* Card Playlist */
 .playlist-card-bg {
   min-height: 347px;
@@ -188,6 +196,7 @@ body {
     border: solid 1px black;
   }
 }
+
 /* Card Community */
 .community-card-bg {
   background: linear-gradient(96deg, #2E5259 12.78%, #191F20 100%);

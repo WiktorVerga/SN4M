@@ -14,13 +14,13 @@ export default function ProfiloUtente() {
     const [showPasswordConf, setShowPasswordConf] = useState(false);
     const [canSubmit, setCabSubmit] = useState(false);
 
-    const [utenteLoggato, setUtenteLoggato] = useState({})              //memorizza i dati completi dell’utente loggato.
+    const [utenteLoggato, setUtenteLoggato] = useState({})              //memorizza i dati completi dell’utente loggato
 
-    const [initialArtisti, setInizialeArtisti] = useState([])           //serve a salvare la lista iniziale di artisti.
+    const [initialArtisti, setInizialeArtisti] = useState([])           //serve a salvare la lista iniziale di artisti
 
     const [artistiPreferiti, setArtistiPreferiti] = useState([])        //serve a salvare gli artisti selezionati dall'utente loggato
 
-    const riceviNuoviArtisti = (array) => {         //funzione di callback che riceve un array di nuovi artisti preferiti e aggiorna lo stato.
+    const riceviNuoviArtisti = (array) => {         //funzione che riceve un array di nuovi artisti preferiti e aggiorna lo stato
         setArtistiPreferiti(array);
     }
 
@@ -37,13 +37,13 @@ export default function ProfiloUtente() {
         setShowNewUser(false);
     }
 
-    /*Visibilità inserimento nuovo utente */
+    /* Visibilità inserimento nuovo utente */
     const [showNewUser, setShowNewUser] = useState(false);
 
-    /*Visibilità inserimento nuova password*/
+    /* Visibilità inserimento nuova password */
     const [showNewPassword, setShowNewPassword] = useState(false);
 
-    /*Dati errori Form*/
+    /* Dati errori Form */
     const [userError, setUserError] = useState("");
     const [passwordError, setPasswordError] = useState("")
     let hasError = false;
@@ -54,7 +54,7 @@ export default function ProfiloUtente() {
         navigate("/login")
     }
 
-    /*handleFunction Username*/
+    /* handleFunction Username */
     const handleSaveUsername = () => {
 
         const existingUsers = getUsers()
@@ -128,6 +128,7 @@ export default function ProfiloUtente() {
         }
     }
 
+    //Salva i dati modificati del profilo utente
     const handleSubmit = () => {
         if (showNewUser) handleSaveUsername()
         if (showNewPassword) handleSavePassword()
@@ -143,7 +144,6 @@ export default function ProfiloUtente() {
                 username: (showNewUser && newUsername.length !== 0) ? newUsername : utenteLoggato.username,
                 password: (showNewPassword && newPassword !== "" && newPasswordConf !== "") ? newPassword : utenteLoggato.password,
                 cantantiPreferiti: (artistiPreferiti.length < 3 || artistiPreferiti > 15)? initialArtisti : artistiPreferiti,
-                //generiPreferiti: generiPreferiti,
                 playlistProprie: utenteLoggato.playlistProprie,
                 playlistSalvate: utenteLoggato.playlistSalvate,
                 communities: utenteLoggato.communities
@@ -152,6 +152,7 @@ export default function ProfiloUtente() {
             updateUser(profilo)
             setUtenteLoggato(getUser(utenteLoggato.idUtente))
 
+            //Notifica di successo
             toast.success("Modifiche Salvate", {
                 position: "top-right",
                 autoClose: 5000,
@@ -165,6 +166,7 @@ export default function ProfiloUtente() {
 
             resetState()
         } else {
+            //Notifica di errore
             toast.error("Errore nel Salvataggio", {
                 position: "top-right",
                 autoClose: 5000,

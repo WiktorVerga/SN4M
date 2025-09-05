@@ -1,7 +1,7 @@
 import {getUsers} from "./users";
 import {getAutorePlaylist, getPlaylist} from "./playlists";
 
-//recupera la voce "communities" da localStorage e trasforma il JSON in stringa
+//recupera la voce "communities" da localStorage e trasforma la stringa in JSON
 export const getCommunities = () => {
     return JSON.parse(localStorage.getItem("communities"))
 }
@@ -17,12 +17,12 @@ export const getCommunity = (id) => {
     return typeof result === 'undefined'? null : result      //se non trova nessuna community con id di input restituisce null
 }
 
-//ottiene la lista esistente di community dal localStorage.
+//aggiorna la lista di communities nel localStorage
 export const updateCommunity = (community) => {
     const existingCommunities = getCommunities()
     const communities = existingCommunities?.filter(item => item.idCommunity !== community.idCommunity)       //filtra quelle che hanno un ID diverso da quello della community da aggiornare.
 
-    if (existingCommunities) setCommunities([...communities, community])      //se c'erano community salvate: aggiunge quella nuova/aggiornata all’array filtrato e lo salva nel localStorage.
+    if (existingCommunities) setCommunities([...communities, community])      //se c'erano communities salvate: aggiunge quella nuova/aggiornata all’array filtrato e lo salva nel localStorage.
     else setCommunities([community])                                           //Se no: crea un nuovo array con solo la community da aggiornare/inserire.
 }
 

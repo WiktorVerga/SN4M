@@ -4,9 +4,8 @@ import {getLetter, getLoggedUser, getUser, getUsers, logout, setUsers} from "../
 import {getCommunity, updateCommunity} from "../utilities/communities";
 import {toast} from "react-toastify";
 
-//Componente che riceve come props: il commento, id della community, id della playlist e funzione update
 export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
-    /*Variabili*/
+    /* Variabili */
     const [autore, setAutore] = useState({});           //stato per memorizzare i dati dell'autore del commento
 
     const [letter, setLetter] = useState("");       //stato per memorizzare la lettera iniziale dell'autore
@@ -75,7 +74,6 @@ export const CommentoCard = ({commento, idCommunity, idPlaylist, update}) => {
             //chiude overlay
             setOpenEdit(false)
 
-            // Aggiorna la UI genitore
             update()
 
             //Notifica di successo

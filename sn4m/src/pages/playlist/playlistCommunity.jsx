@@ -1,8 +1,5 @@
-import {getCommunity} from "../../utilities/communities";
 import SearchBar from "../../Components/SearchBar";
-import share from "../../media/share.svg";
-import unshare from "../../media/un-share.svg";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {SongCard} from "../../Components/SongCard";
 import salvata from "../../media/saved.svg";
 import salva from "../../media/salva.svg";
@@ -77,14 +74,15 @@ export const PlaylistCommunity = () => {
         }
     }
 
-    /* useEffect Hooks */
+    /* useEffect */
+
     //Inizializza dati playlist, autore e stato salvata
     useEffect(() => {
         setPlaylist(getPlaylist(idPlaylist))        //Recupera i dati della playlist
         setAutore(getAutorePlaylist(idPlaylist))    //Recupera i dati dell'autore della playlist
         setIsSaved(checkIfSaved(idPlaylist))        //Controlla se la playlist è già stata salvata o no
 
-        //Imposta dati per permettere la ricerca (imposta i dati di default e i filtri di default
+        //Rimuove le community a cui non si è più iscritti (perche eliminate dagli utenti proprietari)
         cleanSubscribedCommunities()
     }, [idPlaylist]);       //ricalcola quando cambia l'ID playlist in URL
 

@@ -104,7 +104,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
 
     /* Selezione artista cliccando sulla lista */
     const handleChoice = (e) => {
-        //Recupera il valore (nome artista) dall’attributo HTML
+        //Recupera il valore (nome artista)
         const element = e.target.getAttribute('value')
 
         addArtist(element);    // Aggiunge l’artista ai tag
@@ -129,7 +129,7 @@ export default function TagSelector({personalizzati, returnData, initialState, l
     /* Imposta uno stato iniziale per i tags, se c'è */
     useEffect(() => {
         if (initialState?.length > 0) {
-            //Se il componente riceve un "initialState" con uno o più tag, li copia nello stato `tags`
+            //Se il componente riceve un "initialState" con uno o più tag, li copia nello stato 'tags'
             setTags([...initialState])
         }
     }, [initialState]);

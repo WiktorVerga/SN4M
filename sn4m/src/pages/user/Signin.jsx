@@ -4,12 +4,12 @@ import {getUsers, setUsers} from "../../utilities/users";
 import TagSelector from "../../Components/TagSelector";
 
 export default function Signin() {
-    /* Functional Vars */
+    /* Variabili Funzionali */
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showRipetiPassword, setShowRipetiPassword] = useState(false);
-    const [canSubmit, setCabSubmit] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);
 
     /* Dati Form */
     const [username, setUsername] = useState("");
@@ -54,6 +54,7 @@ export default function Signin() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(email)) {
+            //Avviene errore:
             emailInput.classList.add("is-invalid")
             setEmailError("Email non Valida")
             hasError = true;
@@ -153,9 +154,9 @@ export default function Signin() {
     //Controllo Massimi e Minimi di Artisti Preferiti
     useEffect(() => {
         if (artistiPreferiti.length < 3 || artistiPreferiti.length > 15) {
-            setCabSubmit(false)
+            setCanSubmit(false)
         } else {
-            setCabSubmit(true)
+            setCanSubmit(true)
         }
     }, [artistiPreferiti]);
 

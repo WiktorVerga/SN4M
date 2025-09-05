@@ -1,9 +1,9 @@
-import {data, Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {
     checkIfSaved,
     communitiesWhereShared,
     getAutorePlaylist, getIdCondivisionePlaylisty,
-    getPlaylist, getPlaylistSalvata, getPlaylistSalvate,
+    getPlaylist,
     isPublic
 } from "../../utilities/playlists";
 import {useEffect, useState} from "react";
@@ -14,9 +14,8 @@ import share from "../../media/share.svg"
 import unshare from "../../media/un-share.svg"
 import salva from "../../media/salva.svg"
 import salvata from "../../media/saved.svg"
-import {getSong, getSongs} from "../../utilities/songs";
+import {getSongs} from "../../utilities/songs";
 import {SongCard} from "../../Components/SongCard";
-import {PlaylistCard} from "../../Components/PlaylistCard";
 import {getCommunity, updateCommunity} from "../../utilities/communities";
 import {toast} from "react-toastify";
 
@@ -47,7 +46,7 @@ export const Playlist = () => {
 
     const [canzoni, setCanzoni] = useState([]);
 
-    const [autore, setAutore] = useState({});           //dati autore (username, ecc.) della playlist
+    const [autore, setAutore] = useState({});           //dati autore della playlist
 
     const [defaultData, setDefaultData] = useState([]);             //stato per reset filtri ricerca
 
@@ -62,7 +61,7 @@ export const Playlist = () => {
     const handleCondividi = () => {
         const community = getCommunity(selectedItem)        //carica la community scelta
 
-        /* Creazione oggetto Playlist Condivisibile*/
+        /* Creazione oggetto Playlist Condivisa */
         const nuovaPlaylist = {
             idPlaylist: id,
             idCondivisione: generateId(),
@@ -146,9 +145,6 @@ export const Playlist = () => {
                 idCondivisione: getIdCondivisionePlaylisty(searchParams.get("idCommunity"), id),
             })
 
-            console.log(loggedUser.playlistSalvate)
-
-
             updateUser(loggedUser)
             setIsSaved(checkIfSaved(id))
 
@@ -171,7 +167,7 @@ export const Playlist = () => {
         setPlaylist(getPlaylist(id))
     }
 
-    /* useEffect Hooks */
+    /* useEffect */
 
     useEffect(() => {
         setPlaylist(getPlaylist(id))        //Recupera i dati della playlist
@@ -179,7 +175,7 @@ export const Playlist = () => {
         setAutore(getAutorePlaylist(id))    //Recupera i dati dell'autore della playlist
         setIsSaved(checkIfSaved(id))        //Controlla se la playlist è già stata salvata o no
 
-        //Imposta dati per permettere la ricerca (imposta i dati di default e i filtri di default
+        //Rimuove le community a cui non si è più iscritti (perche eliminate dagli utenti proprietari)
         cleanSubscribedCommunities()
 
         // calcola community in cui si può condividere e dove è già condivisa
@@ -187,7 +183,7 @@ export const Playlist = () => {
         setUnsharableCommunities(communitiesWhereShared(id))
     }, [id]);       //ricalcola quando cambia l'ID playlist in URL
 
-
+    //Recupera i dettagli delle canzoni della playlist
     useEffect(() => {
         if (typeof playlist.canzoni !== "undefined") {
             getSongs(playlist.canzoni).then(data => {

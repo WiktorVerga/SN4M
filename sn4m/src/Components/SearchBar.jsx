@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-//barra di ricerca con un campo di input
+//barra di ricerca
 export default function SearchBar({sendSearch}) {
 
     const [search, setSearch] = useState("")    //stato per memorizzare il testo digitato dall’utente
@@ -10,7 +10,7 @@ export default function SearchBar({sendSearch}) {
         sendSearch(search)
     }
 
-    //UseEffect che si attiva ogni volta che cambia il valore di search e invia al padre il testo in minuscolo e senza spazi
+    //UseEffect che si attiva ogni volta che cambia il valore di search
     useEffect(() => {
         sendData(search.toLocaleLowerCase().trim())
     }, [search])

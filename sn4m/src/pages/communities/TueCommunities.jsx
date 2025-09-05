@@ -24,9 +24,10 @@ export default function TueCommunities() {
         setCommunities(getUserCommunities())
     }
 
-    /*Effetto che si attiva quando cambiano 'communities' o 'isTue': viene applicato il filtro:
+    /* si attiva quando cambiano 'communities' o 'isTue': viene applicato il filtro:
      - se isTue = false => mostra communities a cui l'utente è iscritto ma NON create da lui
-     - se isTue = true => mostra solo le communities create dall'utente*/
+     - se isTue = true => mostra solo le communities create dall'utente
+     */
     const setDefaultCommunities = () => {
         cleanCommunities()
         cleanSubscribedCommunities()
@@ -35,7 +36,7 @@ export default function TueCommunities() {
         if (!isTue) {
             setDefaultData(communities.filter(community => (community.autore !== loggedUser.idUtente)));
         } else {
-            /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
+            /*Mostra tutte le community non create né seguite dall’utente */
             setDefaultData(communities.filter(community => (community.autore === loggedUser.idUtente)));
         }
     }

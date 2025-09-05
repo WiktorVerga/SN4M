@@ -10,7 +10,7 @@ export default function ModificaPlaylist() {
 
     /* Variabili Funzionali */
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams()                //per leggere i parametri URL, in particolare idPlaylist per identificare la playlist da modificare.
+    const [searchParams] = useSearchParams()                //per leggere i parametri URL
     const playlistId = searchParams.get("idPlaylist")
     const [playlist, setPlaylist] = useState({})               //stato che conterrà i dati della playlist corrente
     const [canSubmit, setCanSubmit] = useState(false);
@@ -39,7 +39,7 @@ export default function ModificaPlaylist() {
 
     let hasError = false
 
-    const resetState = () => {          //resetta gli input, nasconde i campi di modifica, ricarica i dati della playlist da localStorage.
+    const resetState = () => {          //resetta gli input, nasconde i campi di modifica, ricarica i dati della playlist da localStorage
 
         setTitolo("");
         setDescrizione("");
@@ -53,6 +53,7 @@ export default function ModificaPlaylist() {
         setPlaylist(playlist)
     }
 
+    //Logica salvataggio nuovo titolo
     const handleSaveTitolo = () => {
         const existingPlaylists = getPlaylistsProprie()
 
@@ -78,6 +79,7 @@ export default function ModificaPlaylist() {
         }
     }
 
+    //Logica salvataggio nuova descrizione
     const handleSaveDescrizione = () => {
 
         const descrizioneInput = document.getElementById("descrizione");
@@ -102,6 +104,7 @@ export default function ModificaPlaylist() {
 
         if (!hasError) {
 
+            //Aggiorna playlist nel localStorage
             updatePlaylistPropria({
                 idPlaylist: playlist.idPlaylist,
                 titolo: showNewTitolo ? titolo : playlist.titolo,
@@ -110,6 +113,7 @@ export default function ModificaPlaylist() {
                 canzoni: []
             })
 
+            //Notifica di Successo
             toast.success("Modifiche Salvate", {
                 position: "top-right",
                 autoClose: 5000,
@@ -123,6 +127,8 @@ export default function ModificaPlaylist() {
 
             resetState()
         } else {
+
+            //Notifica di Errore
             toast.error("Errore nel Salvataggio", {
                 position: "top-right",
                 autoClose: 5000,
@@ -137,7 +143,7 @@ export default function ModificaPlaylist() {
         }
     }
 
-    const handleDeletePlaylist = () => {            //richiede conferma testuale per l’eliminazione della playlist.
+    const handleDeletePlaylist = () => {            //richiede conferma testuale per l'eliminazione della playlist
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
@@ -150,7 +156,7 @@ export default function ModificaPlaylist() {
         navigate(-1)
     }
 
-    /* UseEffect --> si attiva al montaggio del component*/
+    /* UseEffect */
     useEffect(() => {
         /* Recupero Dati Playlist */
         const playlist = getPlaylistsProprie()?.find(item => item.idPlaylist === playlistId)

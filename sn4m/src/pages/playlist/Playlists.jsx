@@ -10,11 +10,10 @@ import {
 import {PlaylistCard} from "../../Components/PlaylistCard";
 import {cleanPlaylistSalvate, getLoggedUser} from "../../utilities/users";
 import {cleanCommunities} from "../../utilities/communities";
-import {getSong} from "../../utilities/songs";
 
 export default function Playlists() {
 
-    /*Variabili funzionali*/
+    /* Variabili funzionali */
     const navigate = useNavigate();
 
     const [isTue, setIsTue] = useState(true);          //Stato booleano che indica se l’utente sta visualizzando le proprie playlist (true) oppure quelle salvate (false).

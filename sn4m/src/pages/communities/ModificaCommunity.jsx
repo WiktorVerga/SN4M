@@ -8,10 +8,10 @@ import {toast} from "react-toastify";
 export default function ModificaCommunity() {
     /* Variabili Funzionali */
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams()            //per leggere i parametri URL, in particolare idCommunity per identificare la community da modificare.
+    const [searchParams] = useSearchParams()            //per leggere i parametri URL
     const communityId = searchParams.get("idCommunity");
     const [community, setCommunity] = useState({})              //stato che conterrà i dati della community corrente
-    const [canSubmit, setCabSubmit] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);
 
     const [showNewTitolo, setShowNewTitolo] = useState(false);
     const [showNewDescrizione, setShowNewDescrizione] = useState(false);
@@ -37,7 +37,7 @@ export default function ModificaCommunity() {
 
     let hasError = false
 
-    const resetState = () => {      //resetta gli input, nasconde i campi di modifica, ricarica i dati della community da localStorage.
+    const resetState = () => {      //resetta gli input, nasconde i campi di modifica, ricarica i dati della community da localStorage
         setTitolo("");
         setDescrizione("");
         setShowNewTitolo(false);
@@ -138,7 +138,7 @@ export default function ModificaCommunity() {
     }
 
     //Funzione per eliminare community
-    const handleDeleteCommunity = () => {       //richiede conferma testuale per l’eliminazione della community.
+    const handleDeleteCommunity = () => {       //richiede conferma testuale per l’eliminazione della community
         const validate = prompt("Digita: ELIMINA")
 
         if (validate === "ELIMINA") {
@@ -151,7 +151,7 @@ export default function ModificaCommunity() {
         navigate(-1)
     }
 
-    /* UseEffect --> si attiva al montaggio del componente*/
+    /* UseEffect */
     useEffect(() => {
         /* Recupero Dati Community */
         const community = getCommunities()?.find(item => item.idCommunity === communityId)
@@ -164,9 +164,9 @@ export default function ModificaCommunity() {
     //Controllo Massimi e Minimi di Tags
     useEffect(() => {
         if (tags.length < 3 || tags.length > 15) {
-            setCabSubmit(false)
+            setCanSubmit(false)
         } else {
-            setCabSubmit(true)
+            setCanSubmit(true)
         }
     }, [tags]);
 

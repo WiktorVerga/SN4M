@@ -10,27 +10,22 @@ export const getPlaylistsProprie = () => {
     return user.playlistProprie
 }
 
-//Restituisce le playlist dell'utente creatore di una specifica playlist
-export const getPlaylists = (idPlaylist) => {
-    if (!idPlaylist) return null
-    //si ottiene l'utente tramite idPlaylist
-    const idUtente = idPlaylist.split(".")[0]
-    const utente = getUser(idUtente)
 
-    //restituisce le playlist salvate e proprie dell'utente loggato
-    return [utente.playlistProprie?.find(item => item.idPlaylist === idPlaylist), utente.playlistSalvate?.find(item => item.idPlaylist === idPlaylist)]
-}
-
-//restituisce dati playlist dal idPlaylist
-export const getPlaylist = (idPlaylist) => {
-    return getPlaylists(idPlaylist)?.find(item => item.idPlaylist === idPlaylist)
-}
 
 //restituisce l'oggetto dell'autore della playlist dall'idPlaylist
 export const getAutorePlaylist = (idPlaylist) => {
     const idUtente = idPlaylist.split(".")[0]           //idUtente è la parte prima del . dell'idPlaylist
     const utente = getUser(idUtente)
     return utente
+}
+
+//restituisce dati playlist dal idPlaylist
+export const getPlaylist = (idPlaylist) => {
+    if (!idPlaylist) return null
+    //si ottiene l'utente tramite idPlaylist
+    const utente = getAutorePlaylist(idPlaylist)
+
+    return utente?.playlistProprie?.find(item => item.idPlaylist === idPlaylist)
 }
 
 //aggiornare una playlist già esistente nell'array playlistProprie dell'utente loggato
@@ -67,11 +62,11 @@ export const setPlaylistsProprie = (playlists) => {
     setUsers([...users, updatedUser]);          //salvataggio nel localStorage
 }
 
-//controlla se la playlist è stata condivisa in qualche communities
+//controlla se la playlist è stata condivisa in qualche community
 export const isPublic = (idPlaylist) => {
     const loggedUser = getLoggedUser();         //recupera l'utente attualmente loggato
 
-    //Controlla se l'utente ha condiviso la playlist in almeno una delle community
+    //Controlla se l'utente ha condiviso la playlist in almeno una delle communities
     return loggedUser?.communities.some(idCommunity => {        //cicla sulle community dell'utente
         if (loggedUser?.communities.length > 0) {
             //controlla se la community corrente ha nelle playlistCondivise la playlist input
@@ -90,7 +85,7 @@ export const getFullPlaylistsSalvate = () => {
         //Trovo la community per ogni playlist
         const community = getCommunity(playlist.idCommunity)
 
-        //Recupero i l'idPlaylist privato per ogni playlist
+        //Recupero l'idPlaylist privato per ogni playlist
         const playlistCodivisa = community?.playlistCondivise?.find(item => item.idCondivisione = playlist.idCondivisione)
 
         //Restituisco l'oggetto completo della playlist aggiungendo anche l'idCommunity dove è stata condivisa per ogni playlist
@@ -119,11 +114,11 @@ export const checkIfSaved = (idPlaylist) => {
     return getFullPlaylistsSalvate()?.some(item => item.idPlaylist === idPlaylist)
 }
 
-//restituisce un array con gli id delle community in cui una playlist è stata condivisa
+//restituisce un array con gli id delle communities in cui una playlist è stata condivisa
 export const communitiesWhereShared = (idPlaylist) => {
     const whereShared = []              //array dove memorizzare le community in cui la playlist è condivisa
     const loggedUser = getLoggedUser();     //ottiene utente loggato
-    const tuttiIdCommunities = loggedUser?.communities      //recupera tutti gli id delle community dell'utente
+    const tuttiIdCommunities = loggedUser?.communities      //recupera tutti gli id delle communities dell'utente
 
     //Crea un array di oggetti per ogni idCommunity nell'array
     const tutteCommunities = tuttiIdCommunities.map(idCommunity => {

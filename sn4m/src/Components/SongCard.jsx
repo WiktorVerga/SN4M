@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 import {songAlreadyAdded} from "../utilities/songs";
 
 export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
-    /*Variabili*/
+    /* Variabili */
     const {id} = useParams();        //prende l'id della playlist dai parametri dell'URL
 
     const [aggiunta, setAggiunta] = useState(songAlreadyAdded(id, song.idCanzone));     //stato per sapere se la canzone è già aggiunta alla playlist
@@ -47,6 +47,7 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
     //Funzione per rimuovere la canzone dalla playlist
     const handleRimuovi = () => {
         removeSong(id, song.idCanzone)
+
         //Notifica di successo
         toast.success("Canzone Rimossa", {
             position: "top-right",
@@ -62,7 +63,7 @@ export const SongCard = ({song, isProprietaria, aggiungi, update}) => {
         update()
     }
 
-    //UseEffetto che aggiorna lo stato 'aggiunta' quando cambia la canzone
+    //UseEffect che aggiorna lo stato 'aggiunta' quando cambia la canzone
     useEffect(() => {
         setAggiunta(songAlreadyAdded(id, song.idCanzone))
     }, [song])

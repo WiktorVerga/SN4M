@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 export default function CreaCommunity() {
     /* Variabili funzionali */
     const navigate = useNavigate();     //navigazione tra pagine
-    const [canSubmit, setCanSubmit] = useState(false);      //flag booleano per abilitare/disabilitare il pulsante di creazione.
+    const [canSubmit, setCanSubmit] = useState(false);      //flag booleano per abilitare/disabilitare il pulsante di creazione
 
     /* Dati Form */
     const [titolo, setTitolo] = useState("");
@@ -25,7 +25,7 @@ export default function CreaCommunity() {
     const limMinDescrizione = 10
 
     const [tags, setTags] = useState([])
-    const getTags = (array) => {             //Funzione callback passata a TagSelector per aggiornare i tag
+    const getTags = (array) => {             //Funzione passata a TagSelector per aggiornare i tag
         setTags(array)
     }
 
@@ -102,7 +102,7 @@ export default function CreaCommunity() {
             loggedUser.communities.push(community.idCommunity)      //aggiunge la community nella lista delle community dell'utente
             setUsers([...users, loggedUser])        //salva nel localStorage gli utenti
 
-            /* Notifica e Ritorno alla Pagina Precedente */
+            /* Notifica di successo e Ritorno alla Pagina Precedente */
             toast.success("Community Creata", {
                 position: "top-right",
                 autoClose: 5000,

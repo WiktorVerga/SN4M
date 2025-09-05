@@ -1,6 +1,5 @@
 import SearchBar from "../../Components/SearchBar";
 import FloatingAddBtn from "../../Components/FloatingAddBtn";
-import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CommunityCard from "../../Components/CommunityCard";
 import {cleanCommunities, getCommunities} from "../../utilities/communities";
@@ -23,7 +22,8 @@ export default function EsploraCommunities() {
         if (!isTutte) {
             /* Algoritmo di verifica di Correlazione con Profilo Utente: verifica la correlazione tra i tag della community e i tag cantanti preferiti dell’utente.
                 Soglia: almeno il 55% dei tag dell’utente devono combaciare.
-                Esclude: community create dall’utente stesso e community a cui l’utente partecipa già */
+                Esclude: community create dall’utente stesso e community a cui l’utente partecipa già
+            */
             const verifyValidity = (community) => {
                 if (loggedUser) {
                     const numTagsUser = loggedUser.cantantiPreferiti.length
@@ -39,7 +39,7 @@ export default function EsploraCommunities() {
             }
             setDefaultData(communities.filter(community => (verifyValidity(community) && community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         } else {
-            /*Mostra tutte le community non create né seguite dall’utente, senza filtro di corrispondenza. */
+            /* Mostra tutte le community non create né seguite dall’utente */
             setDefaultData(communities.filter(community => (community.autore !== loggedUser.idUtente && !loggedUser.communities.includes(community.idCommunity))));
         }
     }

@@ -21,7 +21,7 @@ export const Community = () => {
 
     const loggedUser = getLoggedUser()          //ottiene utente loggato
 
-    /* useEffect hooks */
+    /* useEffect */
 
     useEffect(() => {
         cleanPlaylists(id)
@@ -57,10 +57,9 @@ export const Community = () => {
                 playlist.titolo.toLowerCase().includes(search) || playlist.tags.some(tag => tag.toLowerCase().includes(search)) || getAutorePlaylist(playlist.idPlaylist).username.toLocaleLowerCase().includes(search)
             )));
         } else {
-            //se non c’è ricerca → mostra tutto
             setDefault()
         }
-    }, [search]);           //si attiva ogni volta che cambia "search"
+    }, [search]);
 
     return (
         <div>

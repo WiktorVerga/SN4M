@@ -21,5 +21,4 @@ export const getToken = async () => {
     } catch (error) {
         console.log(error.message);
     }
-
 }

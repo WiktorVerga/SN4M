@@ -8,7 +8,7 @@ export default function Login() {
 
     /* Variabili Funzionali */
     const navigate = useNavigate()
-    const [showPassword, setShowPassword] = useState(false);        //stato booleano per mostrare/nascondere la password.
+    const [showPassword, setShowPassword] = useState(false);        //stato booleano per mostrare/nascondere la password
 
     /* Dati Form */
     const [username, setUsername] = useState("");
@@ -17,15 +17,16 @@ export default function Login() {
     /* Errori Form */
     const [error, setError] = useState("");
 
-    const handleSubmit = () => {        //Si attiva al click su “Accedi”.
-        const existingUsers = getUsers()    //Recupera gli utenti registrati da localStorage.
+    //Logica di login
+    const handleSubmit = () => {
+        const existingUsers = getUsers()    //Recupera gli utenti registrati da localStorage
 
         const userInput = document.getElementById("username");
         const passwordInput = document.getElementById("password");
 
-        //Controlla se esiste un utente con le credenziali fornite.
+        //Controlla se esiste un utente con le credenziali fornite
         if (existingUsers && existingUsers.some(item => (item.username === username && item.password === password))) {
-            //Se sì: reindirizza pagina profilo utente e salva email utente nel sessionStorage
+            //Se sì: reindirizza pagina esplora e salva idUtente nel sessionStorage
             navigate("/esplora")
             sessionStorage.setItem("loginSession", JSON.stringify({user: existingUsers.find(item => item.password === password && item.username === username).idUtente}))
         } else {

@@ -6,9 +6,9 @@ import {toast} from "react-toastify";
 import {getLoggedUser, getUsers, setUsers} from "../../utilities/users";
 
 export default function CreaPlaylist() {
-    /* Functional Vars */
+    /* Variabili Funzionali */
     const navigate = useNavigate();
-    const [canSubmit, setCanSubmit] = useState(false);          //flag booleano per abilitare/disabilitare il pulsante di creazione.
+    const [canSubmit, setCanSubmit] = useState(false);          //flag booleano per abilitare/disabilitare il pulsante di creazione
 
     /* Dati Form */
     const [titolo, setTitolo] = useState("");
@@ -99,7 +99,7 @@ export default function CreaPlaylist() {
             loggedUser.playlistProprie.push(playlist)               //aggiunge la playlist nella lista delle playlistProprie dell'utente
             setUsers([...users, loggedUser])        //salva nel localStorage gli utenti
 
-            /* Notifica e Ritorno alla pagina visualizza playlist */
+            /* Notifica di Successo e Ritorno alla pagina visualizza playlist */
             toast.success("Playlist Creata", {
                 position: "top-right",
                 autoClose: 5000,

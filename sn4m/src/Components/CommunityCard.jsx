@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 
-    export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
+export default function CommunityCard({community, esplora, update}) {        // scheda di una community a cui un utente può unirsi e modificare/abbandonare
     const loggedUser = getLoggedUser()
 
     const navigate = useNavigate();
@@ -19,6 +19,7 @@ import {useNavigate} from "react-router-dom";
             const users = existingUsers?.filter(item => item.email !== loggedUser.email)        //toglie l'utente loggato dalla lista degli utenti
             loggedUser.communities.push(community.idCommunity)      //Aggiunge l'ID della community alla lista delle community dell'utente loggato
             setUsers([...users, loggedUser])                    //aggiorna la lista degli utenti salvandola nello localStorage
+
             //mostra notifica di successo
             toast.success("Unito alla Community", {
                 position: "top-right",
@@ -46,7 +47,6 @@ import {useNavigate} from "react-router-dom";
 
         updateUser(utenteAggiornato)            //aggiorna dati dell'utente nello storage
 
-        // Chiama la funzione passata come prop per aggiornare la UI esterna
         update()
 
         toast.success("Uscito dalla Community", {
@@ -72,8 +72,11 @@ import {useNavigate} from "react-router-dom";
 
 
     return (
-        <div className={esplora? "card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none " : "card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none cursor-pointer"}
-            onClick={() => {!esplora && navigate(`/communities/${community.idCommunity}`)}}
+        <div
+            className={esplora ? "card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none " : "card mt-5 community-card-bg text-white w-75 m-auto shadow text-decoration-none cursor-pointer"}
+            onClick={() => {
+                !esplora && navigate(`/communities/${community.idCommunity}`)
+            }}
         >
             <div className={"card-body p-5"}>
                 <div className={"row flex-row align-items-center"}>
@@ -84,18 +87,18 @@ import {useNavigate} from "react-router-dom";
                         - Se 'esplora' è true: mostra "Unisciti" e appena l'utente si unisce iscritto
                         - Altrimenti: mostra "Modifica" se propria, oppure "Esci" */}
 
-                    {esplora? <button className={"col-2 btn btn-primary text-uppercase  z-2"}
-                             onClick={(e) => {
-                                 e.preventDefault(); // blocca la navigazione del Link
-                                 e.stopPropagation(); // blocca il click sul Link
-                                 handleUnisciti()
-                             }}
-                             disabled={isUnito}
-                    >
-                        {isUnito ? "iscritto" : "unisciti"}
-                    </button> :
+                    {esplora ? <button className={"col-2 btn btn-primary text-uppercase  z-2"}
+                                       onClick={(e) => {
+                                           e.preventDefault(); // blocca la navigazione del Link
+                                           e.stopPropagation(); // blocca il click sul Link
+                                           handleUnisciti()
+                                       }}
+                                       disabled={isUnito}
+                        >
+                            {isUnito ? "iscritto" : "unisciti"}
+                        </button> :
                         <button className={"col-2 btn btn-primary text-uppercase"}
-                                onClick={isTua? (e) => {
+                                onClick={isTua ? (e) => {
                                     e.preventDefault(); // blocca la navigazione del Link
                                     e.stopPropagation(); // blocca il click sul Link
                                     handleModifica()

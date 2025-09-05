@@ -1,4 +1,4 @@
-//Componente che mostra un "tag" con una "X" per rimuoverlo e ha come props: value: il testo del tag e handleDelete: funzione callback da eseguire quando si clicca sulla "X".
+//Componente che mostra un "tag" con una "X" per rimuoverlo
 export default function TagConChiusura({value, handleDelete}) {
     return (
         <div className={"tag"}>

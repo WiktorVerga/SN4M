@@ -13,10 +13,10 @@ Users build playlists with tracks searched through the Spotify Web API, create o
 ![Spotify API](https://img.shields.io/badge/Spotify_Web_API-1db954?logo=spotify&logoColor=white)
 
 <p align="center">
-  <img src="docs/screenshots/explore.png" width="49%" alt="Explore communities: suggestions based on favourite artists" />
-  <img src="docs/screenshots/community-playlist.png" width="49%" alt="A playlist shared in a community, with its tracks" />
-  <img src="docs/screenshots/playlists.png" width="49%" alt="Playlist library with artist tags" />
-  <img src="docs/screenshots/login.png" width="49%" alt="Log-in page" />
+  <img src="docs/explore.png" width="49%" alt="Explore communities: suggestions based on favourite artists" />
+  <img src="docs/community-playlist.png" width="49%" alt="A playlist shared in a community, with its tracks" />
+  <img src="docs/playlists.png" width="49%" alt="Playlist library with artist tags" />
+  <img src="docs/login.png" width="49%" alt="Log-in page" />
 </p>
 
 <sub>Screenshots with sample data and fictional tracks.</sub>
